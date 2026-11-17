@@ -1,0 +1,201 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-17 16:32+0500\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: apps/accounts/forms.py:9 apps/accounts/templates/accounts/login.html:48
+msgid "Keep me logged in"
+msgstr "Meni eslab qol"
+
+#: apps/accounts/forms.py:13
+msgid "Drivers use the Telegram bot, not the web app."
+msgstr "Haydovchilar veb-ilovadan emas, Telegram botdan foydalanadi."
+
+#: apps/accounts/models.py:16
+msgid "Director"
+msgstr "Direktor"
+
+#: apps/accounts/models.py:17
+msgid "Dispatcher"
+msgstr "Dispetcher"
+
+#: apps/accounts/models.py:18
+msgid "Storekeeper"
+msgstr "Omborchi"
+
+#: apps/accounts/models.py:19
+msgid "Driver"
+msgstr "Haydovchi"
+
+#: apps/accounts/templates/accounts/login.html:4
+#: apps/accounts/templates/accounts/login.html:8
+#: apps/accounts/templates/accounts/login.html:52
+msgid "Sign in"
+msgstr "Kirish"
+
+#: apps/accounts/templates/accounts/login.html:9
+msgid "Enter your username and password."
+msgstr "Login va parolingizni kiriting."
+
+#: apps/accounts/templates/accounts/login.html:24
+msgid "Username"
+msgstr "Login"
+
+#: apps/accounts/templates/accounts/login.html:32
+msgid "Password"
+msgstr "Parol"
+
+#: apps/accounts/templates/accounts/login.html:37
+msgid "Hide password"
+msgstr "Parolni yashirish"
+
+#: apps/accounts/templates/accounts/login.html:37
+msgid "Show password"
+msgstr "Parolni ko'rsatish"
+
+#: apps/accounts/templates/accounts/login.html:55
+msgid "Drivers: use the company Telegram bot."
+msgstr "Haydovchilar: kompaniya Telegram botidan foydalaning."
+
+#: apps/core/menu.py:52
+msgid "Menu"
+msgstr "Menyu"
+
+#: apps/core/menu.py:53 apps/core/views.py:13
+msgid "Dashboard"
+msgstr "Bosh sahifa"
+
+#: apps/core/menu.py:54
+msgid "Live map"
+msgstr "Jonli xarita"
+
+#: apps/core/menu.py:55
+msgid "Trips"
+msgstr "Reyslar"
+
+#: apps/core/menu.py:57
+msgid "Approvals"
+msgstr "Tasdiqlash"
+
+#: apps/core/menu.py:59
+msgid "Fleet"
+msgstr "Avtopark"
+
+#: apps/core/menu.py:60
+msgid "Vehicles"
+msgstr "Avtomobillar"
+
+#: apps/core/menu.py:61
+msgid "Drivers"
+msgstr "Haydovchilar"
+
+#: apps/core/menu.py:62
+msgid "Fuel"
+msgstr "Yoqilg'i"
+
+#: apps/core/menu.py:64
+msgid "Maintenance"
+msgstr "Texnik xizmat"
+
+#: apps/core/menu.py:65
+msgid "Store"
+msgstr "Ombor"
+
+#: apps/core/menu.py:66
+msgid "Documents"
+msgstr "Hujjatlar"
+
+#: apps/core/menu.py:68
+msgid "Other"
+msgstr "Boshqa"
+
+#: apps/core/menu.py:69
+msgid "Reports"
+msgstr "Hisobotlar"
+
+#: apps/core/menu.py:70
+msgid "Settings"
+msgstr "Sozlamalar"
+
+#: apps/core/templates/core/dashboard.html:9
+msgid ""
+"The director's dashboard (vehicles on the road, alerts, service due, "
+"documents, stock, approvals waiting) is built on day 57. Pages in the menu "
+"unlock on the day shown next to them."
+msgstr "Direktor paneli (yo'ldagi mashinalar, ogohlantirishlar, texnik xizmat, hujjatlar, ombor, tasdiq kutayotganlar) 57-kuni tayyor bo'ladi. Menyudagi sahifalar yonida ko'rsatilgan kuni ochiladi."
+
+#: apps/core/templates/core/dashboard.html:17
+msgid "System status"
+msgstr "Tizim holati"
+
+#: apps/core/templates/core/dashboard.html:18
+msgid "Open health check (JSON)"
+msgstr "Tekshiruvni ochish (JSON)"
+
+#: templates/403.html:3 templates/403.html:5
+msgid "No access"
+msgstr "Ruxsat yo'q"
+
+#: templates/403.html:6
+msgid "Your role cannot open this page."
+msgstr "Sizning lavozimingiz bu sahifani ocha olmaydi."
+
+#: templates/403.html:9 templates/partials/header.html:59
+msgid "Log out"
+msgstr "Chiqish"
+
+#: templates/base_auth.html:34
+msgid "Vehicles, drivers, fuel, service and store in one place."
+msgstr "Avtomobillar, haydovchilar, yoqilg'i, texnik xizmat va ombor — bir joyda."
+
+#: templates/partials/breadcrumb.html:4
+msgid "Breadcrumb"
+msgstr "Navigatsiya"
+
+#: templates/partials/breadcrumb.html:8
+msgid "Home"
+msgstr "Bosh sahifa"
+
+#: templates/partials/header.html:8
+msgid "Toggle sidebar"
+msgstr "Yon panelni ochish/yopish"
+
+#: templates/partials/header.html:29
+msgid "Toggle dark mode"
+msgstr "Tungi rejim"
+
+#: templates/partials/sidebar.html:2
+msgid "Skip to the main content"
+msgstr "Asosiy qismga o'tish"
+
+#: templates/partials/sidebar.html:18
+msgid "Sidebar"
+msgstr "Yon panel"
+
+#: templates/partials/sidebar.html:33
+msgid "Main menu"
+msgstr "Asosiy menyu"
+
+#: templates/partials/sidebar.html:52
+#, python-format
+msgid "Coming on day %(day)s"
+msgstr "%(day)s-kunda tayyor bo'ladi"
+
+#: templates/partials/sidebar.html:56
+#, python-format
+msgid "Day %(day)s"
+msgstr "%(day)s-kun"

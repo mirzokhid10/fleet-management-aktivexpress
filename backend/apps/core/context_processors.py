@@ -1,5 +1,5 @@
-from .menu import MENU, active_key
+from .menu import active_key, menu_for
 
 
 def navigation(request):
-    return {"menu": MENU, "menu_active": active_key(request.path)}
+    return {"menu": menu_for(request.user), "menu_active": active_key(request.path)}

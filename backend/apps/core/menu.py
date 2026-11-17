@@ -1,7 +1,8 @@
 """Sidebar menu of the web app.
 
-One list, in roadmap order. An item without a url_name is shown as
-"coming soon" until the day that builds it.
+One list, in roadmap order. Each item says which roles see it (Day 1 kickoff,
+section 2). An item without a url_name is shown as "coming on day N" until the
+day that builds it.
 """
 
 from __future__ import annotations
@@ -9,15 +10,23 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from django.urls import NoReverseMatch, reverse
+from django.utils.translation import gettext_lazy as _
+
+from apps.accounts.models import User
+
+D, P, S = User.Role.DIRECTOR, User.Role.DISPATCHER, User.Role.STOREKEEPER
+ALL_STAFF = frozenset({D, P, S})
+MANAGERS = frozenset({D, P})
 
 
 @dataclass(frozen=True)
 class MenuItem:
     key: str
     label: str
-    icon: str  # name of an icon in templates/partials/icons.html
+    icon: str  # name of an icon in templates/partials/icon.html
     url_name: str | None = None
     day: int | None = None  # roadmap day that builds the page
+    roles: frozenset = ALL_STAFF
 
     @property
     def url(self) -> str | None:
@@ -40,25 +49,39 @@ class MenuGroup:
 
 
 MENU: tuple[MenuGroup, ...] = (
-    MenuGroup("Menu", (
-        MenuItem("dashboard", "Dashboard", "grid", "core:dashboard"),
-        MenuItem("map", "Live map", "map", day=12),
-        MenuItem("trips", "Trips", "route", day=14),
-        MenuItem("approvals", "Approvals", "check", day=21),
+    MenuGroup(_("Menu"), (
+        MenuItem("dashboard", _("Dashboard"), "grid", "core:dashboard"),
+        MenuItem("map", _("Live map"), "map", day=12, roles=MANAGERS),
+        MenuItem("trips", _("Trips"), "route", day=14, roles=MANAGERS),
+        # Storekeepers confirm part requests here when marked as approvers.
+        MenuItem("approvals", _("Approvals"), "check", day=21),
     )),
-    MenuGroup("Fleet", (
-        MenuItem("vehicles", "Vehicles", "truck", day=5),
-        MenuItem("drivers", "Drivers", "users", day=5),
-        MenuItem("fuel", "Fuel", "fuel", day=28),
-        MenuItem("maintenance", "Maintenance", "wrench", day=37),
-        MenuItem("store", "Store", "box", day=46),
-        MenuItem("documents", "Documents", "file", day=49),
+    MenuGroup(_("Fleet"), (
+        MenuItem("vehicles", _("Vehicles"), "truck", day=5, roles=MANAGERS),
+        MenuItem("drivers", _("Drivers"), "users", day=5, roles=MANAGERS),
+        MenuItem("fuel", _("Fuel"), "fuel", day=28, roles=MANAGERS),
+        # Storekeeper doubles as mechanic in V1 (kickoff Q3).
+        MenuItem("maintenance", _("Maintenance"), "wrench", day=37),
+        MenuItem("store", _("Store"), "box", day=46),
+        MenuItem("documents", _("Documents"), "file", day=49, roles=MANAGERS),
     )),
-    MenuGroup("Other", (
-        MenuItem("reports", "Reports", "chart", day=58),
-        MenuItem("settings", "Settings", "settings", day=26),
+    MenuGroup(_("Other"), (
+        MenuItem("reports", _("Reports"), "chart", day=58),
+        MenuItem("settings", _("Settings"), "settings", day=26, roles=frozenset({D})),
     )),
 )
+
+
+def menu_for(user) -> list[MenuGroup]:
+    """The menu groups and items this user may see; empty groups are dropped."""
+    if not getattr(user, "is_authenticated", False):
+        return []
+    groups = []
+    for group in MENU:
+        items = tuple(i for i in group.items if user.is_superuser or user.role in i.roles)
+        if items:
+            groups.append(MenuGroup(group.title, items))
+    return groups
 
 
 def active_key(path: str) -> str | None:

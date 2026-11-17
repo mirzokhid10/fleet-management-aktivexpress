@@ -90,3 +90,22 @@ def template_path(tmp_path: Path) -> Path:
 def filled(template_path: Path):
     """filled(data) -> path of the template filled with data."""
     return lambda data: fill_template(template_path, data)
+
+
+# --- web login helpers (Day 4) ---------------------------------------------
+
+@pytest.fixture
+def login_as(client, db):
+    """login_as("dispatcher", language="ru") -> logged-in test client."""
+    from tests import factories
+
+    def _login(role: str = "director", **kw):
+        user = factories.user(role=role, **kw)
+        client.force_login(user)
+        if "language" in kw:
+            from django.conf import settings
+            client.cookies[settings.LANGUAGE_COOKIE_NAME] = kw["language"]
+        client.user = user
+        return client
+
+    return _login

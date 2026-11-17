@@ -1,5 +1,5 @@
-{% load static %}
-<a class="sr-only" href="#main-content">Skip to the main content</a>
+{% load static i18n %}
+<a class="sr-only" href="#main-content">{% translate "Skip to the main content" %}</a>
 
 <!-- Backdrop (mobile) -->
 <div
@@ -15,7 +15,7 @@
   :class="sidebarToggle ? 'translate-x-0 xl:w-22.5' : '-translate-x-full'"
   class="sidebar fixed top-0 left-0 z-9999 flex h-screen w-72.5 flex-col border-r border-gray-200 bg-white px-5 transition-all duration-300 xl:static xl:translate-x-0 dark:border-gray-800 dark:bg-black"
   @click.outside="if (window.innerWidth < 1280) sidebarToggle = false"
-  aria-label="Sidebar"
+  aria-label="{% translate 'Sidebar' %}"
 >
   <div :class="sidebarToggle ? 'xl:justify-center' : 'justify-between'" class="sidebar-header flex items-center gap-2 py-8">
     <a href="{% url 'core:dashboard' %}">
@@ -30,7 +30,7 @@
   </div>
 
   <div class="no-scrollbar flex flex-1 flex-col overflow-y-auto duration-300 ease-linear">
-    <nav aria-label="Main menu" data-testid="sidebar-nav">
+    <nav aria-label="{% translate 'Main menu' %}" data-testid="sidebar-nav">
       {% for group in menu %}
       <div>
         <h3 class="mb-4 text-xs leading-5 text-gray-400 uppercase">
@@ -49,11 +49,11 @@
               <span class="menu-item-text" :class="sidebarToggle ? 'xl:hidden' : ''">{{ item.label }}</span>
             </a>
             {% else %}
-            <span data-menu="{{ item.key }}" aria-disabled="true" title="Coming on day {{ item.day }}"
+            <span data-menu="{{ item.key }}" aria-disabled="true" title="{% blocktranslate with day=item.day %}Coming on day {{ day }}{% endblocktranslate %}"
                   class="group menu-item menu-item-inactive cursor-not-allowed opacity-60">
               <span class="menu-item-icon-inactive">{% include "partials/icon.html" with name=item.icon %}</span>
               <span class="menu-item-text" :class="sidebarToggle ? 'xl:hidden' : ''">{{ item.label }}</span>
-              <span class="menu-item-text ml-auto rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-500 dark:bg-white/5 dark:text-gray-400" :class="sidebarToggle ? 'xl:hidden' : ''">Day {{ item.day }}</span>
+              <span class="menu-item-text ml-auto whitespace-nowrap rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-500 dark:bg-white/5 dark:text-gray-400" :class="sidebarToggle ? 'xl:hidden' : ''">{% blocktranslate with day=item.day %}Day {{ day }}{% endblocktranslate %}</span>
             </span>
             {% endif %}
           </li>

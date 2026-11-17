@@ -1,0 +1,12 @@
+{% load i18n %}
+{% get_current_language as LANG %}
+{% get_available_languages as LANGUAGES %}
+<form method="post" action="{% url 'accounts:language' %}" class="inline-flex rounded-lg border border-gray-300 p-0.5 dark:border-gray-700" data-testid="language-switch">
+  {% csrf_token %}
+  <input type="hidden" name="next" value="{{ request.get_full_path }}" />
+  {% for code, name in LANGUAGES %}
+  <button type="submit" name="language" value="{{ code }}" title="{{ name }}"
+          {% if code == LANG %}aria-current="true"{% endif %}
+          class="rounded-md px-3 py-1.5 text-xs font-medium uppercase {% if code == LANG %}bg-brand-500 text-white{% else %}text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white{% endif %}">{{ code }}</button>
+  {% endfor %}
+</form>

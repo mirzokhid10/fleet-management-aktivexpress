@@ -6,22 +6,22 @@ from django.core.management import call_command
 pytestmark = [pytest.mark.functional, pytest.mark.django_db]
 
 
-def test_dashboard_renders_tailadmin_layout(client):
-    html = client.get("/").content.decode()
+def test_dashboard_renders_tailadmin_layout(login_as):
+    html = login_as("director").get("/").content.decode()
 
     assert 'data-testid="sidebar-nav"' in html
     assert "/static/css/app.css" in html
     assert "/static/vendor/alpine.min.js" in html
-    assert "<title>Dashboard | Aktiv Fleet</title>" in html
+    assert "<title>Bosh sahifa | Aktiv Fleet</title>" in html
 
 
-def test_dashboard_link_is_active_and_unbuilt_pages_are_disabled(client):
-    html = client.get("/").content.decode()
+def test_dashboard_link_is_active_and_unbuilt_pages_are_disabled(login_as):
+    html = login_as("director").get("/").content.decode()
 
     assert 'data-menu="dashboard"' in html
     assert 'aria-current="page"' in html
     assert html.count('aria-disabled="true"') == 11
-    assert "Day 12" in html  # Live map
+    assert "12-kun" in html  # Live map, "Day 12" in Uzbek
 
 
 def test_health_reports_postgis_and_cache(client):

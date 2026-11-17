@@ -1,11 +1,11 @@
-{% load static %}
+{% load static i18n %}
 <header class="sticky top-0 z-50 flex w-full shrink-0 border-gray-200 bg-white xl:border-b dark:border-gray-800 dark:bg-gray-900">
   <div class="flex grow items-center justify-between gap-2 border-b border-gray-200 px-3 py-3 sm:gap-4 xl:border-b-0 xl:px-6 xl:py-4 dark:border-gray-800">
     <div class="flex items-center gap-3">
       <button
         type="button"
         @click.stop="sidebarToggle = !sidebarToggle"
-        aria-label="Toggle sidebar"
+        aria-label="{% translate 'Toggle sidebar' %}"
         class="inline-flex size-10 shrink-0 items-center justify-center rounded-[10px] border border-gray-300 bg-transparent text-gray-500 shadow-theme-xs transition-all hover:bg-gray-50 hover:text-gray-800 lg:size-11 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700/50 dark:hover:text-white"
       >
         <svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -19,13 +19,14 @@
       </a>
     </div>
 
-    <div class="flex items-center gap-3">
-      <!-- Theme toggle -->
+    <div class="flex items-center gap-2 sm:gap-3">
+      <div class="hidden sm:block">{% include "partials/language_switch.html" %}</div>
+
       <button
         type="button"
         @click.prevent="darkMode = !darkMode; document.documentElement.classList.toggle('dark', darkMode); localStorage.setItem('darkMode', JSON.stringify(darkMode))"
         class="relative inline-flex size-11 shrink-0 items-center justify-center rounded-[10px] border border-gray-300 bg-transparent text-gray-700 shadow-theme-xs transition-all hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700/50 dark:hover:text-white"
-        aria-label="Toggle dark mode"
+        aria-label="{% translate 'Toggle dark mode' %}"
       >
         <svg x-cloak x-show="darkMode" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
           <circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" />
@@ -34,7 +35,33 @@
           <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />
         </svg>
       </button>
-      {# Day 4: language switcher (uz/ru) and user menu go here. #}
+
+      {% if user.is_authenticated %}
+      <!-- User menu -->
+      <div class="relative" x-data="{ open: false }" @click.outside="open = false" data-testid="user-menu">
+        <button type="button" @click="open = !open" :aria-expanded="open"
+                class="flex items-center gap-3 text-gray-700 dark:text-gray-400">
+          <span class="flex size-11 items-center justify-center rounded-full bg-brand-50 text-sm font-semibold text-brand-500 dark:bg-brand-500/15 dark:text-brand-400">
+            {{ user.first_name|default:user.username|first|upper }}{{ user.last_name|first|upper }}
+          </span>
+          <span class="hidden text-left sm:block">
+            <span class="block text-sm font-medium text-gray-800 dark:text-white/90">{{ user }}</span>
+            <span class="block text-xs text-gray-500 dark:text-gray-400" data-testid="user-role">{{ user.get_role_display }}</span>
+          </span>
+        </button>
+        <div x-cloak x-show="open" x-transition
+             class="absolute right-0 mt-4 w-56 rounded-2xl border border-gray-200 bg-white p-3 shadow-theme-lg dark:border-gray-800 dark:bg-gray-900">
+          <div class="mb-3 sm:hidden">{% include "partials/language_switch.html" %}</div>
+          <form method="post" action="{% url 'accounts:logout' %}">
+            {% csrf_token %}
+            <button type="submit" class="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-white/5">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3M10 17l5-5-5-5M15 12H3"/></svg>
+              {% translate "Log out" %}
+            </button>
+          </form>
+        </div>
+      </div>
+      {% endif %}
     </div>
   </div>
 </header>

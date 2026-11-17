@@ -1,0 +1,203 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-17 16:32+0500\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
+"(n%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#: apps/accounts/forms.py:9 apps/accounts/templates/accounts/login.html:48
+msgid "Keep me logged in"
+msgstr "Запомнить меня"
+
+#: apps/accounts/forms.py:13
+msgid "Drivers use the Telegram bot, not the web app."
+msgstr "Водители работают через Telegram-бот, а не через веб-приложение."
+
+#: apps/accounts/models.py:16
+msgid "Director"
+msgstr "Директор"
+
+#: apps/accounts/models.py:17
+msgid "Dispatcher"
+msgstr "Диспетчер"
+
+#: apps/accounts/models.py:18
+msgid "Storekeeper"
+msgstr "Кладовщик"
+
+#: apps/accounts/models.py:19
+msgid "Driver"
+msgstr "Водитель"
+
+#: apps/accounts/templates/accounts/login.html:4
+#: apps/accounts/templates/accounts/login.html:8
+#: apps/accounts/templates/accounts/login.html:52
+msgid "Sign in"
+msgstr "Вход"
+
+#: apps/accounts/templates/accounts/login.html:9
+msgid "Enter your username and password."
+msgstr "Введите логин и пароль."
+
+#: apps/accounts/templates/accounts/login.html:24
+msgid "Username"
+msgstr "Логин"
+
+#: apps/accounts/templates/accounts/login.html:32
+msgid "Password"
+msgstr "Пароль"
+
+#: apps/accounts/templates/accounts/login.html:37
+msgid "Hide password"
+msgstr "Скрыть пароль"
+
+#: apps/accounts/templates/accounts/login.html:37
+msgid "Show password"
+msgstr "Показать пароль"
+
+#: apps/accounts/templates/accounts/login.html:55
+msgid "Drivers: use the company Telegram bot."
+msgstr "Водители: пользуйтесь Telegram-ботом компании."
+
+#: apps/core/menu.py:52
+msgid "Menu"
+msgstr "Меню"
+
+#: apps/core/menu.py:53 apps/core/views.py:13
+msgid "Dashboard"
+msgstr "Главная"
+
+#: apps/core/menu.py:54
+msgid "Live map"
+msgstr "Карта онлайн"
+
+#: apps/core/menu.py:55
+msgid "Trips"
+msgstr "Поездки"
+
+#: apps/core/menu.py:57
+msgid "Approvals"
+msgstr "Подтверждения"
+
+#: apps/core/menu.py:59
+msgid "Fleet"
+msgstr "Автопарк"
+
+#: apps/core/menu.py:60
+msgid "Vehicles"
+msgstr "Автомобили"
+
+#: apps/core/menu.py:61
+msgid "Drivers"
+msgstr "Водители"
+
+#: apps/core/menu.py:62
+msgid "Fuel"
+msgstr "Топливо"
+
+#: apps/core/menu.py:64
+msgid "Maintenance"
+msgstr "Техобслуживание"
+
+#: apps/core/menu.py:65
+msgid "Store"
+msgstr "Склад"
+
+#: apps/core/menu.py:66
+msgid "Documents"
+msgstr "Документы"
+
+#: apps/core/menu.py:68
+msgid "Other"
+msgstr "Прочее"
+
+#: apps/core/menu.py:69
+msgid "Reports"
+msgstr "Отчёты"
+
+#: apps/core/menu.py:70
+msgid "Settings"
+msgstr "Настройки"
+
+#: apps/core/templates/core/dashboard.html:9
+msgid ""
+"The director's dashboard (vehicles on the road, alerts, service due, "
+"documents, stock, approvals waiting) is built on day 57. Pages in the menu "
+"unlock on the day shown next to them."
+msgstr "Панель директора (машины в пути, оповещения, ТО, документы, склад, ожидающие подтверждения) будет готова на 57-й день. Пункты меню открываются в день, указанный рядом с ними."
+
+#: apps/core/templates/core/dashboard.html:17
+msgid "System status"
+msgstr "Состояние системы"
+
+#: apps/core/templates/core/dashboard.html:18
+msgid "Open health check (JSON)"
+msgstr "Открыть проверку (JSON)"
+
+#: templates/403.html:3 templates/403.html:5
+msgid "No access"
+msgstr "Нет доступа"
+
+#: templates/403.html:6
+msgid "Your role cannot open this page."
+msgstr "Ваша роль не позволяет открыть эту страницу."
+
+#: templates/403.html:9 templates/partials/header.html:59
+msgid "Log out"
+msgstr "Выйти"
+
+#: templates/base_auth.html:34
+msgid "Vehicles, drivers, fuel, service and store in one place."
+msgstr "Автомобили, водители, топливо, обслуживание и склад — в одном месте."
+
+#: templates/partials/breadcrumb.html:4
+msgid "Breadcrumb"
+msgstr "Навигация"
+
+#: templates/partials/breadcrumb.html:8
+msgid "Home"
+msgstr "Главная"
+
+#: templates/partials/header.html:8
+msgid "Toggle sidebar"
+msgstr "Показать/скрыть боковую панель"
+
+#: templates/partials/header.html:29
+msgid "Toggle dark mode"
+msgstr "Тёмная тема"
+
+#: templates/partials/sidebar.html:2
+msgid "Skip to the main content"
+msgstr "Перейти к основному содержимому"
+
+#: templates/partials/sidebar.html:18
+msgid "Sidebar"
+msgstr "Боковая панель"
+
+#: templates/partials/sidebar.html:33
+msgid "Main menu"
+msgstr "Главное меню"
+
+#: templates/partials/sidebar.html:52
+#, python-format
+msgid "Coming on day %(day)s"
+msgstr "Будет готово в день %(day)s"
+
+#: templates/partials/sidebar.html:56
+#, python-format
+msgid "Day %(day)s"
+msgstr "День %(day)s"

@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 from apps.core.validators import validate_phone
 
@@ -12,10 +13,10 @@ class User(AbstractUser):
     """
 
     class Role(models.TextChoices):
-        DIRECTOR = "director", "Director"
-        DISPATCHER = "dispatcher", "Dispatcher"
-        STOREKEEPER = "storekeeper", "Storekeeper"
-        DRIVER = "driver", "Driver"
+        DIRECTOR = "director", _("Director")
+        DISPATCHER = "dispatcher", _("Dispatcher")
+        STOREKEEPER = "storekeeper", _("Storekeeper")
+        DRIVER = "driver", _("Driver")
 
     class Language(models.TextChoices):
         UZ = "uz", "O'zbekcha"

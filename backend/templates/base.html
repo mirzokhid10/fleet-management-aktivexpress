@@ -1,5 +1,6 @@
-{% load static %}<!doctype html>
-<html lang="{{ LANGUAGE_CODE|default:'uz' }}">
+{% load static i18n %}<!doctype html>
+{% get_current_language as LANG %}
+<html lang="{{ LANG }}">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />

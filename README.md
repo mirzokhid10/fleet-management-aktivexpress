@@ -33,6 +33,22 @@ Running `manage.py runserver` on your machine instead? Postgres (5432) and Redis
 docker compose exec web python manage.py createsuperuser
 ```
 
+To try each role locally (director, dispatcher, storekeeper, driver), create demo users. It prints one password for all of them; it refuses to run unless `DJANGO_DEBUG=1`.
+
+```bash
+docker compose exec web python manage.py create_demo_users
+```
+
+## Translations (Uzbek / Russian)
+
+Our own UI strings are translated in `backend/locale/translations.py`. After adding or changing text:
+
+```bash
+docker compose exec web sh -c "python manage.py makemessages -l uz -l ru --no-obsolete && python locale/translations.py && python manage.py compilemessages"
+```
+
+A test fails while any string is untranslated.
+
 ## Tests
 
 Three levels, all in `backend/tests/`, run against real PostGIS and Redis:
@@ -60,4 +76,5 @@ docker compose --profile tests run --rm tests python -m fleet_import check /data
 - [x] Day 1 — kickoff: scope, roles, approval rules (`docs/day-01-kickoff.md`), data template + checker. Signed off.
 - [x] Day 2 — local Docker Compose (PostGIS, Redis, Django, Tailwind), empty Django project with TailAdmin layout. Server + deploy postponed.
 - [x] Day 3 — database design: 9 apps, PostGIS, rules enforced by DB constraints (`docs/day-03-database.md`). Approved.
-- [ ] Day 4 — login, roles, Uzbek/Russian; web layout and menu
+- [x] Day 4 — login by role, role-based menu and access, Uzbek/Russian interface with language switch
+- [ ] Day 5 — admin panel; import vehicles and drivers from Excel

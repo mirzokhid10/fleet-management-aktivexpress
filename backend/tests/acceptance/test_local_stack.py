@@ -1,18 +1,24 @@
+import html
 import re
 
 import pytest
-from pytest_bdd import parsers, scenarios, then, when
+from pytest_bdd import given, parsers, scenarios, then, when
 
 pytestmark = [pytest.mark.acceptance, pytest.mark.django_db]
 
 scenarios("local_stack.feature")
 
 
+@given("I am logged in as the director", target_fixture="client")
+def director(login_as):
+    return login_as("director")
+
+
 @when("I open the home page", target_fixture="page")
 def open_home(client):
     response = client.get("/")
     assert response.status_code == 200
-    return response.content.decode()
+    return html.unescape(response.content.decode())
 
 
 @when("I open the health check", target_fixture="health")
@@ -38,7 +44,7 @@ def sidebar_pages(page, datatable):
 
 @then(parsers.parse('"{label}" is marked as coming on day {day:d}'))
 def coming_on_day(page, label, day):
-    entry = re.search(rf'<span data-menu="[^"]+" aria-disabled="true" title="Coming on day {day}"'
+    entry = re.search(rf'<span data-menu="[^"]+" aria-disabled="true" title="{day}-kunda[^"]*"'
                       rf'[\s\S]*?>{re.escape(label)}<', page)
     assert entry, f"{label} not disabled for day {day}"
 

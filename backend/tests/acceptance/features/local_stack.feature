@@ -4,24 +4,25 @@ Feature: The web app runs locally
   the Django app runs on Docker Compose with PostGIS and Redis
   and shows the TailAdmin layout with the fleet menu.
 
-  Scenario: A developer opens the web app
+  Scenario: A developer opens the web app as the director
+    Given I am logged in as the director
     When I open the home page
-    Then I see the page title "Dashboard"
+    Then I see the page title "Bosh sahifa"
     And the sidebar lists these pages in order
-      | page        |
-      | Dashboard   |
-      | Live map    |
-      | Trips       |
-      | Approvals   |
-      | Vehicles    |
-      | Drivers     |
-      | Fuel        |
-      | Maintenance |
-      | Store       |
-      | Documents   |
-      | Reports     |
-      | Settings    |
-    And "Live map" is marked as coming on day 12
+      | page          |
+      | Bosh sahifa   |
+      | Jonli xarita  |
+      | Reyslar       |
+      | Tasdiqlash    |
+      | Avtomobillar  |
+      | Haydovchilar  |
+      | Yoqilg'i      |
+      | Texnik xizmat |
+      | Ombor         |
+      | Hujjatlar     |
+      | Hisobotlar    |
+      | Sozlamalar    |
+    And "Jonli xarita" is marked as coming on day 12
 
   Scenario: The services the app needs are up
     When I open the health check
