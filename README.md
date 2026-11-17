@@ -7,7 +7,8 @@ Web app + Telegram bot for the 50-vehicle fleet. Plan: *Fleet App — Roadmap & 
 | Path | What |
 |---|---|
 | `backend/config/` | Django settings and URLs (all machine-specific values come from `.env`) |
-| `backend/apps/core/` | Layout, sidebar menu, dashboard, `/health/` |
+| `backend/apps/core/` | Layout, sidebar menu, dashboard, `/health/`, company settings |
+| `backend/apps/{accounts,fleet,tracking,entries,store,maintenance,documents,audit}/` | Data model (Day 3) |
 | `backend/templates/` | Base layout and partials (sidebar, header, breadcrumb, icons) |
 | `backend/theme/` | Tailwind build: `tailadmin.css` (upstream, unchanged) + `app.css` (ours) → `static/css/app.css` |
 | `backend/fleet_import/` | Company data template and checker (Day 1; Day 5 import uses it) |
@@ -58,4 +59,5 @@ docker compose --profile tests run --rm tests python -m fleet_import check /data
 
 - [x] Day 1 — kickoff: scope, roles, approval rules (`docs/day-01-kickoff.md`), data template + checker. Signed off.
 - [x] Day 2 — local Docker Compose (PostGIS, Redis, Django, Tailwind), empty Django project with TailAdmin layout. Server + deploy postponed.
-- [ ] Day 3 — database design
+- [x] Day 3 — database design: 9 apps, PostGIS, rules enforced by DB constraints (`docs/day-03-database.md`). Approved.
+- [ ] Day 4 — login, roles, Uzbek/Russian; web layout and menu

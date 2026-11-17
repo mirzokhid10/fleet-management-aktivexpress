@@ -39,7 +39,17 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django.contrib.gis",
     "apps.core",
+    "apps.accounts",
+    "apps.fleet",
+    "apps.tracking",
+    "apps.entries",
+    "apps.store",
+    "apps.documents",
+    "apps.audit",
+    "apps.maintenance",
 ]
+
+AUTH_USER_MODEL = "accounts.User"
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -105,5 +115,9 @@ USE_TZ = True
 STATIC_URL = "static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_ROOT = BASE_DIR / "staticfiles"
+
+# Photos and scans. Local disk now, MinIO (S3) from Day 20.
+MEDIA_URL = "media/"
+MEDIA_ROOT = Path(env("DJANGO_MEDIA_ROOT", str(BASE_DIR / "media")))
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"

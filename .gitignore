@@ -12,3 +12,4 @@ backend/static/css/app.css
 backend/static/vendor/
 backend/staticfiles/
 backend/venv/
+backend/media/

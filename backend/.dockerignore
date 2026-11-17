@@ -6,3 +6,4 @@ theme/node_modules
 theme/.npm-cache
 staticfiles
 venv
+media

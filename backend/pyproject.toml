@@ -17,4 +17,5 @@ markers = [
     "acceptance: business scenarios written in Gherkin",
     "day-01: delivered on roadmap Day 1",
     "day-02: delivered on roadmap Day 2",
+    "day-03: delivered on roadmap Day 3",
 ]
