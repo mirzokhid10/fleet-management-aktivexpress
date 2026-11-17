@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="grid grid-cols-1 gap-4 md:gap-6 xl:grid-cols-3">
+  <div class="rounded-2xl border border-gray-200 bg-white px-5 py-7 xl:col-span-2 xl:px-10 xl:py-12 dark:border-gray-800 dark:bg-white/3">
+    <h3 class="mb-4 text-theme-xl font-semibold text-gray-800 sm:text-2xl dark:text-white/90">Aktiv Fleet</h3>
+    <p class="text-sm text-gray-500 sm:text-base dark:text-gray-400">
+      The director's dashboard (vehicles on the road, alerts, service due, documents, stock, approvals waiting)
+      is built on day 57. Pages in the menu unlock on the day shown next to them.
+    </p>
+  </div>
+
+  <div class="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/3" data-testid="system-status">
+    <h3 class="mb-4 text-lg font-semibold text-gray-800 dark:text-white/90">System status</h3>
+    <a href="{% url 'core:health' %}" class="text-sm text-brand-500 hover:underline">Open health check (JSON)</a>
+  </div>
+</div>
+{% endblock %}

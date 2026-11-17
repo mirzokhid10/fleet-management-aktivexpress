@@ -1,0 +1,11 @@
+/* Fleet web styles: TailAdmin theme + our additions.
+   Tailwind scans the Django templates below for class names. */
+@import "./tailadmin.css";
+
+@source "../../templates";
+@source "../../apps";
+@source "../../apps/**/*.py";
+
+[x-cloak] {
+  display: none !important;
+}

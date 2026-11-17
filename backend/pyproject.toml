@@ -1,0 +1,20 @@
+[project]
+name = "fleet-backend"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = ["Django>=5.2,<6", "psycopg[binary]>=3.2", "redis>=6", "openpyxl>=3.1", "python-dotenv>=1.0"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "pytest-bdd>=8", "pytest-django>=4.11"]
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "config.settings"
+testpaths = ["tests"]
+bdd_features_base_dir = "tests/acceptance/features"
+markers = [
+    "unit: fast tests of one function or class",
+    "functional: tests of a whole module through its public API",
+    "acceptance: business scenarios written in Gherkin",
+    "day-01: delivered on roadmap Day 1",
+    "day-02: delivered on roadmap Day 2",
+]

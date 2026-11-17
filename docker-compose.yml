@@ -1,0 +1,71 @@
+# Local development stack. Server/deploy comes later.
+#   docker compose up -d                          -> http://localhost:8000
+#   docker compose --profile tests run --rm tests -> all tests
+
+x-backend: &backend
+  build: ./backend
+  image: fleet-backend:dev
+  user: "${UID:-1000}:${GID:-1000}"
+  env_file: .env
+  volumes:
+    - ./backend:/app
+  depends_on:
+    db:
+      condition: service_healthy
+    redis:
+      condition: service_healthy
+
+services:
+  db:
+    image: postgis/postgis:16-3.4-alpine
+    environment:
+      POSTGRES_DB: fleet
+      POSTGRES_USER: fleet
+      POSTGRES_PASSWORD: fleet
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "127.0.0.1:5432:5432"
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "fleet", "-d", "fleet"]
+      interval: 3s
+      retries: 20
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "127.0.0.1:6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 3s
+      retries: 20
+
+  web:
+    <<: *backend
+    command: sh -c "python manage.py migrate --noinput && python manage.py runserver 0.0.0.0:8000"
+    ports:
+      - "127.0.0.1:${WEB_PORT:-8000}:8000"
+
+  tailwind:
+    image: node:22-alpine
+    user: "${UID:-1000}:${GID:-1000}"
+    working_dir: /app/theme
+    volumes:
+      - ./backend:/app
+    environment:
+      npm_config_cache: /app/theme/.npm-cache
+    command: sh -c "npm install --no-audit --no-fund && npm run watch"
+    tty: true
+
+  tests:
+    <<: *backend
+    environment:
+      PYTEST_ADDOPTS: "-p no:cacheprovider"
+    volumes:
+      - ./backend:/app
+      - ./data-templates:/data
+    command: pytest
+    profiles: ["tests"]
+
+volumes:
+  pgdata:

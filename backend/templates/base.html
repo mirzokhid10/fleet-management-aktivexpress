@@ -1,0 +1,38 @@
+{% load static %}<!doctype html>
+<html lang="{{ LANGUAGE_CODE|default:'uz' }}">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}{{ page_title }}{% endblock %} | Aktiv Fleet</title>
+    <link rel="icon" href="{% static 'images/logo/logo-icon.svg' %}" type="image/svg+xml" />
+    <link rel="stylesheet" href="{% static 'css/app.css' %}" />
+    <script>
+      // Apply the saved theme before first paint (no flash).
+      if (JSON.parse(localStorage.getItem("darkMode") || "false")) {
+        document.documentElement.classList.add("dark");
+      }
+    </script>
+    <script defer src="{% static 'vendor/alpine-persist.min.js' %}"></script>
+    <script defer src="{% static 'vendor/alpine-collapse.min.js' %}"></script>
+    <script defer src="{% static 'vendor/alpine.min.js' %}"></script>
+  </head>
+  <body
+    x-data="{ darkMode: JSON.parse(localStorage.getItem('darkMode') || 'false'), sidebarToggle: false }"
+    :class="{ 'dark bg-gray-900': darkMode }"
+  >
+    <div class="flex h-screen overflow-hidden">
+      {% include "partials/sidebar.html" %}
+
+      <div class="relative flex flex-1 flex-col overflow-x-hidden overflow-y-auto">
+        {% include "partials/header.html" %}
+
+        <main id="main-content">
+          <div class="mx-auto max-w-(--breakpoint-2xl) p-4 pb-20 md:p-6 md:pb-6">
+            {% include "partials/breadcrumb.html" %}
+            {% block content %}{% endblock %}
+          </div>
+        </main>
+      </div>
+    </div>
+  </body>
+</html>

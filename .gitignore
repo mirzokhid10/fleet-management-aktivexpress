@@ -1,0 +1,14 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+node_modules/
+.env
+# filled company data stays out of git
+data-templates/filled*.xlsx
+backend/theme/node_modules/
+backend/theme/.npm-cache/
+backend/static/css/app.css
+backend/static/vendor/
+backend/staticfiles/
+backend/venv/

@@ -1,0 +1,61 @@
+# Aktivexpress Fleet
+
+Web app + Telegram bot for the 50-vehicle fleet. Plan: *Fleet App — Roadmap & Tech Stack* (70 working days).
+
+**Stack:** Django (server-rendered HTML + Tailwind CSS, based on the free [TailAdmin](https://github.com/TailAdmin/tailadmin-free-tailwind-dashboard-template) template, MIT) · PostgreSQL + PostGIS · Redis · Alpine.js for small UI behaviour. Built and run locally with Docker Compose; server deploy comes later.
+
+| Path | What |
+|---|---|
+| `backend/config/` | Django settings and URLs (all machine-specific values come from `.env`) |
+| `backend/apps/core/` | Layout, sidebar menu, dashboard, `/health/` |
+| `backend/templates/` | Base layout and partials (sidebar, header, breadcrumb, icons) |
+| `backend/theme/` | Tailwind build: `tailadmin.css` (upstream, unchanged) + `app.css` (ours) → `static/css/app.css` |
+| `backend/fleet_import/` | Company data template and checker (Day 1; Day 5 import uses it) |
+| `docs/` | Decisions per roadmap day |
+| `data-templates/` | Excel template for the company; filled copies are git-ignored |
+
+## Run locally
+
+```bash
+cp .env.example .env
+```
+
+```bash
+docker compose up -d
+```
+
+Open http://localhost:8000. `tailwind` rebuilds the CSS whenever a template changes.
+
+Running `manage.py runserver` on your machine instead? Postgres (5432) and Redis (6379) are published on 127.0.0.1, so set `POSTGRES_HOST=localhost` and `REDIS_URL=redis://localhost:6379/0` in `backend/.env`. To run both at once, start the Docker one on another port: `WEB_PORT=8001 docker compose up -d`.
+
+```bash
+docker compose exec web python manage.py createsuperuser
+```
+
+## Tests
+
+Three levels, all in `backend/tests/`, run against real PostGIS and Redis:
+
+- `unit/` — one function at a time
+- `functional/` — a module or page through its public API
+- `acceptance/` — business scenarios in Gherkin (`features/*.feature`), tagged by roadmap day
+
+```bash
+docker compose --profile tests run --rm tests
+```
+
+```bash
+docker compose --profile tests run --rm tests pytest -m acceptance
+```
+
+## Company data template
+
+```bash
+docker compose --profile tests run --rm tests python -m fleet_import check /data/filled.xlsx
+```
+
+## Progress
+
+- [x] Day 1 — kickoff: scope, roles, approval rules (`docs/day-01-kickoff.md`), data template + checker. Signed off.
+- [x] Day 2 — local Docker Compose (PostGIS, Redis, Django, Tailwind), empty Django project with TailAdmin layout. Server + deploy postponed.
+- [ ] Day 3 — database design
