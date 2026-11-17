@@ -46,6 +46,14 @@ services:
     ports:
       - "127.0.0.1:${WEB_PORT:-8000}:8000"
 
+  # Telegram bot. Locally it polls Telegram (BOT_MODE=polling); needs
+  # TELEGRAM_BOT_TOKEN in .env. Start with: docker compose --profile bot up -d bot
+  bot:
+    <<: *backend
+    command: python manage.py runbot
+    profiles: ["bot"]
+    restart: unless-stopped
+
   tailwind:
     image: node:22-alpine
     user: "${UID:-1000}:${GID:-1000}"

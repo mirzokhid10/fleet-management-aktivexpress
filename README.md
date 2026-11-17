@@ -81,6 +81,24 @@ The same from the command line (the file must be inside `backend/`, e.g. `backen
 docker compose exec web python manage.py import_fleet media/filled.xlsx --dry-run
 ```
 
+## Telegram bot
+
+1. Create the company bot with @BotFather and copy its token.
+2. Put it in `.env` as `TELEGRAM_BOT_TOKEN=...` (never in git or chat).
+3. Start it. Locally it polls Telegram, so no public URL is needed:
+
+```bash
+docker compose --profile bot up -d bot
+```
+
+```bash
+docker compose logs -f bot
+```
+
+On the server it runs in webhook mode: set `BOT_MODE=webhook`, `BOT_WEBHOOK_URL=https://<domain>/bot/webhook` and a long random `BOT_WEBHOOK_SECRET`; the reverse proxy forwards `/bot/` to the bot container on port 8080. Telegram updates without the secret are refused.
+
+Running Django from `backend/venv` on your machine? Install the new requirements there too: `pip install -r backend/requirements.txt`.
+
 ## Admin panel
 
 http://localhost:8000/admin/ for superusers (the demo director is one). Changes made there are written to the audit log; the audit log itself is read-only.
@@ -92,3 +110,4 @@ http://localhost:8000/admin/ for superusers (the demo director is one). Changes 
 - [x] Day 3 — database design: 9 apps, PostGIS, rules enforced by DB constraints (`docs/day-03-database.md`). Approved.
 - [x] Day 4 — login by role, role-based menu and access, Uzbek/Russian interface with language switch
 - [x] Day 5 — admin panel; vehicle and driver lists; Excel import with preview (web + `import_fleet` command). Waiting for the company's filled template to load the real fleet.
+- [x] Day 6 — bot skeleton (aiogram 3, polling locally / webhook on the server), /start, language choice (uz/ru), /language, /help. Live test waits for the bot token.

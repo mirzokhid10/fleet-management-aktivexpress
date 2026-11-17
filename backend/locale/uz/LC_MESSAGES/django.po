@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-17 18:12+0500\n"
+"POT-Creation-Date: 2026-11-17 18:23+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -70,6 +70,46 @@ msgstr "Parolni ko'rsatish"
 #: apps/accounts/templates/accounts/login.html:55
 msgid "Drivers: use the company Telegram bot."
 msgstr "Haydovchilar: kompaniya Telegram botidan foydalaning."
+
+#: apps/bot/handlers.py:22
+#, python-format
+msgid "Hello, %(name)s! This is the Aktiv Fleet bot."
+msgstr "Assalomu alaykum, %(name)s! Bu Aktiv Fleet boti."
+
+#: apps/bot/handlers.py:24
+msgid ""
+"Here you will start and end shifts, share your location and send vehicle "
+"data."
+msgstr "Bu yerda smenani boshlaysiz va tugatasiz, joylashuvingizni ulashasiz va mashina ma'lumotlarini yuborasiz."
+
+#: apps/bot/handlers.py:25
+msgid "Commands: /help"
+msgstr "Buyruqlar: /help"
+
+#: apps/bot/handlers.py:31
+msgid "What the bot can do:"
+msgstr "Bot nimalar qila oladi:"
+
+#: apps/bot/handlers.py:32 apps/bot/setup.py:33
+msgid "start"
+msgstr "boshlash"
+
+#: apps/bot/handlers.py:33 apps/bot/setup.py:34
+msgid "change the language"
+msgstr "tilni o'zgartirish"
+
+#: apps/bot/handlers.py:34 apps/bot/setup.py:35
+msgid "this help"
+msgstr "ushbu yordam"
+
+#: apps/bot/handlers.py:65
+#, python-format
+msgid "Language: %(language)s"
+msgstr "Til: %(language)s"
+
+#: apps/bot/handlers.py:80
+msgid "I don't understand this yet. Send /help to see what I can do."
+msgstr "Buni hali tushunmayman. Nimalar qila olishimni ko'rish uchun /help yuboring."
 
 #: apps/core/menu.py:52
 msgid "Menu"

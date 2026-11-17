@@ -178,6 +178,24 @@ T: dict[str, tuple[str, str]] = {
         "%(nd)s yangi, %(ud)s o'zgargan.",
         "Импортировано: автомобили — %(nv)s новых, %(uv)s изменённых; водители — %(nd)s "
         "новых, %(ud)s изменённых."),
+    # Telegram bot (Day 6)
+    "Hello, %(name)s! This is the Aktiv Fleet bot.": (
+        "Assalomu alaykum, %(name)s! Bu Aktiv Fleet boti.",
+        "Здравствуйте, %(name)s! Это бот Aktiv Fleet."),
+    "Here you will start and end shifts, share your location and send vehicle data.": (
+        "Bu yerda smenani boshlaysiz va tugatasiz, joylashuvingizni ulashasiz va mashina "
+        "ma'lumotlarini yuborasiz.",
+        "Здесь вы будете начинать и заканчивать смену, делиться геопозицией и отправлять "
+        "данные по машине."),
+    "Commands: /help": ("Buyruqlar: /help", "Команды: /help"),
+    "What the bot can do:": ("Bot nimalar qila oladi:", "Что умеет бот:"),
+    "start": ("boshlash", "начать"),
+    "change the language": ("tilni o'zgartirish", "сменить язык"),
+    "this help": ("ushbu yordam", "эта справка"),
+    "Language: %(language)s": ("Til: %(language)s", "Язык: %(language)s"),
+    "I don't understand this yet. Send /help to see what I can do.": (
+        "Buni hali tushunmayman. Nimalar qila olishimni ko'rish uchun /help yuboring.",
+        "Пока не понимаю. Отправьте /help, чтобы увидеть, что я умею."),
 }
 
 LANGS = {"uz": 0, "ru": 1}

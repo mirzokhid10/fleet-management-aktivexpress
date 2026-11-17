@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     "apps.documents",
     "apps.audit",
     "apps.maintenance",
+    "apps.bot",
 ]
 
 AUTH_USER_MODEL = "accounts.User"
@@ -125,3 +126,13 @@ MEDIA_URL = "media/"
 MEDIA_ROOT = Path(env("DJANGO_MEDIA_ROOT", str(BASE_DIR / "media")))
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# --- Telegram bot (Day 6) ------------------------------------------------------
+# The token comes from @BotFather and lives only in .env.
+TELEGRAM_BOT_TOKEN = env("TELEGRAM_BOT_TOKEN", "")
+# polling: local development, no public URL needed.
+# webhook: on the server; Telegram calls BOT_WEBHOOK_URL, checked with BOT_WEBHOOK_SECRET.
+BOT_MODE = env("BOT_MODE", "polling")
+BOT_WEBHOOK_URL = env("BOT_WEBHOOK_URL", "")
+BOT_WEBHOOK_SECRET = env("BOT_WEBHOOK_SECRET", "")
+BOT_WEBHOOK_PORT = int(env("BOT_WEBHOOK_PORT", "8080"))
