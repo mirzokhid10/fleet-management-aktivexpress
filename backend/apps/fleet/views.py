@@ -1,0 +1,165 @@
+"""Vehicle and driver lists, and the Excel import (Day 5)."""
+
+from __future__ import annotations
+
+import datetime as dt
+import io
+import secrets
+from pathlib import Path
+from zipfile import BadZipFile
+
+from django.conf import settings
+from django.contrib import messages
+from django.core.paginator import Paginator
+from django.db.models import Q
+from django.http import FileResponse
+from django.shortcuts import redirect, render
+from django.utils import timezone
+from django.utils.translation import gettext as _
+from django.views.decorators.http import require_POST
+from openpyxl.utils.exceptions import InvalidFileException
+
+from apps.accounts.roles import MANAGERS, role_required
+from fleet_import.schema import DRIVERS, VEHICLES
+from fleet_import.workbook import build_workbook
+
+from .forms import ImportForm
+from .importer import CREATE, UPDATE, ImportBlocked, apply_import, plan_import
+from .models import Driver, Vehicle
+
+PAGE_SIZE = 50
+LICENCE_WARN_DAYS = 30
+SESSION_KEY = "fleet_import_token"
+
+
+def _search(request, queryset, fields):
+    """?q= matches any of fields; spaces are ignored for plates and phones."""
+    q = request.GET.get("q", "").strip()
+    if q:
+        cond = Q()
+        for name in fields:
+            value = q.replace(" ", "") if name in ("plate", "phone") else q
+            cond |= Q(**{f"{name}__icontains": value})
+        queryset = queryset.filter(cond)
+    return q, queryset
+
+
+@role_required(*MANAGERS)
+def vehicle_list(request):
+    q, qs = _search(request, Vehicle.objects.all(), ["plate", "brand", "model", "vin"])
+    page = Paginator(qs, PAGE_SIZE).get_page(request.GET.get("page"))
+    return render(request, "fleet/vehicle_list.html", {
+        "page_title": _("Vehicles"), "page": page, "q": q, "total": Vehicle.objects.count()})
+
+
+@role_required(*MANAGERS)
+def driver_list(request):
+    q, qs = _search(request, Driver.objects.select_related("default_vehicle"),
+                    ["full_name", "phone", "licence_number"])
+    page = Paginator(qs, PAGE_SIZE).get_page(request.GET.get("page"))
+    today = timezone.localdate()
+    for d in page:
+        d.licence_status = ("expired" if d.licence_expiry < today else
+                            "soon" if d.licence_expiry <= today + dt.timedelta(LICENCE_WARN_DAYS)
+                            else "ok")
+    return render(request, "fleet/driver_list.html", {
+        "page_title": _("Drivers"), "page": page, "q": q, "total": Driver.objects.count(),
+        "warn_days": LICENCE_WARN_DAYS})
+
+
+# --- import ----------------------------------------------------------------
+
+def _upload_dir() -> Path:
+    path = Path(settings.MEDIA_ROOT) / "imports"
+    path.mkdir(parents=True, exist_ok=True)
+    return path
+
+
+def _upload_path(token: str) -> Path:
+    return _upload_dir() / f"{token}.xlsx"
+
+
+def _column(sheet, name: str) -> str:
+    key = "default_plate" if name == "default_vehicle" else name
+    return sheet.field(key).header
+
+
+def _preview(plan) -> dict:
+    """Counts and per-row changes, with the column names people know from Excel."""
+    for sheet, rows in ((VEHICLES, plan.vehicles), (DRIVERS, plan.drivers)):
+        for r in rows:
+            r.changes_shown = {_column(sheet, k): v for k, v in r.changes.items()}
+    return {
+        "counts": [
+            (_("New vehicles"), plan.count("vehicles", CREATE)),
+            (_("Changed vehicles"), plan.count("vehicles", UPDATE)),
+            (_("New drivers"), plan.count("drivers", CREATE)),
+            (_("Changed drivers"), plan.count("drivers", UPDATE)),
+        ],
+        "sections": [(_("Vehicles"), plan.vehicles), (_("Drivers"), plan.drivers)],
+    }
+
+
+@role_required(*MANAGERS)
+def import_upload(request):
+    """Step 1: upload. Step 2 (same page): see what would change."""
+    form = ImportForm(request.POST or None, request.FILES or None)
+    context = {"page_title": _("Import from Excel"), "form": form}
+    if request.method == "POST" and form.is_valid():
+        token = secrets.token_urlsafe(16)
+        path = _upload_path(token)
+        with path.open("wb") as out:
+            for chunk in form.cleaned_data["file"].chunks():
+                out.write(chunk)
+        try:
+            plan = plan_import(path)
+        except (BadZipFile, InvalidFileException, KeyError, OSError):
+            path.unlink(missing_ok=True)
+            form.add_error("file", _("This is not a valid Excel file."))
+            return render(request, "fleet/import.html", context)
+        old = request.session.get(SESSION_KEY)
+        if old:
+            _upload_path(old).unlink(missing_ok=True)
+        if plan.ok:
+            request.session[SESSION_KEY] = token
+        else:
+            path.unlink(missing_ok=True)
+            request.session.pop(SESSION_KEY, None)
+        context.update(plan=plan, token=token if plan.ok else None,
+                       file_name=form.cleaned_data["file"].name, **_preview(plan))
+    return render(request, "fleet/import.html", context)
+
+
+@require_POST
+@role_required(*MANAGERS)
+def import_confirm(request):
+    """Step 3: write it. Only the file this user just previewed can be imported."""
+    token = request.POST.get("token", "")
+    if not token or request.session.get(SESSION_KEY) != token:
+        messages.error(request, _("The preview has expired. Upload the file again."))
+        return redirect("fleet:import")
+    path = _upload_path(token)
+    try:
+        plan = apply_import(path, actor=request.user)
+    except (ImportBlocked, FileNotFoundError):
+        messages.error(request, _("The data changed since the preview. Upload the file again."))
+        return redirect("fleet:import")
+    finally:
+        path.unlink(missing_ok=True)
+        request.session.pop(SESSION_KEY, None)
+    messages.success(request, _(
+        "Imported: %(nv)s new and %(uv)s changed vehicles, %(nd)s new and %(ud)s changed "
+        "drivers.") % {"nv": plan.count("vehicles", CREATE),
+                       "uv": plan.count("vehicles", UPDATE),
+                       "nd": plan.count("drivers", CREATE),
+                       "ud": plan.count("drivers", UPDATE)})
+    return redirect("fleet:vehicles")
+
+
+@role_required(*MANAGERS)
+def import_template(request):
+    """The blank company data template, always matching the current import."""
+    buffer = io.BytesIO()
+    build_workbook().save(buffer)
+    buffer.seek(0)
+    return FileResponse(buffer, as_attachment=True, filename="fleet-data-template.xlsx")

@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+<div class="mb-4 flex flex-wrap justify-end gap-3">
+  <a href="{% url 'fleet:import' %}" class="inline-flex items-center gap-2 rounded-lg bg-brand-500 px-4 py-2.5 text-sm font-medium text-white shadow-theme-xs hover:bg-brand-600">
+    {% translate "Import from Excel" %}
+  </a>
+</div>
+
+<div class="overflow-hidden rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/3">
+  {% translate "Plate, brand, model or VIN" as placeholder %}
+  {% include "partials/list_toolbar.html" with placeholder=placeholder %}
+  {% if page.object_list %}
+  <div class="max-w-full overflow-x-auto">
+    <table class="min-w-full" data-testid="vehicle-table">
+      <thead>
+        <tr class="border-b border-gray-100 dark:border-gray-800">
+          <th class="px-5 py-3 text-left text-xs font-medium text-gray-500 sm:px-6 dark:text-gray-400">{% translate "Plate" %}</th>
+          <th class="px-5 py-3 text-left text-xs font-medium text-gray-500 sm:px-6 dark:text-gray-400">{% translate "Vehicle" %}</th>
+          <th class="px-5 py-3 text-left text-xs font-medium text-gray-500 sm:px-6 dark:text-gray-400">{% translate "Year" %}</th>
+          <th class="px-5 py-3 text-left text-xs font-medium text-gray-500 sm:px-6 dark:text-gray-400">{% translate "Fuel" %}</th>
+          <th class="px-5 py-3 text-right text-xs font-medium text-gray-500 sm:px-6 dark:text-gray-400">{% translate "Norm / 100 km" %}</th>
+          <th class="px-5 py-3 text-right text-xs font-medium text-gray-500 sm:px-6 dark:text-gray-400">{% translate "Odometer, km" %}</th>
+          <th class="px-5 py-3 text-left text-xs font-medium text-gray-500 sm:px-6 dark:text-gray-400">{% translate "Status" %}</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+        {% for v in page %}
+        <tr data-plate="{{ v.plate }}">
+          <td class="whitespace-nowrap px-5 py-4 text-sm font-medium text-gray-800 sm:px-6 dark:text-white/90">{{ v.plate_display }}</td>
+          <td class="px-5 py-4 text-sm text-gray-500 sm:px-6 dark:text-gray-400">{{ v.brand }} {{ v.model }}<span class="block text-xs text-gray-400">{{ v.vin }}</span></td>
+          <td class="px-5 py-4 text-sm text-gray-500 sm:px-6 dark:text-gray-400">{{ v.year }}</td>
+          <td class="whitespace-nowrap px-5 py-4 text-sm text-gray-500 sm:px-6 dark:text-gray-400">{{ v.fuel_type }}{% if v.second_fuel_type %} + {{ v.second_fuel_type }}{% endif %}</td>
+          <td class="whitespace-nowrap px-5 py-4 text-right text-sm text-gray-500 sm:px-6 dark:text-gray-400">{{ v.fuel_norm|floatformat:"-2" }}{% if v.second_fuel_norm %} / {{ v.second_fuel_norm|floatformat:"-2" }}{% endif %}</td>
+          <td class="whitespace-nowrap px-5 py-4 text-right text-sm text-gray-500 sm:px-6 dark:text-gray-400">{{ v.odometer_km }}</td>
+          <td class="px-5 py-4 sm:px-6">
+            {% if v.is_active %}
+            <span class="rounded-full bg-green-50 px-2 py-0.5 text-xs font-medium text-green-700 dark:bg-green-500/15 dark:text-green-500">{% translate "Active" %}</span>
+            {% else %}
+            <span class="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600 dark:bg-white/5 dark:text-gray-400">{% translate "Inactive" %}</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% include "partials/pagination.html" %}
+  {% else %}
+  <p class="px-5 py-10 text-center text-sm text-gray-500 sm:px-6 dark:text-gray-400" data-testid="empty">
+    {% if q %}{% translate "Nothing found." %}{% else %}{% translate "No vehicles yet. Import them from the company data template." %}{% endif %}
+  </p>
+  {% endif %}
+</div>
+{% endblock %}

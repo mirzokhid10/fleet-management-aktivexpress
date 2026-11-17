@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+<div class="grid grid-cols-1 gap-6 xl:grid-cols-3">
+  <div class="rounded-2xl border border-gray-200 bg-white p-5 sm:p-6 xl:col-span-2 dark:border-gray-800 dark:bg-white/3">
+    <h3 class="mb-1 text-lg font-semibold text-gray-800 dark:text-white/90">{% translate "1. Upload the filled template" %}</h3>
+    <p class="mb-5 text-sm text-gray-500 dark:text-gray-400">
+      {% blocktranslate trimmed %}
+      Vehicles and drivers are read from the Vehicles and Drivers sheets. Nothing is saved until
+      you confirm. Rows are matched by plate and phone, so the same file can be imported again.
+      {% endblocktranslate %}
+    </p>
+    <form method="post" enctype="multipart/form-data" action="{% url 'fleet:import' %}" class="space-y-4" data-testid="upload-form">
+      {% csrf_token %}
+      <label for="id_file" class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">{{ form.file.label }}</label>
+      <input type="file" name="file" id="id_file" accept=".xlsx" required
+             class="h-11 w-full overflow-hidden rounded-lg border border-gray-300 bg-transparent text-sm text-gray-500 shadow-theme-xs file:mr-5 file:h-full file:border-0 file:border-r file:border-solid file:border-gray-200 file:bg-gray-50 file:px-3.5 file:text-sm file:text-gray-700 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-400 dark:file:border-gray-800 dark:file:bg-white/3 dark:file:text-gray-400" />
+      {% for error in form.file.errors %}
+      <p role="alert" class="text-sm text-red-600 dark:text-red-500">{{ error }}</p>
+      {% endfor %}
+      <button type="submit" class="inline-flex items-center gap-2 rounded-lg bg-brand-500 px-4 py-2.5 text-sm font-medium text-white shadow-theme-xs hover:bg-brand-600">
+        {% translate "Check the file" %}
+      </button>
+    </form>
+  </div>
+
+  <div class="rounded-2xl border border-gray-200 bg-white p-5 sm:p-6 dark:border-gray-800 dark:bg-white/3">
+    <h3 class="mb-1 text-lg font-semibold text-gray-800 dark:text-white/90">{% translate "Blank template" %}</h3>
+    <p class="mb-5 text-sm text-gray-500 dark:text-gray-400">{% translate "Headers in Uzbek and Russian, dropdowns for fixed choices, an example on row 2." %}</p>
+    <a href="{% url 'fleet:import_template' %}" class="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/3">
+      {% translate "Download template" %}
+    </a>
+  </div>
+</div>
+
+{% if plan %}
+<section class="mt-6 rounded-2xl border border-gray-200 bg-white p-5 sm:p-6 dark:border-gray-800 dark:bg-white/3" data-testid="preview">
+  <h3 class="mb-1 text-lg font-semibold text-gray-800 dark:text-white/90">{% translate "2. Check what will change" %}</h3>
+  <p class="mb-5 text-sm text-gray-500 dark:text-gray-400">{{ file_name }}</p>
+
+  {% if plan.issues %}
+  <div role="alert" class="mb-5 rounded-xl border border-red-500 bg-red-50 p-4 text-sm text-red-600 dark:border-red-500/30 dark:bg-red-500/15 dark:text-red-500">
+    {% blocktranslate with n=plan.issues|length trimmed %}
+    Problems found: {{ n }}. Nothing was imported. Fix the file in Excel and upload it again.
+    {% endblocktranslate %}
+  </div>
+  <div class="max-w-full overflow-x-auto">
+    <table class="min-w-full" data-testid="issues">
+      <thead>
+        <tr class="border-b border-gray-100 dark:border-gray-800">
+          <th class="py-3 pr-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400">{% translate "Sheet" %}</th>
+          <th class="py-3 pr-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400">{% translate "Row" %}</th>
+          <th class="py-3 pr-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400">{% translate "Column" %}</th>
+          <th class="py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400">{% translate "Problem" %}</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+        {% for issue in plan.issues %}
+        <tr>
+          <td class="py-3 pr-4 text-sm text-gray-800 dark:text-white/90">{{ issue.sheet }}</td>
+          <td class="py-3 pr-4 text-sm text-gray-500 dark:text-gray-400">{{ issue.row|default:"—" }}</td>
+          <td class="py-3 pr-4 text-sm text-gray-500 dark:text-gray-400">{{ issue.column|default:"—" }}</td>
+          <td class="py-3 text-sm text-gray-500 dark:text-gray-400">{{ issue.message }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="mb-6 grid grid-cols-2 gap-4 sm:grid-cols-4" data-testid="counts">
+    {% for label, value in counts %}
+    <div class="rounded-xl border border-gray-200 p-4 dark:border-gray-800">
+      <p class="text-xs text-gray-500 dark:text-gray-400">{{ label }}</p>
+      <p class="mt-1 text-title-sm font-semibold text-gray-800 dark:text-white/90">{{ value }}</p>
+    </div>
+    {% endfor %}
+  </div>
+
+  {% for title, rows in sections %}
+  <h4 class="mb-2 text-sm font-semibold text-gray-800 dark:text-white/90">{{ title }}</h4>
+  <div class="mb-6 max-w-full overflow-x-auto">
+    <table class="min-w-full">
+      <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+        {% for r in rows %}
+        <tr data-action="{{ r.action }}">
+          <td class="w-24 py-2.5 pr-4 align-top">
+            {% if r.action == "create" %}
+            <span class="rounded-full bg-green-50 px-2 py-0.5 text-xs font-medium text-green-700 dark:bg-green-500/15 dark:text-green-500">{% translate "New" %}</span>
+            {% elif r.action == "update" %}
+            <span class="rounded-full bg-amber-50 px-2 py-0.5 text-xs font-medium text-amber-700 dark:bg-amber-500/15 dark:text-amber-400">{% translate "Changed" %}</span>
+            {% else %}
+            <span class="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600 dark:bg-white/5 dark:text-gray-400">{% translate "Unchanged" %}</span>
+            {% endif %}
+          </td>
+          <td class="whitespace-nowrap py-2.5 pr-4 align-top text-sm font-medium text-gray-800 dark:text-white/90">{{ r.key }}</td>
+          <td class="py-2.5 pr-4 align-top text-sm text-gray-500 dark:text-gray-400">{{ r.label }}</td>
+          <td class="py-2.5 align-top text-xs text-gray-500 dark:text-gray-400">
+            {% for name, change in r.changes_shown.items %}
+            <span class="block">{{ name }}: <s>{{ change.0|default:"—" }}</s> → {{ change.1|default:"—" }}</span>
+            {% endfor %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endfor %}
+
+  <form method="post" action="{% url 'fleet:import_confirm' %}" class="flex flex-wrap items-center gap-3">
+    {% csrf_token %}
+    <input type="hidden" name="token" value="{{ token }}" />
+    <button type="submit" class="inline-flex items-center gap-2 rounded-lg bg-brand-500 px-4 py-2.5 text-sm font-medium text-white shadow-theme-xs hover:bg-brand-600" data-testid="confirm">
+      {% translate "3. Import" %}
+    </button>
+    <a href="{% url 'fleet:import' %}" class="text-sm text-gray-500 hover:underline dark:text-gray-400">{% translate "Cancel" %}</a>
+  </form>
+  {% endif %}
+</section>
+{% endif %}
+{% endblock %}

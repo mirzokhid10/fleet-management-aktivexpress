@@ -1,0 +1,10 @@
+{% if messages %}
+<div class="mb-6 space-y-3" data-testid="messages">
+  {% for message in messages %}
+  <div role="{% if message.level_tag == 'error' %}alert{% else %}status{% endif %}"
+       class="rounded-xl border p-4 text-sm {% if message.level_tag == 'error' %}border-red-500 bg-red-50 text-red-600 dark:border-red-500/30 dark:bg-red-500/15 dark:text-red-500{% else %}border-green-500 bg-green-50 text-green-700 dark:border-green-500/30 dark:bg-green-500/15 dark:text-green-500{% endif %}">
+    {{ message }}
+  </div>
+  {% endfor %}
+</div>
+{% endif %}

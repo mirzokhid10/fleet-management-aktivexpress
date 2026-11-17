@@ -23,15 +23,16 @@ def test_every_unbuilt_page_says_which_roadmap_day_builds_it():
             assert item.day and 1 <= item.day <= 70, item.key
 
 
-def test_only_dashboard_is_ready_on_day_2():
-    assert [item.key for item in ALL_ITEMS if item.ready] == ["dashboard"]
+def test_pages_ready_by_day_5():
+    assert [item.key for item in ALL_ITEMS if item.ready] == ["dashboard", "vehicles", "drivers"]
 
 
 def test_item_with_unknown_url_name_is_not_ready():
     assert MenuItem("x", "X", "grid", url_name="core:does-not-exist").ready is False
 
 
-@pytest.mark.parametrize("path, key", [("/", "dashboard"), ("/admin/", None), ("/nope/", None)])
+@pytest.mark.parametrize("path, key", [("/", "dashboard"), ("/admin/", None), ("/nope/", None),
+                                       ("/vehicles/import/", "vehicles")])
 def test_active_key(path, key):
     assert active_key(path) == key
 

@@ -102,6 +102,23 @@ def _cross_checks(report: Report) -> None:
         report.error(sheet, row["_row"], sheet.field(col).header,
                      f"vehicle {row[col]} is not in the Vehicles sheet")
 
+    vsheet = by_key["vehicles"]
+    for v in vehicles:
+        second, norm = v.get("second_fuel_type"), v.get("second_fuel_norm")
+        if second and norm is None:
+            report.error(vsheet, v["_row"], vsheet.field("second_fuel_norm").header,
+                         "is required when there is a second fuel")
+        elif norm is not None and not second:
+            report.error(vsheet, v["_row"], vsheet.field("second_fuel_type").header,
+                         "is required when there is a second fuel norm")
+        if second and second == v.get("fuel_type"):
+            report.error(vsheet, v["_row"], vsheet.field("second_fuel_type").header,
+                         "must differ from the first fuel")
+        for key in ("fuel_norm", "second_fuel_norm"):
+            if v.get(key) == 0:
+                report.error(vsheet, v["_row"], vsheet.field(key).header,
+                             "must be more than 0")
+
     for d in drivers:
         if d.get("default_plate") and d["default_plate"] not in plates:
             unknown_plate("drivers", "default_plate", d)

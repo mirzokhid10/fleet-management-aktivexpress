@@ -20,7 +20,7 @@ def test_dashboard_link_is_active_and_unbuilt_pages_are_disabled(login_as):
 
     assert 'data-menu="dashboard"' in html
     assert 'aria-current="page"' in html
-    assert html.count('aria-disabled="true"') == 11
+    assert html.count('aria-disabled="true"') == 9  # vehicles and drivers live since Day 5
     assert "12-kun" in html  # Live map, "Day 12" in Uzbek
 
 

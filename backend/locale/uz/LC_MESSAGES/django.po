@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-17 16:32+0500\n"
+"POT-Creation-Date: 2026-11-17 18:12+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -95,15 +95,15 @@ msgstr "Tasdiqlash"
 msgid "Fleet"
 msgstr "Avtopark"
 
-#: apps/core/menu.py:60
+#: apps/core/menu.py:60 apps/fleet/views.py:52 apps/fleet/views.py:99
 msgid "Vehicles"
 msgstr "Avtomobillar"
 
-#: apps/core/menu.py:61
+#: apps/core/menu.py:61 apps/fleet/views.py:66 apps/fleet/views.py:99
 msgid "Drivers"
 msgstr "Haydovchilar"
 
-#: apps/core/menu.py:62
+#: apps/core/menu.py:62 apps/fleet/templates/fleet/vehicle_list.html:22
 msgid "Fuel"
 msgstr "Yoqilg'i"
 
@@ -146,6 +146,225 @@ msgstr "Tizim holati"
 msgid "Open health check (JSON)"
 msgstr "Tekshiruvni ochish (JSON)"
 
+#: apps/fleet/forms.py:9
+msgid "Filled data template (.xlsx)"
+msgstr "To'ldirilgan shablon (.xlsx)"
+
+#: apps/fleet/forms.py:15
+#, python-format
+msgid "The file is larger than %(mb)s MB."
+msgstr "Fayl %(mb)s MB dan katta."
+
+#: apps/fleet/templates/fleet/driver_list.html:7
+#: apps/fleet/templates/fleet/vehicle_list.html:7 apps/fleet/views.py:107
+msgid "Import from Excel"
+msgstr "Exceldan import"
+
+#: apps/fleet/templates/fleet/driver_list.html:12
+msgid "Name, phone or licence"
+msgstr "F.I.Sh., telefon yoki guvohnoma"
+
+#: apps/fleet/templates/fleet/driver_list.html:19
+msgid "Full name"
+msgstr "F.I.Sh."
+
+#: apps/fleet/templates/fleet/driver_list.html:20
+msgid "Telegram phone"
+msgstr "Telegram telefoni"
+
+#: apps/fleet/templates/fleet/driver_list.html:21
+msgid "Licence"
+msgstr "Guvohnoma"
+
+#: apps/fleet/templates/fleet/driver_list.html:22
+msgid "Licence valid until"
+msgstr "Guvohnoma muddati"
+
+#: apps/fleet/templates/fleet/driver_list.html:23
+msgid "Main vehicle"
+msgstr "Asosiy mashina"
+
+#: apps/fleet/templates/fleet/driver_list.html:24
+msgid "Bot"
+msgstr "Bot"
+
+#: apps/fleet/templates/fleet/driver_list.html:36
+msgid "Expired"
+msgstr "Muddati o'tgan"
+
+#: apps/fleet/templates/fleet/driver_list.html:38
+#, python-format
+msgid "Within %(warn_days)s days"
+msgstr "%(warn_days)s kun ichida"
+
+#: apps/fleet/templates/fleet/driver_list.html:44
+msgid "Linked"
+msgstr "Ulangan"
+
+#: apps/fleet/templates/fleet/driver_list.html:46
+msgid "Not yet"
+msgstr "Hali yo'q"
+
+#: apps/fleet/templates/fleet/driver_list.html:57
+#: apps/fleet/templates/fleet/vehicle_list.html:52
+msgid "Nothing found."
+msgstr "Hech narsa topilmadi."
+
+#: apps/fleet/templates/fleet/driver_list.html:57
+msgid "No drivers yet. Import them from the company data template."
+msgstr "Hali haydovchilar yo'q. Ularni kompaniya ma'lumotlar shablonidan import qiling."
+
+#: apps/fleet/templates/fleet/import.html:7
+msgid "1. Upload the filled template"
+msgstr "1. To'ldirilgan shablonni yuklang"
+
+#: apps/fleet/templates/fleet/import.html:9
+msgid ""
+"Vehicles and drivers are read from the Vehicles and Drivers sheets. Nothing "
+"is saved until you confirm. Rows are matched by plate and phone, so the same "
+"file can be imported again."
+msgstr "Avtomobillar va haydovchilar Vehicles va Drivers varaqlaridan o'qiladi. Siz tasdiqlamaguningizcha hech narsa saqlanmaydi. Qatorlar davlat raqami va telefon bo'yicha solishtiriladi, shuning uchun bir faylni qayta import qilish mumkin."
+
+#: apps/fleet/templates/fleet/import.html:23
+msgid "Check the file"
+msgstr "Faylni tekshirish"
+
+#: apps/fleet/templates/fleet/import.html:29
+msgid "Blank template"
+msgstr "Bo'sh shablon"
+
+#: apps/fleet/templates/fleet/import.html:30
+msgid ""
+"Headers in Uzbek and Russian, dropdowns for fixed choices, an example on row "
+"2."
+msgstr "Sarlavhalar o'zbek va rus tillarida, tanlov ro'yxatlari, 2-qatorda namuna."
+
+#: apps/fleet/templates/fleet/import.html:32
+msgid "Download template"
+msgstr "Shablonni yuklab olish"
+
+#: apps/fleet/templates/fleet/import.html:39
+msgid "2. Check what will change"
+msgstr "2. Nima o'zgarishini tekshiring"
+
+#: apps/fleet/templates/fleet/import.html:44
+#, python-format
+msgid ""
+"Problems found: %(n)s. Nothing was imported. Fix the file in Excel and "
+"upload it again."
+msgstr "Topilgan xatolar: %(n)s. Hech narsa import qilinmadi. Faylni Excelda tuzatib, qayta yuklang."
+
+#: apps/fleet/templates/fleet/import.html:52
+msgid "Sheet"
+msgstr "Varaq"
+
+#: apps/fleet/templates/fleet/import.html:53
+msgid "Row"
+msgstr "Qator"
+
+#: apps/fleet/templates/fleet/import.html:54
+msgid "Column"
+msgstr "Ustun"
+
+#: apps/fleet/templates/fleet/import.html:55
+msgid "Problem"
+msgstr "Xato"
+
+#: apps/fleet/templates/fleet/import.html:89
+msgid "New"
+msgstr "Yangi"
+
+#: apps/fleet/templates/fleet/import.html:91
+msgid "Changed"
+msgstr "O'zgargan"
+
+#: apps/fleet/templates/fleet/import.html:93
+msgid "Unchanged"
+msgstr "O'zgarmagan"
+
+#: apps/fleet/templates/fleet/import.html:114
+msgid "3. Import"
+msgstr "3. Import qilish"
+
+#: apps/fleet/templates/fleet/import.html:116
+msgid "Cancel"
+msgstr "Bekor qilish"
+
+#: apps/fleet/templates/fleet/vehicle_list.html:12
+msgid "Plate, brand, model or VIN"
+msgstr "Raqam, marka, model yoki VIN"
+
+#: apps/fleet/templates/fleet/vehicle_list.html:19
+msgid "Plate"
+msgstr "Davlat raqami"
+
+#: apps/fleet/templates/fleet/vehicle_list.html:20
+msgid "Vehicle"
+msgstr "Avtomobil"
+
+#: apps/fleet/templates/fleet/vehicle_list.html:21
+msgid "Year"
+msgstr "Yili"
+
+#: apps/fleet/templates/fleet/vehicle_list.html:23
+msgid "Norm / 100 km"
+msgstr "Me'yor / 100 km"
+
+#: apps/fleet/templates/fleet/vehicle_list.html:24
+msgid "Odometer, km"
+msgstr "Probeg, km"
+
+#: apps/fleet/templates/fleet/vehicle_list.html:25
+msgid "Status"
+msgstr "Holati"
+
+#: apps/fleet/templates/fleet/vehicle_list.html:39
+msgid "Active"
+msgstr "Faol"
+
+#: apps/fleet/templates/fleet/vehicle_list.html:41
+msgid "Inactive"
+msgstr "Nofaol"
+
+#: apps/fleet/templates/fleet/vehicle_list.html:52
+msgid "No vehicles yet. Import them from the company data template."
+msgstr "Hali avtomobillar yo'q. Ularni kompaniya ma'lumotlar shablonidan import qiling."
+
+#: apps/fleet/views.py:94
+msgid "New vehicles"
+msgstr "Yangi avtomobillar"
+
+#: apps/fleet/views.py:95
+msgid "Changed vehicles"
+msgstr "O'zgargan avtomobillar"
+
+#: apps/fleet/views.py:96
+msgid "New drivers"
+msgstr "Yangi haydovchilar"
+
+#: apps/fleet/views.py:97
+msgid "Changed drivers"
+msgstr "O'zgargan haydovchilar"
+
+#: apps/fleet/views.py:118
+msgid "This is not a valid Excel file."
+msgstr "Bu yaroqli Excel fayli emas."
+
+#: apps/fleet/views.py:139
+msgid "The preview has expired. Upload the file again."
+msgstr "Ko'rib chiqish muddati tugadi. Faylni qayta yuklang."
+
+#: apps/fleet/views.py:145
+msgid "The data changed since the preview. Upload the file again."
+msgstr "Ko'rib chiqishdan keyin ma'lumotlar o'zgardi. Faylni qayta yuklang."
+
+#: apps/fleet/views.py:151
+#, python-format
+msgid ""
+"Imported: %(nv)s new and %(uv)s changed vehicles, %(nd)s new and %(ud)s "
+"changed drivers."
+msgstr "Import qilindi: avtomobillar — %(nv)s yangi, %(uv)s o'zgargan; haydovchilar — %(nd)s yangi, %(ud)s o'zgargan."
+
 #: templates/403.html:3 templates/403.html:5
 msgid "No access"
 msgstr "Ruxsat yo'q"
@@ -154,7 +373,7 @@ msgstr "Ruxsat yo'q"
 msgid "Your role cannot open this page."
 msgstr "Sizning lavozimingiz bu sahifani ocha olmaydi."
 
-#: templates/403.html:9 templates/partials/header.html:59
+#: templates/403.html:9 templates/partials/header.html:65
 msgid "Log out"
 msgstr "Chiqish"
 
@@ -177,6 +396,41 @@ msgstr "Yon panelni ochish/yopish"
 #: templates/partials/header.html:29
 msgid "Toggle dark mode"
 msgstr "Tungi rejim"
+
+#: templates/partials/header.html:58
+msgid "Admin panel"
+msgstr "Admin panel"
+
+#: templates/partials/list_toolbar.html:5
+msgid "Search"
+msgstr "Qidirish"
+
+#: templates/partials/list_toolbar.html:10
+#, python-format
+msgid "%(shown)s of %(total)s"
+msgstr "%(total)s tadan %(shown)s"
+
+#: templates/partials/list_toolbar.html:10
+#, python-format
+msgid "Total: %(total)s"
+msgstr "Jami: %(total)s"
+
+#: templates/partials/pagination.html:3
+msgid "Pages"
+msgstr "Sahifalar"
+
+#: templates/partials/pagination.html:5
+msgid "Previous"
+msgstr "Oldingi"
+
+#: templates/partials/pagination.html:7
+#, python-format
+msgid "Page %(n)s of %(total)s"
+msgstr "%(n)s / %(total)s sahifa"
+
+#: templates/partials/pagination.html:9
+msgid "Next"
+msgstr "Keyingi"
 
 #: templates/partials/sidebar.html:2
 msgid "Skip to the main content"

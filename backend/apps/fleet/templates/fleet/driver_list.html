@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+<div class="mb-4 flex flex-wrap justify-end gap-3">
+  <a href="{% url 'fleet:import' %}" class="inline-flex items-center gap-2 rounded-lg bg-brand-500 px-4 py-2.5 text-sm font-medium text-white shadow-theme-xs hover:bg-brand-600">
+    {% translate "Import from Excel" %}
+  </a>
+</div>
+
+<div class="overflow-hidden rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/3">
+  {% translate "Name, phone or licence" as placeholder %}
+  {% include "partials/list_toolbar.html" with placeholder=placeholder %}
+  {% if page.object_list %}
+  <div class="max-w-full overflow-x-auto">
+    <table class="min-w-full" data-testid="driver-table">
+      <thead>
+        <tr class="border-b border-gray-100 dark:border-gray-800">
+          <th class="px-5 py-3 text-left text-xs font-medium text-gray-500 sm:px-6 dark:text-gray-400">{% translate "Full name" %}</th>
+          <th class="px-5 py-3 text-left text-xs font-medium text-gray-500 sm:px-6 dark:text-gray-400">{% translate "Telegram phone" %}</th>
+          <th class="px-5 py-3 text-left text-xs font-medium text-gray-500 sm:px-6 dark:text-gray-400">{% translate "Licence" %}</th>
+          <th class="px-5 py-3 text-left text-xs font-medium text-gray-500 sm:px-6 dark:text-gray-400">{% translate "Licence valid until" %}</th>
+          <th class="px-5 py-3 text-left text-xs font-medium text-gray-500 sm:px-6 dark:text-gray-400">{% translate "Main vehicle" %}</th>
+          <th class="px-5 py-3 text-left text-xs font-medium text-gray-500 sm:px-6 dark:text-gray-400">{% translate "Bot" %}</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+        {% for d in page %}
+        <tr data-phone="{{ d.phone }}">
+          <td class="px-5 py-4 text-sm font-medium text-gray-800 sm:px-6 dark:text-white/90">{{ d.full_name }}</td>
+          <td class="whitespace-nowrap px-5 py-4 text-sm text-gray-500 sm:px-6 dark:text-gray-400">{{ d.phone }}</td>
+          <td class="whitespace-nowrap px-5 py-4 text-sm text-gray-500 sm:px-6 dark:text-gray-400">{{ d.licence_number }}{% if d.licence_categories %}<span class="block text-xs text-gray-400">{{ d.licence_categories }}</span>{% endif %}</td>
+          <td class="whitespace-nowrap px-5 py-4 text-sm sm:px-6" data-licence="{{ d.licence_status }}">
+            <span class="text-gray-500 dark:text-gray-400">{{ d.licence_expiry|date:"d.m.Y" }}</span>
+            {% if d.licence_status == "expired" %}
+            <span class="ml-1 rounded-full bg-red-50 px-2 py-0.5 text-xs font-medium text-red-600 dark:bg-red-500/15 dark:text-red-500">{% translate "Expired" %}</span>
+            {% elif d.licence_status == "soon" %}
+            <span class="ml-1 rounded-full bg-amber-50 px-2 py-0.5 text-xs font-medium text-amber-700 dark:bg-amber-500/15 dark:text-amber-400">{% blocktranslate %}Within {{ warn_days }} days{% endblocktranslate %}</span>
+            {% endif %}
+          </td>
+          <td class="whitespace-nowrap px-5 py-4 text-sm text-gray-500 sm:px-6 dark:text-gray-400">{{ d.default_vehicle.plate_display|default:"—" }}</td>
+          <td class="px-5 py-4 sm:px-6">
+            {% if d.user_id %}
+            <span class="rounded-full bg-green-50 px-2 py-0.5 text-xs font-medium text-green-700 dark:bg-green-500/15 dark:text-green-500">{% translate "Linked" %}</span>
+            {% else %}
+            <span class="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600 dark:bg-white/5 dark:text-gray-400">{% translate "Not yet" %}</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% include "partials/pagination.html" %}
+  {% else %}
+  <p class="px-5 py-10 text-center text-sm text-gray-500 sm:px-6 dark:text-gray-400" data-testid="empty">
+    {% if q %}{% translate "Nothing found." %}{% else %}{% translate "No drivers yet. Import them from the company data template." %}{% endif %}
+  </p>
+  {% endif %}
+</div>
+{% endblock %}

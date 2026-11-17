@@ -12,7 +12,9 @@ from django.core.management.base import BaseCommand, CommandError
 from apps.accounts.models import User
 
 DEMO_USERS = [
-    ("demo-director", "Dilshod", "Rahimov", User.Role.DIRECTOR, "uz", {}),
+    # The director runs the admin panel (Day 5).
+    ("demo-director", "Dilshod", "Rahimov", User.Role.DIRECTOR, "uz",
+     {"is_staff": True, "is_superuser": True}),
     ("demo-dispatcher", "Malika", "Karimova", User.Role.DISPATCHER, "uz",
      {"approves_daily": True, "approves_fuel": True, "approves_service": True}),
     ("demo-storekeeper", "Sergey", "Ivanov", User.Role.STOREKEEPER, "ru", {"approves_parts": True}),

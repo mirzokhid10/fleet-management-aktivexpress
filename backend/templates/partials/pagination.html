@@ -1,0 +1,12 @@
+{% load i18n %}
+{% if page.paginator.num_pages > 1 %}
+<nav class="flex items-center justify-between border-t border-gray-100 px-5 py-4 sm:px-6 dark:border-gray-800" aria-label="{% translate 'Pages' %}">
+  {% if page.has_previous %}
+  <a href="?{% if q %}q={{ q|urlencode }}&{% endif %}page={{ page.previous_page_number }}" class="rounded-lg border border-gray-300 bg-white px-3.5 py-2 text-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400">{% translate "Previous" %}</a>
+  {% else %}<span></span>{% endif %}
+  <span class="text-sm text-gray-500 dark:text-gray-400">{% blocktranslate with n=page.number total=page.paginator.num_pages %}Page {{ n }} of {{ total }}{% endblocktranslate %}</span>
+  {% if page.has_next %}
+  <a href="?{% if q %}q={{ q|urlencode }}&{% endif %}page={{ page.next_page_number }}" class="rounded-lg border border-gray-300 bg-white px-3.5 py-2 text-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400">{% translate "Next" %}</a>
+  {% else %}<span></span>{% endif %}
+</nav>
+{% endif %}

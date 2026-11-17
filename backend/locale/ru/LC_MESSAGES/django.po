@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-17 16:32+0500\n"
+"POT-Creation-Date: 2026-11-17 18:12+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -97,15 +97,15 @@ msgstr "Подтверждения"
 msgid "Fleet"
 msgstr "Автопарк"
 
-#: apps/core/menu.py:60
+#: apps/core/menu.py:60 apps/fleet/views.py:52 apps/fleet/views.py:99
 msgid "Vehicles"
 msgstr "Автомобили"
 
-#: apps/core/menu.py:61
+#: apps/core/menu.py:61 apps/fleet/views.py:66 apps/fleet/views.py:99
 msgid "Drivers"
 msgstr "Водители"
 
-#: apps/core/menu.py:62
+#: apps/core/menu.py:62 apps/fleet/templates/fleet/vehicle_list.html:22
 msgid "Fuel"
 msgstr "Топливо"
 
@@ -148,6 +148,225 @@ msgstr "Состояние системы"
 msgid "Open health check (JSON)"
 msgstr "Открыть проверку (JSON)"
 
+#: apps/fleet/forms.py:9
+msgid "Filled data template (.xlsx)"
+msgstr "Заполненный шаблон (.xlsx)"
+
+#: apps/fleet/forms.py:15
+#, python-format
+msgid "The file is larger than %(mb)s MB."
+msgstr "Файл больше %(mb)s МБ."
+
+#: apps/fleet/templates/fleet/driver_list.html:7
+#: apps/fleet/templates/fleet/vehicle_list.html:7 apps/fleet/views.py:107
+msgid "Import from Excel"
+msgstr "Импорт из Excel"
+
+#: apps/fleet/templates/fleet/driver_list.html:12
+msgid "Name, phone or licence"
+msgstr "Ф.И.О., телефон или права"
+
+#: apps/fleet/templates/fleet/driver_list.html:19
+msgid "Full name"
+msgstr "Ф.И.О."
+
+#: apps/fleet/templates/fleet/driver_list.html:20
+msgid "Telegram phone"
+msgstr "Телефон в Telegram"
+
+#: apps/fleet/templates/fleet/driver_list.html:21
+msgid "Licence"
+msgstr "Права"
+
+#: apps/fleet/templates/fleet/driver_list.html:22
+msgid "Licence valid until"
+msgstr "Права действуют до"
+
+#: apps/fleet/templates/fleet/driver_list.html:23
+msgid "Main vehicle"
+msgstr "Основная машина"
+
+#: apps/fleet/templates/fleet/driver_list.html:24
+msgid "Bot"
+msgstr "Бот"
+
+#: apps/fleet/templates/fleet/driver_list.html:36
+msgid "Expired"
+msgstr "Просрочены"
+
+#: apps/fleet/templates/fleet/driver_list.html:38
+#, python-format
+msgid "Within %(warn_days)s days"
+msgstr "В течение %(warn_days)s дней"
+
+#: apps/fleet/templates/fleet/driver_list.html:44
+msgid "Linked"
+msgstr "Подключён"
+
+#: apps/fleet/templates/fleet/driver_list.html:46
+msgid "Not yet"
+msgstr "Ещё нет"
+
+#: apps/fleet/templates/fleet/driver_list.html:57
+#: apps/fleet/templates/fleet/vehicle_list.html:52
+msgid "Nothing found."
+msgstr "Ничего не найдено."
+
+#: apps/fleet/templates/fleet/driver_list.html:57
+msgid "No drivers yet. Import them from the company data template."
+msgstr "Водителей пока нет. Импортируйте их из шаблона данных компании."
+
+#: apps/fleet/templates/fleet/import.html:7
+msgid "1. Upload the filled template"
+msgstr "1. Загрузите заполненный шаблон"
+
+#: apps/fleet/templates/fleet/import.html:9
+msgid ""
+"Vehicles and drivers are read from the Vehicles and Drivers sheets. Nothing "
+"is saved until you confirm. Rows are matched by plate and phone, so the same "
+"file can be imported again."
+msgstr "Автомобили и водители читаются с листов Vehicles и Drivers. Ничего не сохраняется, пока вы не подтвердите. Строки сопоставляются по госномеру и телефону, поэтому тот же файл можно импортировать повторно."
+
+#: apps/fleet/templates/fleet/import.html:23
+msgid "Check the file"
+msgstr "Проверить файл"
+
+#: apps/fleet/templates/fleet/import.html:29
+msgid "Blank template"
+msgstr "Пустой шаблон"
+
+#: apps/fleet/templates/fleet/import.html:30
+msgid ""
+"Headers in Uzbek and Russian, dropdowns for fixed choices, an example on row "
+"2."
+msgstr "Заголовки на узбекском и русском, выпадающие списки, пример во 2-й строке."
+
+#: apps/fleet/templates/fleet/import.html:32
+msgid "Download template"
+msgstr "Скачать шаблон"
+
+#: apps/fleet/templates/fleet/import.html:39
+msgid "2. Check what will change"
+msgstr "2. Проверьте, что изменится"
+
+#: apps/fleet/templates/fleet/import.html:44
+#, python-format
+msgid ""
+"Problems found: %(n)s. Nothing was imported. Fix the file in Excel and "
+"upload it again."
+msgstr "Найдено ошибок: %(n)s. Ничего не импортировано. Исправьте файл в Excel и загрузите снова."
+
+#: apps/fleet/templates/fleet/import.html:52
+msgid "Sheet"
+msgstr "Лист"
+
+#: apps/fleet/templates/fleet/import.html:53
+msgid "Row"
+msgstr "Строка"
+
+#: apps/fleet/templates/fleet/import.html:54
+msgid "Column"
+msgstr "Столбец"
+
+#: apps/fleet/templates/fleet/import.html:55
+msgid "Problem"
+msgstr "Ошибка"
+
+#: apps/fleet/templates/fleet/import.html:89
+msgid "New"
+msgstr "Новый"
+
+#: apps/fleet/templates/fleet/import.html:91
+msgid "Changed"
+msgstr "Изменён"
+
+#: apps/fleet/templates/fleet/import.html:93
+msgid "Unchanged"
+msgstr "Без изменений"
+
+#: apps/fleet/templates/fleet/import.html:114
+msgid "3. Import"
+msgstr "3. Импортировать"
+
+#: apps/fleet/templates/fleet/import.html:116
+msgid "Cancel"
+msgstr "Отмена"
+
+#: apps/fleet/templates/fleet/vehicle_list.html:12
+msgid "Plate, brand, model or VIN"
+msgstr "Госномер, марка, модель или VIN"
+
+#: apps/fleet/templates/fleet/vehicle_list.html:19
+msgid "Plate"
+msgstr "Госномер"
+
+#: apps/fleet/templates/fleet/vehicle_list.html:20
+msgid "Vehicle"
+msgstr "Автомобиль"
+
+#: apps/fleet/templates/fleet/vehicle_list.html:21
+msgid "Year"
+msgstr "Год"
+
+#: apps/fleet/templates/fleet/vehicle_list.html:23
+msgid "Norm / 100 km"
+msgstr "Норма / 100 км"
+
+#: apps/fleet/templates/fleet/vehicle_list.html:24
+msgid "Odometer, km"
+msgstr "Пробег, км"
+
+#: apps/fleet/templates/fleet/vehicle_list.html:25
+msgid "Status"
+msgstr "Статус"
+
+#: apps/fleet/templates/fleet/vehicle_list.html:39
+msgid "Active"
+msgstr "Активен"
+
+#: apps/fleet/templates/fleet/vehicle_list.html:41
+msgid "Inactive"
+msgstr "Неактивен"
+
+#: apps/fleet/templates/fleet/vehicle_list.html:52
+msgid "No vehicles yet. Import them from the company data template."
+msgstr "Автомобилей пока нет. Импортируйте их из шаблона данных компании."
+
+#: apps/fleet/views.py:94
+msgid "New vehicles"
+msgstr "Новые автомобили"
+
+#: apps/fleet/views.py:95
+msgid "Changed vehicles"
+msgstr "Изменённые автомобили"
+
+#: apps/fleet/views.py:96
+msgid "New drivers"
+msgstr "Новые водители"
+
+#: apps/fleet/views.py:97
+msgid "Changed drivers"
+msgstr "Изменённые водители"
+
+#: apps/fleet/views.py:118
+msgid "This is not a valid Excel file."
+msgstr "Это не файл Excel."
+
+#: apps/fleet/views.py:139
+msgid "The preview has expired. Upload the file again."
+msgstr "Предпросмотр устарел. Загрузите файл снова."
+
+#: apps/fleet/views.py:145
+msgid "The data changed since the preview. Upload the file again."
+msgstr "Данные изменились после предпросмотра. Загрузите файл снова."
+
+#: apps/fleet/views.py:151
+#, python-format
+msgid ""
+"Imported: %(nv)s new and %(uv)s changed vehicles, %(nd)s new and %(ud)s "
+"changed drivers."
+msgstr "Импортировано: автомобили — %(nv)s новых, %(uv)s изменённых; водители — %(nd)s новых, %(ud)s изменённых."
+
 #: templates/403.html:3 templates/403.html:5
 msgid "No access"
 msgstr "Нет доступа"
@@ -156,7 +375,7 @@ msgstr "Нет доступа"
 msgid "Your role cannot open this page."
 msgstr "Ваша роль не позволяет открыть эту страницу."
 
-#: templates/403.html:9 templates/partials/header.html:59
+#: templates/403.html:9 templates/partials/header.html:65
 msgid "Log out"
 msgstr "Выйти"
 
@@ -179,6 +398,41 @@ msgstr "Показать/скрыть боковую панель"
 #: templates/partials/header.html:29
 msgid "Toggle dark mode"
 msgstr "Тёмная тема"
+
+#: templates/partials/header.html:58
+msgid "Admin panel"
+msgstr "Админ-панель"
+
+#: templates/partials/list_toolbar.html:5
+msgid "Search"
+msgstr "Поиск"
+
+#: templates/partials/list_toolbar.html:10
+#, python-format
+msgid "%(shown)s of %(total)s"
+msgstr "%(shown)s из %(total)s"
+
+#: templates/partials/list_toolbar.html:10
+#, python-format
+msgid "Total: %(total)s"
+msgstr "Всего: %(total)s"
+
+#: templates/partials/pagination.html:3
+msgid "Pages"
+msgstr "Страницы"
+
+#: templates/partials/pagination.html:5
+msgid "Previous"
+msgstr "Назад"
+
+#: templates/partials/pagination.html:7
+#, python-format
+msgid "Page %(n)s of %(total)s"
+msgstr "Страница %(n)s из %(total)s"
+
+#: templates/partials/pagination.html:9
+msgid "Next"
+msgstr "Вперёд"
 
 #: templates/partials/sidebar.html:2
 msgid "Skip to the main content"

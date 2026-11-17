@@ -57,8 +57,8 @@ MENU: tuple[MenuGroup, ...] = (
         MenuItem("approvals", _("Approvals"), "check", day=21),
     )),
     MenuGroup(_("Fleet"), (
-        MenuItem("vehicles", _("Vehicles"), "truck", day=5, roles=MANAGERS),
-        MenuItem("drivers", _("Drivers"), "users", day=5, roles=MANAGERS),
+        MenuItem("vehicles", _("Vehicles"), "truck", "fleet:vehicles", roles=MANAGERS),
+        MenuItem("drivers", _("Drivers"), "users", "fleet:drivers", roles=MANAGERS),
         MenuItem("fuel", _("Fuel"), "fuel", day=28, roles=MANAGERS),
         # Storekeeper doubles as mechanic in V1 (kickoff Q3).
         MenuItem("maintenance", _("Maintenance"), "wrench", day=37),
