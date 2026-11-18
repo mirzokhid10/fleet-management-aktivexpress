@@ -49,8 +49,11 @@ def driver(**kw):
 def shift(**kw):
     from apps.fleet.models import Shift
 
-    kw.setdefault("driver", driver())
-    kw.setdefault("vehicle", vehicle())
+    # Not setdefault(…, driver()): that would build a spare one even when given.
+    if "driver" not in kw:
+        kw["driver"] = driver()
+    if "vehicle" not in kw:
+        kw["vehicle"] = vehicle()
     kw.setdefault("started_at", timezone.now() - dt.timedelta(hours=2))
     return Shift.objects.create(**kw)
 

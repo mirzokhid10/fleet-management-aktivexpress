@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-17 22:12+0500\n"
+"POT-Creation-Date: 2026-11-18 14:01+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: apps/accounts/forms.py:9
+#: apps/accounts/forms.py:9 apps/accounts/templates/accounts/login.html:63
 msgid "Keep me logged in"
 msgstr "Meni eslab qol"
 
@@ -42,11 +42,13 @@ msgid "Storekeeper"
 msgstr "Omborchi"
 
 #: apps/accounts/models.py:19 apps/bot/templates/bot/request_list.html:27
+#: apps/fleet/templates/fleet/shift_list.html:42
 msgid "Driver"
 msgstr "Haydovchi"
 
 #: apps/accounts/templates/accounts/login.html:4
 #: apps/accounts/templates/accounts/login.html:8
+#: apps/accounts/templates/accounts/login.html:67
 msgid "Sign in"
 msgstr "Kirish"
 
@@ -67,6 +69,22 @@ msgstr "Haydovchilar: kompaniya Telegram botidan foydalaning."
 #: apps/accounts/templates/accounts/login.html:24
 msgid "Administrator sign-in with password"
 msgstr "Administrator uchun parol bilan kirish"
+
+#: apps/accounts/templates/accounts/login.html:39
+msgid "Username"
+msgstr "Login"
+
+#: apps/accounts/templates/accounts/login.html:47
+msgid "Password"
+msgstr "Parol"
+
+#: apps/accounts/templates/accounts/login.html:52
+msgid "Hide password"
+msgstr "Parolni yashirish"
+
+#: apps/accounts/templates/accounts/login.html:52
+msgid "Show password"
+msgstr "Parolni ko'rsatish"
 
 #: apps/accounts/templates/accounts/telegram_wait.html:12
 msgid "Open the bot: tap the button, or scan the code with your phone."
@@ -100,119 +118,127 @@ msgstr "Qayta urinish"
 msgid "Back"
 msgstr "Orqaga"
 
-#: apps/bot/handlers.py:27
+#: apps/bot/handlers.py:31
 #, python-format
 msgid "Hello, %(name)s! This is the Aktiv Fleet bot."
 msgstr "Assalomu alaykum, %(name)s! Bu Aktiv Fleet boti."
 
-#: apps/bot/handlers.py:29
+#: apps/bot/handlers.py:33
 msgid ""
 "Here you will start and end shifts, share your location and send vehicle "
 "data."
 msgstr "Bu yerda smenani boshlaysiz va tugatasiz, joylashuvingizni ulashasiz va mashina ma'lumotlarini yuborasiz."
 
-#: apps/bot/handlers.py:30
+#: apps/bot/handlers.py:34
 msgid "Commands: /help"
 msgstr "Buyruqlar: /help"
 
-#: apps/bot/handlers.py:36
+#: apps/bot/handlers.py:40
 msgid "What the bot can do:"
 msgstr "Bot nimalar qila oladi:"
 
-#: apps/bot/handlers.py:37 apps/bot/setup.py:33
+#: apps/bot/handlers.py:41 apps/bot/setup.py:33
 msgid "start"
 msgstr "boshlash"
 
-#: apps/bot/handlers.py:38 apps/bot/setup.py:34
+#: apps/bot/handlers.py:42 apps/bot/setup.py:34
+msgid "start a shift"
+msgstr "smenani boshlash"
+
+#: apps/bot/handlers.py:43 apps/bot/setup.py:35
+msgid "end the shift"
+msgstr "smenani tugatish"
+
+#: apps/bot/handlers.py:44 apps/bot/setup.py:36
 msgid "change the language"
 msgstr "tilni o'zgartirish"
 
-#: apps/bot/handlers.py:39 apps/bot/setup.py:35
+#: apps/bot/handlers.py:45 apps/bot/setup.py:37
 msgid "this help"
 msgstr "ushbu yordam"
 
-#: apps/bot/handlers.py:44
+#: apps/bot/handlers.py:50
 msgid ""
 "To start, send your phone number with the button below. It must be the "
 "number the company has for you."
 msgstr "Boshlash uchun pastdagi tugma orqali telefon raqamingizni yuboring. Bu kompaniyadagi raqamingiz bo'lishi kerak."
 
-#: apps/bot/handlers.py:58 apps/bot/handlers.py:121
+#: apps/bot/handlers.py:64 apps/bot/handlers.py:127
 msgid ""
 "Your registration is waiting for a manager to confirm it. I will write to "
 "you here."
 msgstr "Ro'yxatdan o'tishingiz rahbar tasdig'ini kutmoqda. Shu yerda sizga yozaman."
 
-#: apps/bot/handlers.py:90
+#: apps/bot/handlers.py:96
 #, python-format
 msgid "Language: %(language)s"
 msgstr "Til: %(language)s"
 
-#: apps/bot/handlers.py:107
+#: apps/bot/handlers.py:113
 msgid "Please send your own number with the button."
 msgstr "Iltimos, tugma orqali o'z raqamingizni yuboring."
 
-#: apps/bot/handlers.py:113
+#: apps/bot/handlers.py:119
 msgid "Only Uzbek phone numbers (+998) can be registered."
 msgstr "Faqat O'zbekiston raqamlari (+998) bilan ro'yxatdan o'tish mumkin."
 
-#: apps/bot/handlers.py:119
+#: apps/bot/handlers.py:125
 msgid "You are already registered."
 msgstr "Siz allaqachon ro'yxatdan o'tgansiz."
 
-#: apps/bot/handlers.py:124
+#: apps/bot/handlers.py:130
 #, python-format
 msgid ""
 "The number %(phone)s is not in the company list. Ask the dispatcher to add "
 "you, then send it again with /start."
 msgstr "%(phone)s raqami kompaniya ro'yxatida yo'q. Dispetcherdan sizni qo'shishini so'rang, keyin /start orqali qayta yuboring."
 
-#: apps/bot/handlers.py:128
+#: apps/bot/handlers.py:134
 msgid ""
 "Thank you! A manager will confirm your registration soon. I will write to "
 "you here."
 msgstr "Rahmat! Rahbar tez orada ro'yxatdan o'tishingizni tasdiqlaydi. Shu yerda sizga yozaman."
 
-#: apps/bot/handlers.py:140
+#: apps/bot/handlers.py:146
 msgid "This sign-in link has expired. Start again on the website."
 msgstr "Bu kirish havolasining muddati tugagan. Saytda qaytadan boshlang."
 
-#: apps/bot/handlers.py:141
+#: apps/bot/handlers.py:147 apps/bot/shift_handlers.py:83
 msgid ""
 "You are not registered yet. Send /start and share your phone number first."
 msgstr "Siz hali ro'yxatdan o'tmagansiz. Avval /start yuboring va telefon raqamingizni ulashing."
 
-#: apps/bot/handlers.py:143
+#: apps/bot/handlers.py:149
 msgid "Your account cannot use the web app. Drivers work in this bot only."
 msgstr "Hisobingiz veb-ilovadan foydalana olmaydi. Haydovchilar faqat shu botda ishlaydi."
 
-#: apps/bot/handlers.py:144
+#: apps/bot/handlers.py:150
 msgid "Wrong number. The sign-in was cancelled. Start again on the website."
 msgstr "Noto'g'ri raqam. Kirish bekor qilindi. Saytda qaytadan boshlang."
 
-#: apps/bot/handlers.py:146
+#: apps/bot/handlers.py:152
 msgid ""
 "The sign-in was cancelled. If you did not try to sign in, tell the director."
 msgstr "Kirish bekor qilindi. Agar siz kirmoqchi bo'lmagan bo'lsangiz, direktorga xabar bering."
 
-#: apps/bot/handlers.py:158
+#: apps/bot/handlers.py:164
 msgid "Sign in to the Aktiv Fleet web app?"
 msgstr "Aktiv Fleet veb-ilovasiga kirasizmi?"
 
-#: apps/bot/handlers.py:160
+#: apps/bot/handlers.py:166
 #, python-format
 msgid "Browser: %(browser)s"
 msgstr "Brauzer: %(browser)s"
 
-#: apps/bot/handlers.py:161
+#: apps/bot/handlers.py:167
 msgid "Tap the number shown on your screen."
 msgstr "Ekraningizda ko'rsatilgan raqamni bosing."
 
-#: apps/bot/handlers.py:174
+#: apps/bot/handlers.py:180
 msgid "You are signed in. You can go back to the browser."
 msgstr "Siz tizimga kirdingiz. Brauzerga qaytishingiz mumkin."
 
-#: apps/bot/handlers.py:182
+#: apps/bot/handlers.py:188
 msgid "I don't understand this yet. Send /help to see what I can do."
 msgstr "Buni hali tushunmayman. Nimalar qila olishimni ko'rish uchun /help yuboring."
 
@@ -223,6 +249,14 @@ msgstr "Telefon raqamimni yuborish"
 #: apps/bot/keyboards.py:30
 msgid "It wasn't me"
 msgstr "Bu men emasman"
+
+#: apps/bot/keyboards.py:53
+msgid "Yes, end the shift"
+msgstr "Ha, smenani tugatish"
+
+#: apps/bot/keyboards.py:55
+msgid "No, keep working"
+msgstr "Yo'q, ishni davom ettiraman"
 
 #: apps/bot/models.py:47
 msgid "Waiting"
@@ -244,9 +278,94 @@ msgstr "Bizning xodim emas"
 msgid "The number belongs to someone else"
 msgstr "Raqam boshqa odamga tegishli"
 
-#: apps/bot/models.py:54 apps/core/menu.py:70
+#: apps/bot/models.py:54 apps/core/menu.py:72
 msgid "Other"
 msgstr "Boshqa"
+
+#: apps/bot/shift_handlers.py:45
+#, python-format
+msgid "%(hours)s h %(minutes)s min"
+msgstr "%(hours)s soat %(minutes)s daqiqa"
+
+#: apps/bot/shift_handlers.py:46
+#, python-format
+msgid "%(minutes)s min"
+msgstr "%(minutes)s daqiqa"
+
+#: apps/bot/shift_handlers.py:50
+#, python-format
+msgid ""
+"You are already on shift with %(vehicle)s since %(time)s. Send /end_shift to "
+"end it."
+msgstr "Siz %(time)s dan beri %(vehicle)s bilan smenadasiz. Tugatish uchun /end_shift yuboring."
+
+#: apps/bot/shift_handlers.py:55
+#, python-format
+msgid ""
+"%(vehicle)s is on shift with %(driver)s since %(time)s. If that is wrong, "
+"call the dispatcher."
+msgstr "%(vehicle)s %(time)s dan beri %(driver)s smenasida. Agar bu xato bo'lsa, dispetcherga qo'ng'iroq qiling."
+
+#: apps/bot/shift_handlers.py:63
+#, python-format
+msgid "Shift started: %(vehicle)s at %(time)s."
+msgstr "Smena boshlandi: %(vehicle)s, %(time)s."
+
+#: apps/bot/shift_handlers.py:65
+msgid "Send /end_shift when you finish."
+msgstr "Ishni tugatganingizda /end_shift yuboring."
+
+#: apps/bot/shift_handlers.py:70
+#, python-format
+msgid "Shift ended: %(vehicle)s, %(start)s–%(end)s (%(duration)s)."
+msgstr "Smena tugadi: %(vehicle)s, %(start)s–%(end)s (%(duration)s)."
+
+#: apps/bot/shift_handlers.py:88 apps/bot/shift_handlers.py:141
+msgid "Shifts are for drivers only."
+msgstr "Smenalar faqat haydovchilar uchun."
+
+#: apps/bot/shift_handlers.py:98
+#, python-format
+msgid "No free vehicle matches “%(text)s”. Try again or call the dispatcher."
+msgstr "“%(text)s” bo'yicha bo'sh avtomobil topilmadi. Qayta urinib ko'ring yoki dispetcherga qo'ng'iroq qiling."
+
+#: apps/bot/shift_handlers.py:101
+msgid "There are no free vehicles. Call the dispatcher."
+msgstr "Bo'sh avtomobil yo'q. Dispetcherga qo'ng'iroq qiling."
+
+#: apps/bot/shift_handlers.py:104
+msgid "Which vehicle are you taking?"
+msgstr "Qaysi avtomobilni olyapsiz?"
+
+#: apps/bot/shift_handlers.py:106
+#, python-format
+msgid "Showing %(shown)s of %(total)s."
+msgstr "%(total)s tadan %(shown)s tasi ko'rsatilgan."
+
+#: apps/bot/shift_handlers.py:108
+msgid "Not in the list? Type part of the plate number, for example 123."
+msgstr "Ro'yxatda yo'qmi? Davlat raqamining bir qismini yozing, masalan 123."
+
+#: apps/bot/shift_handlers.py:153
+msgid "This vehicle can no longer be chosen. Send /start_shift again."
+msgstr "Bu avtomobilni endi tanlab bo'lmaydi. /start_shift ni qayta yuboring."
+
+#: apps/bot/shift_handlers.py:166
+msgid "You have no open shift. Send /start_shift to start one."
+msgstr "Sizda ochiq smena yo'q. Boshlash uchun /start_shift yuboring."
+
+#: apps/bot/shift_handlers.py:169
+#, python-format
+msgid "End your shift with %(vehicle)s? Started at %(time)s, %(duration)s ago."
+msgstr "%(vehicle)s bilan smenani tugatasizmi? %(time)s da boshlangan, %(duration)s oldin."
+
+#: apps/bot/shift_handlers.py:189 apps/fleet/views.py:218
+msgid "This shift has already ended."
+msgstr "Bu smena allaqachon tugagan."
+
+#: apps/bot/shift_handlers.py:197
+msgid "OK, the shift goes on."
+msgstr "Yaxshi, smena davom etmoqda."
 
 #: apps/bot/templates/bot/request_list.html:7
 msgid "Waiting for confirmation"
@@ -350,35 +469,39 @@ msgstr "Tasdiqlash"
 msgid "Fleet"
 msgstr "Avtopark"
 
-#: apps/core/menu.py:62 apps/fleet/views.py:52 apps/fleet/views.py:99
+#: apps/core/menu.py:62 apps/fleet/views.py:56 apps/fleet/views.py:103
 msgid "Vehicles"
 msgstr "Avtomobillar"
 
-#: apps/core/menu.py:63 apps/fleet/views.py:66 apps/fleet/views.py:99
+#: apps/core/menu.py:63 apps/fleet/views.py:70 apps/fleet/views.py:103
 msgid "Drivers"
 msgstr "Haydovchilar"
 
-#: apps/core/menu.py:64 apps/fleet/templates/fleet/vehicle_list.html:22
+#: apps/core/menu.py:65 apps/fleet/views.py:206
+msgid "Shifts"
+msgstr "Smenalar"
+
+#: apps/core/menu.py:66 apps/fleet/templates/fleet/vehicle_list.html:22
 msgid "Fuel"
 msgstr "Yoqilg'i"
 
-#: apps/core/menu.py:66
+#: apps/core/menu.py:68
 msgid "Maintenance"
 msgstr "Texnik xizmat"
 
-#: apps/core/menu.py:67
+#: apps/core/menu.py:69
 msgid "Store"
 msgstr "Ombor"
 
-#: apps/core/menu.py:68
+#: apps/core/menu.py:70
 msgid "Documents"
 msgstr "Hujjatlar"
 
-#: apps/core/menu.py:71
+#: apps/core/menu.py:73
 msgid "Reports"
 msgstr "Hisobotlar"
 
-#: apps/core/menu.py:72
+#: apps/core/menu.py:74
 msgid "Settings"
 msgstr "Sozlamalar"
 
@@ -407,7 +530,7 @@ msgid "The file is larger than %(mb)s MB."
 msgstr "Fayl %(mb)s MB dan katta."
 
 #: apps/fleet/templates/fleet/driver_list.html:7
-#: apps/fleet/templates/fleet/vehicle_list.html:7 apps/fleet/views.py:107
+#: apps/fleet/templates/fleet/vehicle_list.html:7 apps/fleet/views.py:111
 msgid "Import from Excel"
 msgstr "Exceldan import"
 
@@ -457,6 +580,7 @@ msgid "Not yet"
 msgstr "Hali yo'q"
 
 #: apps/fleet/templates/fleet/driver_list.html:57
+#: apps/fleet/templates/fleet/shift_list.html:82
 #: apps/fleet/templates/fleet/vehicle_list.html:52
 msgid "Nothing found."
 msgstr "Hech narsa topilmadi."
@@ -541,6 +665,69 @@ msgstr "3. Import qilish"
 msgid "Cancel"
 msgstr "Bekor qilish"
 
+#: apps/fleet/templates/fleet/shift_list.html:7
+msgid "On shift now"
+msgstr "Hozir smenada"
+
+#: apps/fleet/templates/fleet/shift_list.html:15
+msgid "Driver or plate"
+msgstr "Haydovchi yoki raqam"
+
+#: apps/fleet/templates/fleet/shift_list.html:20
+msgid "Day"
+msgstr "Kun"
+
+#: apps/fleet/templates/fleet/shift_list.html:27
+msgid "On shift now only"
+msgstr "Faqat hozir smenadagilar"
+
+#: apps/fleet/templates/fleet/shift_list.html:30
+msgid "Show"
+msgstr "Ko'rsatish"
+
+#: apps/fleet/templates/fleet/shift_list.html:32
+msgid "Clear"
+msgstr "Tozalash"
+
+#: apps/fleet/templates/fleet/shift_list.html:43
+#: apps/fleet/templates/fleet/vehicle_list.html:20
+msgid "Vehicle"
+msgstr "Avtomobil"
+
+#: apps/fleet/templates/fleet/shift_list.html:44
+msgid "Started"
+msgstr "Boshlangan"
+
+#: apps/fleet/templates/fleet/shift_list.html:45
+msgid "Ended"
+msgstr "Tugagan"
+
+#: apps/fleet/templates/fleet/shift_list.html:46
+msgid "Duration"
+msgstr "Davomiyligi"
+
+#: apps/fleet/templates/fleet/shift_list.html:58
+msgid "On shift"
+msgstr "Smenada"
+
+#: apps/fleet/templates/fleet/shift_list.html:63
+#, python-format
+msgid "%(h)s h %(m)s min"
+msgstr "%(h)s soat %(m)s daqiqa"
+
+#: apps/fleet/templates/fleet/shift_list.html:66
+#, python-format
+msgid "End the shift of %(driver)s with %(vehicle)s?"
+msgstr "%(driver)s ning %(vehicle)s bilan smenasini tugatasizmi?"
+
+#: apps/fleet/templates/fleet/shift_list.html:70
+msgid "End shift"
+msgstr "Smenani tugatish"
+
+#: apps/fleet/templates/fleet/shift_list.html:82
+msgid "No shifts yet. Drivers start them in the bot with /start_shift."
+msgstr "Hali smenalar yo'q. Haydovchilar ularni botda /start_shift bilan boshlaydi."
+
 #: apps/fleet/templates/fleet/vehicle_list.html:12
 msgid "Plate, brand, model or VIN"
 msgstr "Raqam, marka, model yoki VIN"
@@ -548,10 +735,6 @@ msgstr "Raqam, marka, model yoki VIN"
 #: apps/fleet/templates/fleet/vehicle_list.html:19
 msgid "Plate"
 msgstr "Davlat raqami"
-
-#: apps/fleet/templates/fleet/vehicle_list.html:20
-msgid "Vehicle"
-msgstr "Avtomobil"
 
 #: apps/fleet/templates/fleet/vehicle_list.html:21
 msgid "Year"
@@ -581,40 +764,52 @@ msgstr "Nofaol"
 msgid "No vehicles yet. Import them from the company data template."
 msgstr "Hali avtomobillar yo'q. Ularni kompaniya ma'lumotlar shablonidan import qiling."
 
-#: apps/fleet/views.py:94
+#: apps/fleet/views.py:98
 msgid "New vehicles"
 msgstr "Yangi avtomobillar"
 
-#: apps/fleet/views.py:95
+#: apps/fleet/views.py:99
 msgid "Changed vehicles"
 msgstr "O'zgargan avtomobillar"
 
-#: apps/fleet/views.py:96
+#: apps/fleet/views.py:100
 msgid "New drivers"
 msgstr "Yangi haydovchilar"
 
-#: apps/fleet/views.py:97
+#: apps/fleet/views.py:101
 msgid "Changed drivers"
 msgstr "O'zgargan haydovchilar"
 
-#: apps/fleet/views.py:118
+#: apps/fleet/views.py:122
 msgid "This is not a valid Excel file."
 msgstr "Bu yaroqli Excel fayli emas."
 
-#: apps/fleet/views.py:139
+#: apps/fleet/views.py:143
 msgid "The preview has expired. Upload the file again."
 msgstr "Ko'rib chiqish muddati tugadi. Faylni qayta yuklang."
 
-#: apps/fleet/views.py:145
+#: apps/fleet/views.py:149
 msgid "The data changed since the preview. Upload the file again."
 msgstr "Ko'rib chiqishdan keyin ma'lumotlar o'zgardi. Faylni qayta yuklang."
 
-#: apps/fleet/views.py:151
+#: apps/fleet/views.py:155
 #, python-format
 msgid ""
 "Imported: %(nv)s new and %(uv)s changed vehicles, %(nd)s new and %(ud)s "
 "changed drivers."
 msgstr "Import qilindi: avtomobillar — %(nv)s yangi, %(uv)s o'zgargan; haydovchilar — %(nd)s yangi, %(ud)s o'zgargan."
+
+#: apps/fleet/views.py:220
+#, python-format
+msgid "The shift of %(driver)s with %(vehicle)s is ended."
+msgstr "%(driver)s ning %(vehicle)s bilan smenasi tugatildi."
+
+#: apps/fleet/views.py:226
+#, python-format
+msgid ""
+"The dispatcher ended your shift with %(vehicle)s at %(time)s. Send /"
+"start_shift when you take a vehicle again."
+msgstr "Dispetcher %(vehicle)s bilan smenangizni %(time)s da tugatdi. Avtomobilni yana olganingizda /start_shift yuboring."
 
 #: templates/403.html:3 templates/403.html:5
 msgid "No access"

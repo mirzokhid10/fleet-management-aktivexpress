@@ -61,6 +61,8 @@ MENU: tuple[MenuGroup, ...] = (
     MenuGroup(_("Fleet"), (
         MenuItem("vehicles", _("Vehicles"), "truck", "fleet:vehicles", roles=MANAGERS),
         MenuItem("drivers", _("Drivers"), "users", "fleet:drivers", roles=MANAGERS),
+        # Day 8: who drove which vehicle when (/start_shift … /end_shift in the bot).
+        MenuItem("shifts", _("Shifts"), "clock", "fleet:shifts", roles=MANAGERS),
         MenuItem("fuel", _("Fuel"), "fuel", day=28, roles=MANAGERS),
         # Storekeeper doubles as mechanic in V1 (kickoff Q3).
         MenuItem("maintenance", _("Maintenance"), "wrench", day=37),

@@ -107,6 +107,12 @@ Before that, a person registers once: `/start` in the bot → pick the language 
 
 To link yourself locally: sign in as the demo director (password), put your Telegram phone number on a staff user in the admin, share your number in the bot, then confirm yourself on **New users**.
 
+## Shifts (Day 8)
+
+A registered driver sends `/start_shift` in the bot and taps the vehicle they take. Their main vehicle comes first (⭐), then every active vehicle nobody is on shift with; with more than 8, they type part of the plate (e.g. `123`). `/end_shift` asks before ending. A vehicle has one driver at a time: if someone forgot `/end_shift`, the bot names them and says to call the dispatcher.
+
+Managers see every shift on **Shifts** (`/shifts/`): filter by driver or plate, day, or "on shift now", and end a forgotten shift. The driver gets a message in the bot. Every start and end is in the audit log.
+
 ## Admin panel
 
 http://localhost:8000/admin/ for superusers (the demo director is one). Changes made there are written to the audit log; the audit log itself is read-only.
@@ -119,4 +125,5 @@ http://localhost:8000/admin/ for superusers (the demo director is one). Changes 
 - [x] Day 4 — login by role, role-based menu and access, Uzbek/Russian interface with language switch
 - [x] Day 5 — admin panel; vehicle and driver lists; Excel import with preview (web + `import_fleet` command). Waiting for the company's filled template to load the real fleet.
 - [x] Day 6 — bot skeleton (aiogram 3, polling locally / webhook on the server), /start, language choice (uz/ru), /language, /help. Tested with real Telegram.
-- [x] Day 7 — registration by phone in the bot, managers confirm on New users; web sign-in confirmed in the bot (number matching), passwords for superusers only
+- [x] Day 7 — registration by phone in the bot, managers confirm on New users; web sign-in confirmed in the bot (number matching), passwords for superusers only. Tested with real Telegram.
+- [x] Day 8 — `/start_shift` with vehicle picker, `/end_shift`, Shifts page for managers (filters, end a forgotten shift)

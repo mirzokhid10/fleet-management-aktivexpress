@@ -1,4 +1,4 @@
-"""Vehicle and driver lists, and the Excel import (Day 5)."""
+"""Vehicle and driver lists, the Excel import (Day 5) and the shift log (Day 8)."""
 
 from __future__ import annotations
 
@@ -13,19 +13,23 @@ from django.contrib import messages
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.http import FileResponse
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
+from django.utils.dateparse import parse_date
 from django.utils.translation import gettext as _
 from django.views.decorators.http import require_POST
 from openpyxl.utils.exceptions import InvalidFileException
 
 from apps.accounts.roles import MANAGERS, role_required
+from apps.audit.models import AuditLog
+from apps.bot import notify
 from fleet_import.schema import DRIVERS, VEHICLES
 from fleet_import.workbook import build_workbook
 
+from . import shifts
 from .forms import ImportForm
 from .importer import CREATE, UPDATE, ImportBlocked, apply_import, plan_import
-from .models import Driver, Vehicle
+from .models import Driver, Shift, Vehicle
 
 PAGE_SIZE = 50
 LICENCE_WARN_DAYS = 30
@@ -163,3 +167,65 @@ def import_template(request):
     build_workbook().save(buffer)
     buffer.seek(0)
     return FileResponse(buffer, as_attachment=True, filename="fleet-data-template.xlsx")
+
+
+# --- shift log (Day 8) -----------------------------------------------------
+
+def _shift_filters(request, qs):
+    """?q= driver or plate, ?day=YYYY-MM-DD (shifts that overlap that day), ?open=1."""
+    q = request.GET.get("q", "").strip()
+    if q:
+        qs = qs.filter(Q(driver__full_name__icontains=q)
+                       | Q(vehicle__plate__icontains=q.replace(" ", "")))
+    try:
+        day = parse_date(request.GET.get("day", "").strip())
+    except ValueError:  # well-formed but impossible, e.g. 2026-02-30
+        day = None
+    if day:
+        tz = timezone.get_current_timezone()
+        day_start = dt.datetime.combine(day, dt.time.min, tzinfo=tz)
+        day_end = day_start + dt.timedelta(days=1)
+        qs = qs.filter(Q(started_at__lt=day_end),
+                       Q(ended_at__isnull=True) | Q(ended_at__gt=day_start))
+    only_open = request.GET.get("open") == "1"
+    if only_open:
+        qs = qs.filter(ended_at__isnull=True)
+    return qs, {"q": q, "day": day, "only_open": only_open}
+
+
+@role_required(*MANAGERS)
+def shift_list(request):
+    qs, filters = _shift_filters(request, Shift.objects.select_related("driver", "vehicle"))
+    page = Paginator(qs, PAGE_SIZE).get_page(request.GET.get("page"))
+    keep = request.GET.copy()
+    keep.pop("page", None)
+    now = timezone.now()
+    for s in page:
+        s.hours, s.minutes = shifts.hours_minutes(shifts.duration(s, now))
+    return render(request, "fleet/shift_list.html", {
+        "page_title": _("Shifts"), "page": page, **filters,
+        "on_shift": Shift.objects.filter(ended_at__isnull=True).count(),
+        "filtered": any(filters.values()), "page_query": keep.urlencode(),
+    })
+
+
+@require_POST
+@role_required(*MANAGERS)
+def shift_end(request, pk):
+    shift = get_object_or_404(Shift.objects.select_related("driver__user", "vehicle"), pk=pk)
+    if not shifts.end(shift, actor=request.user, source=AuditLog.Source.WEB,
+                      reason="Ended by a manager"):
+        messages.error(request, _("This shift has already ended."))
+    else:
+        messages.success(request, _("The shift of %(driver)s with %(vehicle)s is ended.") % {
+            "driver": shift.driver.full_name, "vehicle": shift.vehicle.plate_display})
+        person = shift.driver.user
+        if person and person.telegram_id:
+            ended_at = timezone.localtime(shift.ended_at)
+            notify.send(person.telegram_id, person.language, lambda: _(
+                "The dispatcher ended your shift with %(vehicle)s at %(time)s. Send "
+                "/start_shift when you take a vehicle again.") % {
+                    "vehicle": shift.vehicle.plate_display, "time": f"{ended_at:%H:%M}"})
+    back = request.POST.get("back", "")
+    # Back to the same filtered list; only our own page, never another site.
+    return redirect(back if back.startswith("/shifts/?") else "fleet:shifts")

@@ -17,6 +17,7 @@ Feature: The web app runs locally
       | Yangi foydalanuvchilar |
       | Avtomobillar  |
       | Haydovchilar  |
+      | Smenalar      |
       | Yoqilg'i      |
       | Texnik xizmat |
       | Ombor         |

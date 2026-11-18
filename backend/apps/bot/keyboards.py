@@ -30,3 +30,27 @@ def login_numbers(login_id: int, numbers: tuple[int, ...]) -> InlineKeyboardMark
         [InlineKeyboardButton(text="❌ " + _("It wasn't me"),
                               callback_data=f"{LOGIN_PREFIX}{login_id}:no")],
     ])
+
+
+# --- shifts (Day 8) --------------------------------------------------------
+
+SHIFT_TAKE = "shift:take:"
+SHIFT_END = "shift:end:"
+SHIFT_KEEP = "shift:keep"
+
+
+def vehicle_picker(vehicles, own_id: int | None) -> InlineKeyboardMarkup:
+    """One vehicle per row; the driver's own vehicle is starred."""
+    return InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text=("⭐ " if v.pk == own_id else "") + str(v),
+                              callback_data=f"{SHIFT_TAKE}{v.pk}")]
+        for v in vehicles
+    ])
+
+
+def end_confirm(shift_id: int) -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text="✅ " + _("Yes, end the shift"),
+                              callback_data=f"{SHIFT_END}{shift_id}")],
+        [InlineKeyboardButton(text=_("No, keep working"), callback_data=SHIFT_KEEP)],
+    ])

@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+<div class="mb-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+  <div class="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/3">
+    <p class="text-sm text-gray-500 dark:text-gray-400">{% translate "On shift now" %}</p>
+    <p class="mt-1 text-2xl font-semibold text-gray-800 dark:text-white/90" data-testid="on-shift">{{ on_shift }}</p>
+  </div>
+</div>
+
+<div class="overflow-hidden rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/3">
+  <form method="get" role="search" class="flex flex-col gap-3 border-b border-gray-100 px-5 py-4 sm:flex-row sm:flex-wrap sm:items-end sm:px-6 dark:border-gray-800">
+    <div class="w-full sm:max-w-xs">
+      <label for="shift-search" class="mb-1.5 block text-xs font-medium text-gray-500 dark:text-gray-400">{% translate "Driver or plate" %}</label>
+      <input id="shift-search" type="search" name="q" value="{{ q }}"
+             class="h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs focus:border-brand-300 focus:ring-3 focus:ring-brand-500/10 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90" />
+    </div>
+    <div>
+      <label for="shift-day" class="mb-1.5 block text-xs font-medium text-gray-500 dark:text-gray-400">{% translate "Day" %}</label>
+      <input id="shift-day" type="date" name="day" value="{{ day|date:'Y-m-d' }}"
+             class="h-11 rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs focus:border-brand-300 focus:ring-3 focus:ring-brand-500/10 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90" />
+    </div>
+    <label class="flex h-11 items-center gap-2 text-sm text-gray-700 dark:text-gray-400">
+      <input type="checkbox" name="open" value="1" {% if only_open %}checked{% endif %}
+             class="size-4 rounded border-gray-300 text-brand-500 dark:border-gray-700" />
+      {% translate "On shift now only" %}
+    </label>
+    <div class="flex gap-2">
+      <button type="submit" class="h-11 rounded-lg bg-brand-500 px-4 text-sm font-medium text-white shadow-theme-xs hover:bg-brand-600">{% translate "Show" %}</button>
+      {% if filtered %}
+      <a href="{% url 'fleet:shifts' %}" class="inline-flex h-11 items-center rounded-lg border border-gray-300 px-4 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-white/3">{% translate "Clear" %}</a>
+      {% endif %}
+    </div>
+  </form>
+
+  {% if page.object_list %}
+  <div class="max-w-full overflow-x-auto">
+    <table class="min-w-full" data-testid="shift-table">
+      <thead>
+        <tr class="border-b border-gray-100 dark:border-gray-800">
+          <th class="px-5 py-3 text-left text-xs font-medium text-gray-500 sm:px-6 dark:text-gray-400">{% translate "Driver" %}</th>
+          <th class="px-5 py-3 text-left text-xs font-medium text-gray-500 sm:px-6 dark:text-gray-400">{% translate "Vehicle" %}</th>
+          <th class="px-5 py-3 text-left text-xs font-medium text-gray-500 sm:px-6 dark:text-gray-400">{% translate "Started" %}</th>
+          <th class="px-5 py-3 text-left text-xs font-medium text-gray-500 sm:px-6 dark:text-gray-400">{% translate "Ended" %}</th>
+          <th class="px-5 py-3 text-left text-xs font-medium text-gray-500 sm:px-6 dark:text-gray-400">{% translate "Duration" %}</th>
+          <th class="px-5 py-3 sm:px-6"></th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+        {% for s in page %}
+        <tr data-shift="{{ s.pk }}" data-open="{{ s.is_open|yesno:'1,0' }}">
+          <td class="px-5 py-4 text-sm font-medium text-gray-800 sm:px-6 dark:text-white/90">{{ s.driver.full_name }}</td>
+          <td class="whitespace-nowrap px-5 py-4 text-sm text-gray-500 sm:px-6 dark:text-gray-400">{{ s.vehicle.plate_display }}<span class="block text-xs text-gray-400">{{ s.vehicle.brand }} {{ s.vehicle.model }}</span></td>
+          <td class="whitespace-nowrap px-5 py-4 text-sm text-gray-500 sm:px-6 dark:text-gray-400">{{ s.started_at|date:"d.m.Y H:i" }}</td>
+          <td class="whitespace-nowrap px-5 py-4 text-sm sm:px-6">
+            {% if s.is_open %}
+            <span class="rounded-full bg-green-50 px-2 py-0.5 text-xs font-medium text-green-700 dark:bg-green-500/15 dark:text-green-500">{% translate "On shift" %}</span>
+            {% else %}
+            <span class="text-gray-500 dark:text-gray-400">{{ s.ended_at|date:"d.m.Y H:i" }}</span>
+            {% endif %}
+          </td>
+          <td class="whitespace-nowrap px-5 py-4 text-sm text-gray-500 sm:px-6 dark:text-gray-400" data-testid="duration">{% blocktranslate with h=s.hours m=s.minutes %}{{ h }} h {{ m }} min{% endblocktranslate %}</td>
+          <td class="px-5 py-4 text-right sm:px-6">
+            {% if s.is_open %}
+            {% blocktranslate with driver=s.driver.full_name vehicle=s.vehicle.plate_display asvar question %}End the shift of {{ driver }} with {{ vehicle }}?{% endblocktranslate %}
+            <form method="post" action="{% url 'fleet:shift_end' s.pk %}" x-data @submit="if (!confirm($el.dataset.question)) $event.preventDefault()" data-question="{{ question }}">
+              {% csrf_token %}
+              <input type="hidden" name="back" value="{{ request.get_full_path }}" />
+              <button type="submit" class="rounded-lg border border-gray-300 px-3.5 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-white/3">{% translate "End shift" %}</button>
+            </form>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% include "partials/pagination.html" %}
+  {% else %}
+  <p class="px-5 py-10 text-center text-sm text-gray-500 sm:px-6 dark:text-gray-400" data-testid="empty">
+    {% if filtered %}{% translate "Nothing found." %}{% else %}{% translate "No shifts yet. Drivers start them in the bot with /start_shift." %}{% endif %}
+  </p>
+  {% endif %}
+</div>
+{% endblock %}

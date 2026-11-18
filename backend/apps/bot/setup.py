@@ -31,6 +31,8 @@ def build_bot(token: str | None = None, session: BaseSession | None = None) -> B
 def commands(language: str) -> list[BotCommand]:
     with translation.override(language):
         return [BotCommand(command="start", description=_("start")),
+                BotCommand(command="start_shift", description=_("start a shift")),
+                BotCommand(command="end_shift", description=_("end the shift")),
                 BotCommand(command="language", description=_("change the language")),
                 BotCommand(command="help", description=_("this help"))]
 

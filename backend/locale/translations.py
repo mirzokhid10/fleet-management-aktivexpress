@@ -309,6 +309,83 @@ T: dict[str, tuple[str, str]] = {
         "❌ Ro'yxatdan o'tishingiz tasdiqlanmadi. Xato bo'lsa, dispetcherga murojaat qiling.",
         "❌ Регистрация не подтверждена. Если это ошибка, обратитесь к диспетчеру."),
     "The request was rejected.": ("So'rov rad etildi.", "Запрос отклонён."),
+    # shifts in the bot (Day 8)
+    "start a shift": ("smenani boshlash", "начать смену"),
+    "end the shift": ("smenani tugatish", "закончить смену"),
+    "%(hours)s h %(minutes)s min": ("%(hours)s soat %(minutes)s daqiqa", "%(hours)s ч %(minutes)s мин"),
+    "%(minutes)s min": ("%(minutes)s daqiqa", "%(minutes)s мин"),
+    "You are already on shift with %(vehicle)s since %(time)s. Send /end_shift to end it.": (
+        "Siz %(time)s dan beri %(vehicle)s bilan smenadasiz. Tugatish uchun /end_shift yuboring.",
+        "Вы на смене на %(vehicle)s с %(time)s. Чтобы закончить, отправьте /end_shift."),
+    "%(vehicle)s is on shift with %(driver)s since %(time)s. If that is wrong, call the "
+    "dispatcher.": (
+        "%(vehicle)s %(time)s dan beri %(driver)s smenasida. Agar bu xato bo'lsa, dispetcherga "
+        "qo'ng'iroq qiling.",
+        "%(vehicle)s на смене у %(driver)s с %(time)s. Если это ошибка, позвоните диспетчеру."),
+    "Shift started: %(vehicle)s at %(time)s.": ("Smena boshlandi: %(vehicle)s, %(time)s.",
+                                                 "Смена начата: %(vehicle)s в %(time)s."),
+    "Send /end_shift when you finish.": ("Ishni tugatganingizda /end_shift yuboring.",
+                                         "Когда закончите, отправьте /end_shift."),
+    "Shift ended: %(vehicle)s, %(start)s–%(end)s (%(duration)s).": (
+        "Smena tugadi: %(vehicle)s, %(start)s–%(end)s (%(duration)s).",
+        "Смена закончена: %(vehicle)s, %(start)s–%(end)s (%(duration)s)."),
+    "Shifts are for drivers only.": ("Smenalar faqat haydovchilar uchun.",
+                                     "Смены только для водителей."),
+    "No free vehicle matches “%(text)s”. Try again or call the dispatcher.": (
+        "“%(text)s” bo'yicha bo'sh avtomobil topilmadi. Qayta urinib ko'ring yoki dispetcherga "
+        "qo'ng'iroq qiling.",
+        "Свободных машин по «%(text)s» не найдено. Попробуйте ещё раз или позвоните диспетчеру."),
+    "There are no free vehicles. Call the dispatcher.": (
+        "Bo'sh avtomobil yo'q. Dispetcherga qo'ng'iroq qiling.",
+        "Свободных машин нет. Позвоните диспетчеру."),
+    "Which vehicle are you taking?": ("Qaysi avtomobilni olyapsiz?", "Какую машину вы берёте?"),
+    "Showing %(shown)s of %(total)s.": ("%(total)s tadan %(shown)s tasi ko'rsatilgan.",
+                                        "Показано %(shown)s из %(total)s."),
+    "Not in the list? Type part of the plate number, for example 123.": (
+        "Ro'yxatda yo'qmi? Davlat raqamining bir qismini yozing, masalan 123.",
+        "Нет в списке? Напишите часть госномера, например 123."),
+    "This vehicle can no longer be chosen. Send /start_shift again.": (
+        "Bu avtomobilni endi tanlab bo'lmaydi. /start_shift ni qayta yuboring.",
+        "Эту машину больше нельзя выбрать. Отправьте /start_shift ещё раз."),
+    "You have no open shift. Send /start_shift to start one.": (
+        "Sizda ochiq smena yo'q. Boshlash uchun /start_shift yuboring.",
+        "У вас нет открытой смены. Чтобы начать, отправьте /start_shift."),
+    "End your shift with %(vehicle)s? Started at %(time)s, %(duration)s ago.": (
+        "%(vehicle)s bilan smenani tugatasizmi? %(time)s da boshlangan, %(duration)s oldin.",
+        "Закончить смену на %(vehicle)s? Начата в %(time)s, %(duration)s назад."),
+    "This shift has already ended.": ("Bu smena allaqachon tugagan.", "Эта смена уже закончена."),
+    "OK, the shift goes on.": ("Yaxshi, smena davom etmoqda.", "Хорошо, смена продолжается."),
+    "Yes, end the shift": ("Ha, smenani tugatish", "Да, закончить смену"),
+    "No, keep working": ("Yo'q, ishni davom ettiraman", "Нет, продолжаю работать"),
+    # shift log page (Day 8)
+    "Shifts": ("Smenalar", "Смены"),
+    "On shift now": ("Hozir smenada", "Сейчас на смене"),
+    "Driver or plate": ("Haydovchi yoki raqam", "Водитель или номер"),
+    "Day": ("Kun", "День"),
+    "On shift now only": ("Faqat hozir smenadagilar", "Только сейчас на смене"),
+    "Show": ("Ko'rsatish", "Показать"),
+    "Clear": ("Tozalash", "Сбросить"),
+    "Started": ("Boshlangan", "Начало"),
+    "Ended": ("Tugagan", "Конец"),
+    "Duration": ("Davomiyligi", "Длительность"),
+    "On shift": ("Smenada", "На смене"),
+    "%(h)s h %(m)s min": ("%(h)s soat %(m)s daqiqa", "%(h)s ч %(m)s мин"),
+    "End the shift of %(driver)s with %(vehicle)s?": (
+        "%(driver)s ning %(vehicle)s bilan smenasini tugatasizmi?",
+        "Закончить смену %(driver)s на %(vehicle)s?"),
+    "End shift": ("Smenani tugatish", "Закончить смену"),
+    "No shifts yet. Drivers start them in the bot with /start_shift.": (
+        "Hali smenalar yo'q. Haydovchilar ularni botda /start_shift bilan boshlaydi.",
+        "Смен пока нет. Водители начинают их в боте командой /start_shift."),
+    "The shift of %(driver)s with %(vehicle)s is ended.": (
+        "%(driver)s ning %(vehicle)s bilan smenasi tugatildi.",
+        "Смена %(driver)s на %(vehicle)s закончена."),
+    "The dispatcher ended your shift with %(vehicle)s at %(time)s. Send /start_shift when you "
+    "take a vehicle again.": (
+        "Dispetcher %(vehicle)s bilan smenangizni %(time)s da tugatdi. Avtomobilni yana "
+        "olganingizda /start_shift yuboring.",
+        "Диспетчер закончил вашу смену на %(vehicle)s в %(time)s. Когда снова возьмёте машину, "
+        "отправьте /start_shift."),
 }
 
 LANGS = {"uz": 0, "ru": 1}

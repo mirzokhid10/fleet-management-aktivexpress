@@ -25,9 +25,12 @@ def test_language_picker_offers_uzbek_and_russian():
 
 
 def test_command_menu_is_translated():
-    assert [c.command for c in commands("uz")] == ["start", "language", "help"]
-    assert commands("ru")[1].description == "сменить язык"
-    assert commands("uz")[1].description == "tilni o'zgartirish"
+    assert [c.command for c in commands("uz")] == ["start", "start_shift", "end_shift",
+                                                   "language", "help"]
+    ru, uz = ({c.command: c.description for c in commands(code)} for code in ("ru", "uz"))
+    assert ru["language"] == "сменить язык"
+    assert uz["language"] == "tilni o'zgartirish"
+    assert (uz["start_shift"], ru["end_shift"]) == ("smenani boshlash", "закончить смену")
 
 
 def test_bot_needs_a_token(settings):

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-17 22:12+0500\n"
+"POT-Creation-Date: 2026-11-18 14:01+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
 "(n%100>=11 && n%100<=14)? 2 : 3);\n"
 
-#: apps/accounts/forms.py:9
+#: apps/accounts/forms.py:9 apps/accounts/templates/accounts/login.html:63
 msgid "Keep me logged in"
 msgstr "Запомнить меня"
 
@@ -44,11 +44,13 @@ msgid "Storekeeper"
 msgstr "Кладовщик"
 
 #: apps/accounts/models.py:19 apps/bot/templates/bot/request_list.html:27
+#: apps/fleet/templates/fleet/shift_list.html:42
 msgid "Driver"
 msgstr "Водитель"
 
 #: apps/accounts/templates/accounts/login.html:4
 #: apps/accounts/templates/accounts/login.html:8
+#: apps/accounts/templates/accounts/login.html:67
 msgid "Sign in"
 msgstr "Вход"
 
@@ -69,6 +71,22 @@ msgstr "Водители: пользуйтесь Telegram-ботом компа�
 #: apps/accounts/templates/accounts/login.html:24
 msgid "Administrator sign-in with password"
 msgstr "Вход администратора по паролю"
+
+#: apps/accounts/templates/accounts/login.html:39
+msgid "Username"
+msgstr "Логин"
+
+#: apps/accounts/templates/accounts/login.html:47
+msgid "Password"
+msgstr "Пароль"
+
+#: apps/accounts/templates/accounts/login.html:52
+msgid "Hide password"
+msgstr "Скрыть пароль"
+
+#: apps/accounts/templates/accounts/login.html:52
+msgid "Show password"
+msgstr "Показать пароль"
 
 #: apps/accounts/templates/accounts/telegram_wait.html:12
 msgid "Open the bot: tap the button, or scan the code with your phone."
@@ -102,119 +120,127 @@ msgstr "Попробовать снова"
 msgid "Back"
 msgstr "Назад"
 
-#: apps/bot/handlers.py:27
+#: apps/bot/handlers.py:31
 #, python-format
 msgid "Hello, %(name)s! This is the Aktiv Fleet bot."
 msgstr "Здравствуйте, %(name)s! Это бот Aktiv Fleet."
 
-#: apps/bot/handlers.py:29
+#: apps/bot/handlers.py:33
 msgid ""
 "Here you will start and end shifts, share your location and send vehicle "
 "data."
 msgstr "Здесь вы будете начинать и заканчивать смену, делиться геопозицией и отправлять данные по машине."
 
-#: apps/bot/handlers.py:30
+#: apps/bot/handlers.py:34
 msgid "Commands: /help"
 msgstr "Команды: /help"
 
-#: apps/bot/handlers.py:36
+#: apps/bot/handlers.py:40
 msgid "What the bot can do:"
 msgstr "Что умеет бот:"
 
-#: apps/bot/handlers.py:37 apps/bot/setup.py:33
+#: apps/bot/handlers.py:41 apps/bot/setup.py:33
 msgid "start"
 msgstr "начать"
 
-#: apps/bot/handlers.py:38 apps/bot/setup.py:34
+#: apps/bot/handlers.py:42 apps/bot/setup.py:34
+msgid "start a shift"
+msgstr "начать смену"
+
+#: apps/bot/handlers.py:43 apps/bot/setup.py:35
+msgid "end the shift"
+msgstr "закончить смену"
+
+#: apps/bot/handlers.py:44 apps/bot/setup.py:36
 msgid "change the language"
 msgstr "сменить язык"
 
-#: apps/bot/handlers.py:39 apps/bot/setup.py:35
+#: apps/bot/handlers.py:45 apps/bot/setup.py:37
 msgid "this help"
 msgstr "эта справка"
 
-#: apps/bot/handlers.py:44
+#: apps/bot/handlers.py:50
 msgid ""
 "To start, send your phone number with the button below. It must be the "
 "number the company has for you."
 msgstr "Для начала отправьте свой номер телефона кнопкой ниже. Это должен быть номер, который есть у компании."
 
-#: apps/bot/handlers.py:58 apps/bot/handlers.py:121
+#: apps/bot/handlers.py:64 apps/bot/handlers.py:127
 msgid ""
 "Your registration is waiting for a manager to confirm it. I will write to "
 "you here."
 msgstr "Ваша регистрация ждёт подтверждения руководителя. Я напишу вам здесь."
 
-#: apps/bot/handlers.py:90
+#: apps/bot/handlers.py:96
 #, python-format
 msgid "Language: %(language)s"
 msgstr "Язык: %(language)s"
 
-#: apps/bot/handlers.py:107
+#: apps/bot/handlers.py:113
 msgid "Please send your own number with the button."
 msgstr "Пожалуйста, отправьте свой номер кнопкой."
 
-#: apps/bot/handlers.py:113
+#: apps/bot/handlers.py:119
 msgid "Only Uzbek phone numbers (+998) can be registered."
 msgstr "Зарегистрироваться можно только с узбекским номером (+998)."
 
-#: apps/bot/handlers.py:119
+#: apps/bot/handlers.py:125
 msgid "You are already registered."
 msgstr "Вы уже зарегистрированы."
 
-#: apps/bot/handlers.py:124
+#: apps/bot/handlers.py:130
 #, python-format
 msgid ""
 "The number %(phone)s is not in the company list. Ask the dispatcher to add "
 "you, then send it again with /start."
 msgstr "Номера %(phone)s нет в списке компании. Попросите диспетчера добавить вас, затем отправьте его снова через /start."
 
-#: apps/bot/handlers.py:128
+#: apps/bot/handlers.py:134
 msgid ""
 "Thank you! A manager will confirm your registration soon. I will write to "
 "you here."
 msgstr "Спасибо! Руководитель скоро подтвердит регистрацию. Я напишу вам здесь."
 
-#: apps/bot/handlers.py:140
+#: apps/bot/handlers.py:146
 msgid "This sign-in link has expired. Start again on the website."
 msgstr "Срок этой ссылки для входа истёк. Начните заново на сайте."
 
-#: apps/bot/handlers.py:141
+#: apps/bot/handlers.py:147 apps/bot/shift_handlers.py:83
 msgid ""
 "You are not registered yet. Send /start and share your phone number first."
 msgstr "Вы ещё не зарегистрированы. Сначала отправьте /start и поделитесь номером телефона."
 
-#: apps/bot/handlers.py:143
+#: apps/bot/handlers.py:149
 msgid "Your account cannot use the web app. Drivers work in this bot only."
 msgstr "Ваш аккаунт не может пользоваться веб-приложением. Водители работают только в этом боте."
 
-#: apps/bot/handlers.py:144
+#: apps/bot/handlers.py:150
 msgid "Wrong number. The sign-in was cancelled. Start again on the website."
 msgstr "Неверное число. Вход отменён. Начните заново на сайте."
 
-#: apps/bot/handlers.py:146
+#: apps/bot/handlers.py:152
 msgid ""
 "The sign-in was cancelled. If you did not try to sign in, tell the director."
 msgstr "Вход отменён. Если это были не вы, сообщите директору."
 
-#: apps/bot/handlers.py:158
+#: apps/bot/handlers.py:164
 msgid "Sign in to the Aktiv Fleet web app?"
 msgstr "Войти в веб-приложение Aktiv Fleet?"
 
-#: apps/bot/handlers.py:160
+#: apps/bot/handlers.py:166
 #, python-format
 msgid "Browser: %(browser)s"
 msgstr "Браузер: %(browser)s"
 
-#: apps/bot/handlers.py:161
+#: apps/bot/handlers.py:167
 msgid "Tap the number shown on your screen."
 msgstr "Нажмите число, которое видите на экране."
 
-#: apps/bot/handlers.py:174
+#: apps/bot/handlers.py:180
 msgid "You are signed in. You can go back to the browser."
 msgstr "Вы вошли. Можно вернуться в браузер."
 
-#: apps/bot/handlers.py:182
+#: apps/bot/handlers.py:188
 msgid "I don't understand this yet. Send /help to see what I can do."
 msgstr "Пока не понимаю. Отправьте /help, чтобы увидеть, что я умею."
 
@@ -225,6 +251,14 @@ msgstr "Отправить мой номер"
 #: apps/bot/keyboards.py:30
 msgid "It wasn't me"
 msgstr "Это не я"
+
+#: apps/bot/keyboards.py:53
+msgid "Yes, end the shift"
+msgstr "Да, закончить смену"
+
+#: apps/bot/keyboards.py:55
+msgid "No, keep working"
+msgstr "Нет, продолжаю работать"
 
 #: apps/bot/models.py:47
 msgid "Waiting"
@@ -246,9 +280,94 @@ msgstr "Не наш сотрудник"
 msgid "The number belongs to someone else"
 msgstr "Номер принадлежит другому человеку"
 
-#: apps/bot/models.py:54 apps/core/menu.py:70
+#: apps/bot/models.py:54 apps/core/menu.py:72
 msgid "Other"
 msgstr "Прочее"
+
+#: apps/bot/shift_handlers.py:45
+#, python-format
+msgid "%(hours)s h %(minutes)s min"
+msgstr "%(hours)s ч %(minutes)s мин"
+
+#: apps/bot/shift_handlers.py:46
+#, python-format
+msgid "%(minutes)s min"
+msgstr "%(minutes)s мин"
+
+#: apps/bot/shift_handlers.py:50
+#, python-format
+msgid ""
+"You are already on shift with %(vehicle)s since %(time)s. Send /end_shift to "
+"end it."
+msgstr "Вы на смене на %(vehicle)s с %(time)s. Чтобы закончить, отправьте /end_shift."
+
+#: apps/bot/shift_handlers.py:55
+#, python-format
+msgid ""
+"%(vehicle)s is on shift with %(driver)s since %(time)s. If that is wrong, "
+"call the dispatcher."
+msgstr "%(vehicle)s на смене у %(driver)s с %(time)s. Если это ошибка, позвоните диспетчеру."
+
+#: apps/bot/shift_handlers.py:63
+#, python-format
+msgid "Shift started: %(vehicle)s at %(time)s."
+msgstr "Смена начата: %(vehicle)s в %(time)s."
+
+#: apps/bot/shift_handlers.py:65
+msgid "Send /end_shift when you finish."
+msgstr "Когда закончите, отправьте /end_shift."
+
+#: apps/bot/shift_handlers.py:70
+#, python-format
+msgid "Shift ended: %(vehicle)s, %(start)s–%(end)s (%(duration)s)."
+msgstr "Смена закончена: %(vehicle)s, %(start)s–%(end)s (%(duration)s)."
+
+#: apps/bot/shift_handlers.py:88 apps/bot/shift_handlers.py:141
+msgid "Shifts are for drivers only."
+msgstr "Смены только для водителей."
+
+#: apps/bot/shift_handlers.py:98
+#, python-format
+msgid "No free vehicle matches “%(text)s”. Try again or call the dispatcher."
+msgstr "Свободных машин по «%(text)s» не найдено. Попробуйте ещё раз или позвоните диспетчеру."
+
+#: apps/bot/shift_handlers.py:101
+msgid "There are no free vehicles. Call the dispatcher."
+msgstr "Свободных машин нет. Позвоните диспетчеру."
+
+#: apps/bot/shift_handlers.py:104
+msgid "Which vehicle are you taking?"
+msgstr "Какую машину вы берёте?"
+
+#: apps/bot/shift_handlers.py:106
+#, python-format
+msgid "Showing %(shown)s of %(total)s."
+msgstr "Показано %(shown)s из %(total)s."
+
+#: apps/bot/shift_handlers.py:108
+msgid "Not in the list? Type part of the plate number, for example 123."
+msgstr "Нет в списке? Напишите часть госномера, например 123."
+
+#: apps/bot/shift_handlers.py:153
+msgid "This vehicle can no longer be chosen. Send /start_shift again."
+msgstr "Эту машину больше нельзя выбрать. Отправьте /start_shift ещё раз."
+
+#: apps/bot/shift_handlers.py:166
+msgid "You have no open shift. Send /start_shift to start one."
+msgstr "У вас нет открытой смены. Чтобы начать, отправьте /start_shift."
+
+#: apps/bot/shift_handlers.py:169
+#, python-format
+msgid "End your shift with %(vehicle)s? Started at %(time)s, %(duration)s ago."
+msgstr "Закончить смену на %(vehicle)s? Начата в %(time)s, %(duration)s назад."
+
+#: apps/bot/shift_handlers.py:189 apps/fleet/views.py:218
+msgid "This shift has already ended."
+msgstr "Эта смена уже закончена."
+
+#: apps/bot/shift_handlers.py:197
+msgid "OK, the shift goes on."
+msgstr "Хорошо, смена продолжается."
 
 #: apps/bot/templates/bot/request_list.html:7
 msgid "Waiting for confirmation"
@@ -352,35 +471,39 @@ msgstr "Подтверждения"
 msgid "Fleet"
 msgstr "Автопарк"
 
-#: apps/core/menu.py:62 apps/fleet/views.py:52 apps/fleet/views.py:99
+#: apps/core/menu.py:62 apps/fleet/views.py:56 apps/fleet/views.py:103
 msgid "Vehicles"
 msgstr "Автомобили"
 
-#: apps/core/menu.py:63 apps/fleet/views.py:66 apps/fleet/views.py:99
+#: apps/core/menu.py:63 apps/fleet/views.py:70 apps/fleet/views.py:103
 msgid "Drivers"
 msgstr "Водители"
 
-#: apps/core/menu.py:64 apps/fleet/templates/fleet/vehicle_list.html:22
+#: apps/core/menu.py:65 apps/fleet/views.py:206
+msgid "Shifts"
+msgstr "Смены"
+
+#: apps/core/menu.py:66 apps/fleet/templates/fleet/vehicle_list.html:22
 msgid "Fuel"
 msgstr "Топливо"
 
-#: apps/core/menu.py:66
+#: apps/core/menu.py:68
 msgid "Maintenance"
 msgstr "Техобслуживание"
 
-#: apps/core/menu.py:67
+#: apps/core/menu.py:69
 msgid "Store"
 msgstr "Склад"
 
-#: apps/core/menu.py:68
+#: apps/core/menu.py:70
 msgid "Documents"
 msgstr "Документы"
 
-#: apps/core/menu.py:71
+#: apps/core/menu.py:73
 msgid "Reports"
 msgstr "Отчёты"
 
-#: apps/core/menu.py:72
+#: apps/core/menu.py:74
 msgid "Settings"
 msgstr "Настройки"
 
@@ -409,7 +532,7 @@ msgid "The file is larger than %(mb)s MB."
 msgstr "Файл больше %(mb)s МБ."
 
 #: apps/fleet/templates/fleet/driver_list.html:7
-#: apps/fleet/templates/fleet/vehicle_list.html:7 apps/fleet/views.py:107
+#: apps/fleet/templates/fleet/vehicle_list.html:7 apps/fleet/views.py:111
 msgid "Import from Excel"
 msgstr "Импорт из Excel"
 
@@ -459,6 +582,7 @@ msgid "Not yet"
 msgstr "Ещё нет"
 
 #: apps/fleet/templates/fleet/driver_list.html:57
+#: apps/fleet/templates/fleet/shift_list.html:82
 #: apps/fleet/templates/fleet/vehicle_list.html:52
 msgid "Nothing found."
 msgstr "Ничего не найдено."
@@ -543,6 +667,69 @@ msgstr "3. Импортировать"
 msgid "Cancel"
 msgstr "Отмена"
 
+#: apps/fleet/templates/fleet/shift_list.html:7
+msgid "On shift now"
+msgstr "Сейчас на смене"
+
+#: apps/fleet/templates/fleet/shift_list.html:15
+msgid "Driver or plate"
+msgstr "Водитель или номер"
+
+#: apps/fleet/templates/fleet/shift_list.html:20
+msgid "Day"
+msgstr "День"
+
+#: apps/fleet/templates/fleet/shift_list.html:27
+msgid "On shift now only"
+msgstr "Только сейчас на смене"
+
+#: apps/fleet/templates/fleet/shift_list.html:30
+msgid "Show"
+msgstr "Показать"
+
+#: apps/fleet/templates/fleet/shift_list.html:32
+msgid "Clear"
+msgstr "Сбросить"
+
+#: apps/fleet/templates/fleet/shift_list.html:43
+#: apps/fleet/templates/fleet/vehicle_list.html:20
+msgid "Vehicle"
+msgstr "Автомобиль"
+
+#: apps/fleet/templates/fleet/shift_list.html:44
+msgid "Started"
+msgstr "Начало"
+
+#: apps/fleet/templates/fleet/shift_list.html:45
+msgid "Ended"
+msgstr "Конец"
+
+#: apps/fleet/templates/fleet/shift_list.html:46
+msgid "Duration"
+msgstr "Длительность"
+
+#: apps/fleet/templates/fleet/shift_list.html:58
+msgid "On shift"
+msgstr "На смене"
+
+#: apps/fleet/templates/fleet/shift_list.html:63
+#, python-format
+msgid "%(h)s h %(m)s min"
+msgstr "%(h)s ч %(m)s мин"
+
+#: apps/fleet/templates/fleet/shift_list.html:66
+#, python-format
+msgid "End the shift of %(driver)s with %(vehicle)s?"
+msgstr "Закончить смену %(driver)s на %(vehicle)s?"
+
+#: apps/fleet/templates/fleet/shift_list.html:70
+msgid "End shift"
+msgstr "Закончить смену"
+
+#: apps/fleet/templates/fleet/shift_list.html:82
+msgid "No shifts yet. Drivers start them in the bot with /start_shift."
+msgstr "Смен пока нет. Водители начинают их в боте командой /start_shift."
+
 #: apps/fleet/templates/fleet/vehicle_list.html:12
 msgid "Plate, brand, model or VIN"
 msgstr "Госномер, марка, модель или VIN"
@@ -550,10 +737,6 @@ msgstr "Госномер, марка, модель или VIN"
 #: apps/fleet/templates/fleet/vehicle_list.html:19
 msgid "Plate"
 msgstr "Госномер"
-
-#: apps/fleet/templates/fleet/vehicle_list.html:20
-msgid "Vehicle"
-msgstr "Автомобиль"
 
 #: apps/fleet/templates/fleet/vehicle_list.html:21
 msgid "Year"
@@ -583,40 +766,52 @@ msgstr "Неактивен"
 msgid "No vehicles yet. Import them from the company data template."
 msgstr "Автомобилей пока нет. Импортируйте их из шаблона данных компании."
 
-#: apps/fleet/views.py:94
+#: apps/fleet/views.py:98
 msgid "New vehicles"
 msgstr "Новые автомобили"
 
-#: apps/fleet/views.py:95
+#: apps/fleet/views.py:99
 msgid "Changed vehicles"
 msgstr "Изменённые автомобили"
 
-#: apps/fleet/views.py:96
+#: apps/fleet/views.py:100
 msgid "New drivers"
 msgstr "Новые водители"
 
-#: apps/fleet/views.py:97
+#: apps/fleet/views.py:101
 msgid "Changed drivers"
 msgstr "Изменённые водители"
 
-#: apps/fleet/views.py:118
+#: apps/fleet/views.py:122
 msgid "This is not a valid Excel file."
 msgstr "Это не файл Excel."
 
-#: apps/fleet/views.py:139
+#: apps/fleet/views.py:143
 msgid "The preview has expired. Upload the file again."
 msgstr "Предпросмотр устарел. Загрузите файл снова."
 
-#: apps/fleet/views.py:145
+#: apps/fleet/views.py:149
 msgid "The data changed since the preview. Upload the file again."
 msgstr "Данные изменились после предпросмотра. Загрузите файл снова."
 
-#: apps/fleet/views.py:151
+#: apps/fleet/views.py:155
 #, python-format
 msgid ""
 "Imported: %(nv)s new and %(uv)s changed vehicles, %(nd)s new and %(ud)s "
 "changed drivers."
 msgstr "Импортировано: автомобили — %(nv)s новых, %(uv)s изменённых; водители — %(nd)s новых, %(ud)s изменённых."
+
+#: apps/fleet/views.py:220
+#, python-format
+msgid "The shift of %(driver)s with %(vehicle)s is ended."
+msgstr "Смена %(driver)s на %(vehicle)s закончена."
+
+#: apps/fleet/views.py:226
+#, python-format
+msgid ""
+"The dispatcher ended your shift with %(vehicle)s at %(time)s. Send /"
+"start_shift when you take a vehicle again."
+msgstr "Диспетчер закончил вашу смену на %(vehicle)s в %(time)s. Когда снова возьмёте машину, отправьте /start_shift."
 
 #: templates/403.html:3 templates/403.html:5
 msgid "No access"
