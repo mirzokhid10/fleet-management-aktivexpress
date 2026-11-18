@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-18 21:42+0500\n"
+"POT-Creation-Date: 2026-11-18 22:42+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -120,6 +120,37 @@ msgstr "Попробовать снова"
 msgid "Back"
 msgstr "Назад"
 
+#: apps/bot/alerts.py:47
+#, python-format
+msgid "%(who)s: location is off for %(minutes)s min (since %(time)s)."
+msgstr "%(who)s: геопозиция выключена %(minutes)s мин (с %(time)s)."
+
+#: apps/bot/alerts.py:51
+msgid "No location since the shift started."
+msgstr "С начала смены геопозиции не было."
+
+#: apps/bot/alerts.py:53
+#, python-format
+msgid "Last place: %(link)s"
+msgstr "Последнее место: %(link)s"
+
+#: apps/bot/alerts.py:58
+#, python-format
+msgid "%(who)s: location is on again (it was off for %(minutes)s min)."
+msgstr "%(who)s: геопозиция снова включена (была выключена %(minutes)s мин)."
+
+#: apps/bot/alerts.py:64
+#, python-format
+msgid ""
+"Your location has been off for %(minutes)s min. The dispatcher is informed."
+msgstr "Ваша геопозиция выключена уже %(minutes)s мин. Диспетчер уведомлён."
+
+#: apps/bot/alerts.py:138
+msgid ""
+"Hello! I will post alerts here once the director chooses this group in "
+"Company settings."
+msgstr "Здравствуйте! Я буду присылать сюда оповещения, когда директор выберет эту группу в настройках компании."
+
 #: apps/bot/handlers.py:31
 #, python-format
 msgid "Hello, %(name)s! This is the Aktiv Fleet bot."
@@ -206,7 +237,7 @@ msgid "This sign-in link has expired. Start again on the website."
 msgstr "Срок этой ссылки для входа истёк. Начните заново на сайте."
 
 #: apps/bot/handlers.py:147 apps/bot/location_handlers.py:63
-#: apps/bot/shift_handlers.py:90
+#: apps/bot/shift_handlers.py:92
 msgid ""
 "You are not registered yet. Send /start and share your phone number first."
 msgstr "Вы ещё не зарегистрированы. Сначала отправьте /start и поделитесь номером телефона."
@@ -285,8 +316,8 @@ msgstr "Это разовая геопозиция. Нужна трансляц�
 msgid "Start a shift first with /start_shift, then share your live location."
 msgstr "Сначала начните смену через /start_shift, затем включите трансляцию геопозиции."
 
-#: apps/bot/location_handlers.py:61 apps/bot/shift_handlers.py:95
-#: apps/bot/shift_handlers.py:148
+#: apps/bot/location_handlers.py:61 apps/bot/shift_handlers.py:97
+#: apps/bot/shift_handlers.py:150
 msgid "Shifts are for drivers only."
 msgstr "Смены только для водителей."
 
@@ -314,93 +345,93 @@ msgstr "Номер принадлежит другому человеку"
 msgid "Other"
 msgstr "Прочее"
 
-#: apps/bot/shift_handlers.py:47
+#: apps/bot/shift_handlers.py:48
 #, python-format
 msgid "%(hours)s h %(minutes)s min"
 msgstr "%(hours)s ч %(minutes)s мин"
 
-#: apps/bot/shift_handlers.py:48
+#: apps/bot/shift_handlers.py:49
 #, python-format
 msgid "%(minutes)s min"
 msgstr "%(minutes)s мин"
 
-#: apps/bot/shift_handlers.py:52
+#: apps/bot/shift_handlers.py:53
 #, python-format
 msgid ""
 "You are already on shift with %(vehicle)s since %(time)s. Send /end_shift to "
 "end it."
 msgstr "Вы на смене на %(vehicle)s с %(time)s. Чтобы закончить, отправьте /end_shift."
 
-#: apps/bot/shift_handlers.py:57
+#: apps/bot/shift_handlers.py:58
 #, python-format
 msgid ""
 "%(vehicle)s is on shift with %(driver)s since %(time)s. If that is wrong, "
 "call the dispatcher."
 msgstr "%(vehicle)s на смене у %(driver)s с %(time)s. Если это ошибка, позвоните диспетчеру."
 
-#: apps/bot/shift_handlers.py:65
+#: apps/bot/shift_handlers.py:66
 #, python-format
 msgid "Shift started: %(vehicle)s at %(time)s."
 msgstr "Смена начата: %(vehicle)s в %(time)s."
 
-#: apps/bot/shift_handlers.py:68
+#: apps/bot/shift_handlers.py:69
 msgid "Send /end_shift when you finish."
 msgstr "Когда закончите, отправьте /end_shift."
 
-#: apps/bot/shift_handlers.py:73
+#: apps/bot/shift_handlers.py:74
 #, python-format
 msgid "Shift ended: %(vehicle)s, %(start)s–%(end)s (%(duration)s)."
 msgstr "Смена закончена: %(vehicle)s, %(start)s–%(end)s (%(duration)s)."
 
-#: apps/bot/shift_handlers.py:77
+#: apps/bot/shift_handlers.py:78
 #, python-format
 msgid "Distance: %(km)s km."
 msgstr "Пробег: %(km)s км."
 
-#: apps/bot/shift_handlers.py:78 apps/fleet/views.py:247
+#: apps/bot/shift_handlers.py:80 apps/fleet/views.py:247
 msgid "You can stop sharing your location now."
 msgstr "Теперь можно выключить трансляцию геопозиции."
 
-#: apps/bot/shift_handlers.py:105
+#: apps/bot/shift_handlers.py:107
 #, python-format
 msgid "No free vehicle matches “%(text)s”. Try again or call the dispatcher."
 msgstr "Свободных машин по «%(text)s» не найдено. Попробуйте ещё раз или позвоните диспетчеру."
 
-#: apps/bot/shift_handlers.py:108
+#: apps/bot/shift_handlers.py:110
 msgid "There are no free vehicles. Call the dispatcher."
 msgstr "Свободных машин нет. Позвоните диспетчеру."
 
-#: apps/bot/shift_handlers.py:111
+#: apps/bot/shift_handlers.py:113
 msgid "Which vehicle are you taking?"
 msgstr "Какую машину вы берёте?"
 
-#: apps/bot/shift_handlers.py:113
+#: apps/bot/shift_handlers.py:115
 #, python-format
 msgid "Showing %(shown)s of %(total)s."
 msgstr "Показано %(shown)s из %(total)s."
 
-#: apps/bot/shift_handlers.py:115
+#: apps/bot/shift_handlers.py:117
 msgid "Not in the list? Type part of the plate number, for example 123."
 msgstr "Нет в списке? Напишите часть госномера, например 123."
 
-#: apps/bot/shift_handlers.py:160
+#: apps/bot/shift_handlers.py:162
 msgid "This vehicle can no longer be chosen. Send /start_shift again."
 msgstr "Эту машину больше нельзя выбрать. Отправьте /start_shift ещё раз."
 
-#: apps/bot/shift_handlers.py:173
+#: apps/bot/shift_handlers.py:175
 msgid "You have no open shift. Send /start_shift to start one."
 msgstr "У вас нет открытой смены. Чтобы начать, отправьте /start_shift."
 
-#: apps/bot/shift_handlers.py:176
+#: apps/bot/shift_handlers.py:178
 #, python-format
 msgid "End your shift with %(vehicle)s? Started at %(time)s, %(duration)s ago."
 msgstr "Закончить смену на %(vehicle)s? Начата в %(time)s, %(duration)s назад."
 
-#: apps/bot/shift_handlers.py:196 apps/fleet/views.py:236
+#: apps/bot/shift_handlers.py:198 apps/fleet/views.py:236
 msgid "This shift has already ended."
 msgstr "Эта смена уже закончена."
 
-#: apps/bot/shift_handlers.py:205
+#: apps/bot/shift_handlers.py:207
 msgid "OK, the shift goes on."
 msgstr "Хорошо, смена продолжается."
 

@@ -17,7 +17,7 @@ from apps.accounts.models import User
 from fleet_import.fields import FieldError, parse_phone
 
 from . import registration as reg
-from . import location_handlers, shift_handlers
+from . import alerts, location_handlers, shift_handlers
 from .keyboards import (LANGUAGE_PREFIX, LOGIN_PREFIX, language_picker, login_numbers,
                         phone_request)
 from .models import BotUser, RegistrationRequest
@@ -199,6 +199,7 @@ def make_router() -> Router:
     router.message.register(contact_shared, F.contact)
     shift_handlers.register(router)
     location_handlers.register(router)
+    alerts.register(router)
     router.callback_query.register(language_chosen, F.data.startswith(LANGUAGE_PREFIX))
     router.callback_query.register(login_pick, F.data.startswith(LOGIN_PREFIX))
     router.message.register(anything_else)  # last: catches everything else

@@ -416,6 +416,13 @@ T: dict[str, tuple[str, str]] = {
     '%(km)s km': ('%(km)s km', '%(km)s км'),
     'max %(v)s km/h': ('maks. %(v)s km/soat', 'макс. %(v)s км/ч'),
     'Distance: %(km)s km.': ('Masofa: %(km)s km.', 'Пробег: %(km)s км.'),
+    # stop-sharing alerts (Day 11)
+    '%(who)s: location is off for %(minutes)s min (since %(time)s).': ("%(who)s: joylashuv %(minutes)s daqiqadan beri o'chiq (%(time)s dan).", '%(who)s: геопозиция выключена %(minutes)s мин (с %(time)s).'),
+    'No location since the shift started.': ("Smena boshlanganidan beri joylashuv yo'q.", 'С начала смены геопозиции не было.'),
+    'Last place: %(link)s': ('Oxirgi joy: %(link)s', 'Последнее место: %(link)s'),
+    '%(who)s: location is on again (it was off for %(minutes)s min).': ("%(who)s: joylashuv yana yoqildi (%(minutes)s daqiqa o'chiq edi).", '%(who)s: геопозиция снова включена (была выключена %(minutes)s мин).'),
+    'Your location has been off for %(minutes)s min. The dispatcher is informed.': ("Joylashuvingiz %(minutes)s daqiqadan beri o'chiq. Dispetcherga xabar berildi.", 'Ваша геопозиция выключена уже %(minutes)s мин. Диспетчер уведомлён.'),
+    'Hello! I will post alerts here once the director chooses this group in Company settings.': ('Salom! Direktor bu guruhni kompaniya sozlamalarida tanlagach, ogohlantirishlarni shu yerga yuboraman.', 'Здравствуйте! Я буду присылать сюда оповещения, когда директор выберет эту группу в настройках компании.'),
 }
 
 LANGS = {"uz": 0, "ru": 1}

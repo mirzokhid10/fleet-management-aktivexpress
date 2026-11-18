@@ -97,3 +97,22 @@ class RegistrationRequest(models.Model):
     @property
     def is_staff_request(self) -> bool:
         return self.staff_id is not None
+
+
+class BotGroup(models.Model):
+    """A Telegram group the bot was added to (Day 11).
+
+    The director chooses one of them in Company settings for manager alerts.
+    """
+
+    chat_id = models.BigIntegerField(unique=True)
+    title = models.CharField(max_length=128, blank=True)
+    is_member = models.BooleanField(default=True, help_text="False once the bot is removed")
+    added_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["title"]
+
+    def __str__(self) -> str:
+        return self.title or str(self.chat_id)

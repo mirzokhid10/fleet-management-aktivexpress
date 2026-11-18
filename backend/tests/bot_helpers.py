@@ -9,7 +9,8 @@ from typing import Any
 from aiogram import Bot
 from aiogram.client.session.base import BaseSession
 from aiogram.methods import (AnswerCallbackQuery, EditMessageText, SendMessage, TelegramMethod)
-from aiogram.types import CallbackQuery, Chat, Location, Message, Update, User
+from aiogram.types import (CallbackQuery, Chat, ChatMemberLeft, ChatMemberMember,
+                           ChatMemberUpdated, Location, Message, Update, User)
 from asgiref.sync import async_to_sync
 
 from apps.bot.setup import build_bot, build_dispatcher
@@ -101,6 +102,19 @@ class FakeTelegram:
                           location=Location(latitude=lat, longitude=lon,
                                             live_period=live_period, **loc))
         self._feed(Update(update_id=next(_ids), edited_message=message))
+        return self.session.calls[start:]
+
+    # --- groups (Day 11) ---
+    def bot_in_group(self, chat_id: int, title: str, added: bool = True) -> list:
+        """This person adds the bot to a group (or removes it)."""
+        start = len(self.session.calls)
+        me = User(id=42, is_bot=True, first_name="fleetbot")
+        out, inside = ChatMemberLeft(user=me), ChatMemberMember(user=me)
+        event = ChatMemberUpdated(
+            chat=Chat(id=chat_id, type="supergroup", title=title), from_user=self.user,
+            date=dt.datetime.now(dt.UTC), old_chat_member=out if added else inside,
+            new_chat_member=inside if added else out)
+        self._feed(Update(update_id=next(_ids), my_chat_member=event))
         return self.session.calls[start:]
 
     # what the person sees

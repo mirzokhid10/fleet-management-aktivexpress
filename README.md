@@ -129,6 +129,14 @@ The Shifts page shows each shift's distance and top speed; the bot gives the dis
 docker compose exec web python manage.py recalculate_track
 ```
 
+## Stop-sharing alerts (Day 11)
+
+The bot checks every 30 seconds. When a driver on shift has had no location for **Company settings → stop alert minutes** (10), the managers' Telegram group gets an alert with the last known place, and the driver gets a reminder. When location comes back, the group hears that too. One alert per gap; gaps are stored (`SharingGap`) for reports.
+
+To set up the group:
+1. Create a Telegram group for the managers and add the bot to it. The bot says hello and remembers the group.
+2. In the admin, open **Company settings** and choose it under **Alert group**.
+
 ## Admin panel
 
 http://localhost:8000/admin/ for superusers (the demo director is one). Changes made there are written to the audit log; the audit log itself is read-only.
@@ -144,4 +152,5 @@ http://localhost:8000/admin/ for superusers (the demo director is one). Changes 
 - [x] Day 7 — registration by phone in the bot, managers confirm on New users; web sign-in confirmed in the bot (number matching), passwords for superusers only. Tested with real Telegram.
 - [x] Day 8 — `/start_shift` with vehicle picker, `/end_shift`, Shifts page for managers (filters, end a forgotten shift). Tested with real Telegram.
 - [x] Day 9 — live location from drivers on shift stored as points per shift; sharing status and points on the Shifts page. Tested with real Telegram.
-- [x] Day 10 — distance and speed per point, bad points (accuracy >100 m, jumps >150 km/h) left out; distance on the Shifts page and in the bot
+- [x] Day 10 — distance and speed per point, bad points (accuracy >100 m, jumps >150 km/h) left out; distance on the Shifts page and in the bot. Committed.
+- [x] Day 11 — stop-sharing detection (every 30 s); alert with last place to the managers' group, reminder to the driver, "back on" message

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-18 21:42+0500\n"
+"POT-Creation-Date: 2026-11-18 22:42+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -118,6 +118,37 @@ msgstr "Qayta urinish"
 msgid "Back"
 msgstr "Orqaga"
 
+#: apps/bot/alerts.py:47
+#, python-format
+msgid "%(who)s: location is off for %(minutes)s min (since %(time)s)."
+msgstr "%(who)s: joylashuv %(minutes)s daqiqadan beri o'chiq (%(time)s dan)."
+
+#: apps/bot/alerts.py:51
+msgid "No location since the shift started."
+msgstr "Smena boshlanganidan beri joylashuv yo'q."
+
+#: apps/bot/alerts.py:53
+#, python-format
+msgid "Last place: %(link)s"
+msgstr "Oxirgi joy: %(link)s"
+
+#: apps/bot/alerts.py:58
+#, python-format
+msgid "%(who)s: location is on again (it was off for %(minutes)s min)."
+msgstr "%(who)s: joylashuv yana yoqildi (%(minutes)s daqiqa o'chiq edi)."
+
+#: apps/bot/alerts.py:64
+#, python-format
+msgid ""
+"Your location has been off for %(minutes)s min. The dispatcher is informed."
+msgstr "Joylashuvingiz %(minutes)s daqiqadan beri o'chiq. Dispetcherga xabar berildi."
+
+#: apps/bot/alerts.py:138
+msgid ""
+"Hello! I will post alerts here once the director chooses this group in "
+"Company settings."
+msgstr "Salom! Direktor bu guruhni kompaniya sozlamalarida tanlagach, ogohlantirishlarni shu yerga yuboraman."
+
 #: apps/bot/handlers.py:31
 #, python-format
 msgid "Hello, %(name)s! This is the Aktiv Fleet bot."
@@ -204,7 +235,7 @@ msgid "This sign-in link has expired. Start again on the website."
 msgstr "Bu kirish havolasining muddati tugagan. Saytda qaytadan boshlang."
 
 #: apps/bot/handlers.py:147 apps/bot/location_handlers.py:63
-#: apps/bot/shift_handlers.py:90
+#: apps/bot/shift_handlers.py:92
 msgid ""
 "You are not registered yet. Send /start and share your phone number first."
 msgstr "Siz hali ro'yxatdan o'tmagansiz. Avval /start yuboring va telefon raqamingizni ulashing."
@@ -283,8 +314,8 @@ msgstr "Bu bir martalik joylashuv. Menga jonli joylashuv kerak."
 msgid "Start a shift first with /start_shift, then share your live location."
 msgstr "Avval /start_shift bilan smenani boshlang, keyin jonli joylashuvni ulashing."
 
-#: apps/bot/location_handlers.py:61 apps/bot/shift_handlers.py:95
-#: apps/bot/shift_handlers.py:148
+#: apps/bot/location_handlers.py:61 apps/bot/shift_handlers.py:97
+#: apps/bot/shift_handlers.py:150
 msgid "Shifts are for drivers only."
 msgstr "Smenalar faqat haydovchilar uchun."
 
@@ -312,93 +343,93 @@ msgstr "Raqam boshqa odamga tegishli"
 msgid "Other"
 msgstr "Boshqa"
 
-#: apps/bot/shift_handlers.py:47
+#: apps/bot/shift_handlers.py:48
 #, python-format
 msgid "%(hours)s h %(minutes)s min"
 msgstr "%(hours)s soat %(minutes)s daqiqa"
 
-#: apps/bot/shift_handlers.py:48
+#: apps/bot/shift_handlers.py:49
 #, python-format
 msgid "%(minutes)s min"
 msgstr "%(minutes)s daqiqa"
 
-#: apps/bot/shift_handlers.py:52
+#: apps/bot/shift_handlers.py:53
 #, python-format
 msgid ""
 "You are already on shift with %(vehicle)s since %(time)s. Send /end_shift to "
 "end it."
 msgstr "Siz %(time)s dan beri %(vehicle)s bilan smenadasiz. Tugatish uchun /end_shift yuboring."
 
-#: apps/bot/shift_handlers.py:57
+#: apps/bot/shift_handlers.py:58
 #, python-format
 msgid ""
 "%(vehicle)s is on shift with %(driver)s since %(time)s. If that is wrong, "
 "call the dispatcher."
 msgstr "%(vehicle)s %(time)s dan beri %(driver)s smenasida. Agar bu xato bo'lsa, dispetcherga qo'ng'iroq qiling."
 
-#: apps/bot/shift_handlers.py:65
+#: apps/bot/shift_handlers.py:66
 #, python-format
 msgid "Shift started: %(vehicle)s at %(time)s."
 msgstr "Smena boshlandi: %(vehicle)s, %(time)s."
 
-#: apps/bot/shift_handlers.py:68
+#: apps/bot/shift_handlers.py:69
 msgid "Send /end_shift when you finish."
 msgstr "Ishni tugatganingizda /end_shift yuboring."
 
-#: apps/bot/shift_handlers.py:73
+#: apps/bot/shift_handlers.py:74
 #, python-format
 msgid "Shift ended: %(vehicle)s, %(start)s–%(end)s (%(duration)s)."
 msgstr "Smena tugadi: %(vehicle)s, %(start)s–%(end)s (%(duration)s)."
 
-#: apps/bot/shift_handlers.py:77
+#: apps/bot/shift_handlers.py:78
 #, python-format
 msgid "Distance: %(km)s km."
 msgstr "Masofa: %(km)s km."
 
-#: apps/bot/shift_handlers.py:78 apps/fleet/views.py:247
+#: apps/bot/shift_handlers.py:80 apps/fleet/views.py:247
 msgid "You can stop sharing your location now."
 msgstr "Endi joylashuvni ulashishni to'xtatishingiz mumkin."
 
-#: apps/bot/shift_handlers.py:105
+#: apps/bot/shift_handlers.py:107
 #, python-format
 msgid "No free vehicle matches “%(text)s”. Try again or call the dispatcher."
 msgstr "“%(text)s” bo'yicha bo'sh avtomobil topilmadi. Qayta urinib ko'ring yoki dispetcherga qo'ng'iroq qiling."
 
-#: apps/bot/shift_handlers.py:108
+#: apps/bot/shift_handlers.py:110
 msgid "There are no free vehicles. Call the dispatcher."
 msgstr "Bo'sh avtomobil yo'q. Dispetcherga qo'ng'iroq qiling."
 
-#: apps/bot/shift_handlers.py:111
+#: apps/bot/shift_handlers.py:113
 msgid "Which vehicle are you taking?"
 msgstr "Qaysi avtomobilni olyapsiz?"
 
-#: apps/bot/shift_handlers.py:113
+#: apps/bot/shift_handlers.py:115
 #, python-format
 msgid "Showing %(shown)s of %(total)s."
 msgstr "%(total)s tadan %(shown)s tasi ko'rsatilgan."
 
-#: apps/bot/shift_handlers.py:115
+#: apps/bot/shift_handlers.py:117
 msgid "Not in the list? Type part of the plate number, for example 123."
 msgstr "Ro'yxatda yo'qmi? Davlat raqamining bir qismini yozing, masalan 123."
 
-#: apps/bot/shift_handlers.py:160
+#: apps/bot/shift_handlers.py:162
 msgid "This vehicle can no longer be chosen. Send /start_shift again."
 msgstr "Bu avtomobilni endi tanlab bo'lmaydi. /start_shift ni qayta yuboring."
 
-#: apps/bot/shift_handlers.py:173
+#: apps/bot/shift_handlers.py:175
 msgid "You have no open shift. Send /start_shift to start one."
 msgstr "Sizda ochiq smena yo'q. Boshlash uchun /start_shift yuboring."
 
-#: apps/bot/shift_handlers.py:176
+#: apps/bot/shift_handlers.py:178
 #, python-format
 msgid "End your shift with %(vehicle)s? Started at %(time)s, %(duration)s ago."
 msgstr "%(vehicle)s bilan smenani tugatasizmi? %(time)s da boshlangan, %(duration)s oldin."
 
-#: apps/bot/shift_handlers.py:196 apps/fleet/views.py:236
+#: apps/bot/shift_handlers.py:198 apps/fleet/views.py:236
 msgid "This shift has already ended."
 msgstr "Bu smena allaqachon tugagan."
 
-#: apps/bot/shift_handlers.py:205
+#: apps/bot/shift_handlers.py:207
 msgid "OK, the shift goes on."
 msgstr "Yaxshi, smena davom etmoqda."
 

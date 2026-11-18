@@ -3,7 +3,7 @@ from django.contrib.gis.admin import GISModelAdmin
 
 from apps.audit.admin import AuditedAdmin
 
-from .models import Geofence, LiveSession, LocationPoint
+from .models import Geofence, LiveSession, LocationPoint, SharingGap
 
 
 @admin.register(Geofence)
@@ -34,3 +34,10 @@ class LocationPointAdmin(admin.ModelAdmin):
 
     def has_change_permission(self, request, obj=None):
         return False
+
+
+@admin.register(SharingGap)
+class SharingGapAdmin(admin.ModelAdmin):
+    list_display = ("shift", "since", "alerted_at", "resolved_at")
+    date_hierarchy = "since"
+    raw_id_fields = ("shift",)

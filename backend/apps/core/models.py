@@ -13,6 +13,10 @@ class CompanySettings(models.Model):
     retention_months = models.PositiveSmallIntegerField(default=3)
     daily_reminder_at = models.TimeField(default="18:00")
     stop_alert_minutes = models.PositiveSmallIntegerField(default=10)
+    # Day 11: Telegram group where the bot posts alerts for managers. The bot
+    # remembers every group it is added to (bot.BotGroup); the director picks one.
+    alert_chat_id = models.BigIntegerField(null=True, blank=True,
+                                           help_text="Telegram group for manager alerts")
 
     class Meta:
         verbose_name_plural = "company settings"

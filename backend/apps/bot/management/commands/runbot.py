@@ -12,6 +12,7 @@ from aiohttp import web
 from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
 
+from apps.bot import alerts
 from apps.bot.setup import build_bot, build_dispatcher, set_commands
 from apps.bot.webhook import WEBHOOK_PATH, make_app
 
@@ -29,6 +30,7 @@ class Command(BaseCommand):
         except Exception as exc:
             raise CommandError(str(exc)) from exc
         dp = build_dispatcher()
+        alerts.run_with(dp)  # Day 11: watch for drivers who stopped sharing location
         if mode == "polling":
             asyncio.run(self.polling(dp, bot))
         else:

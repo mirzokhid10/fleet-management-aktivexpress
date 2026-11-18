@@ -102,3 +102,26 @@ class LocationPoint(models.Model):
             models.CheckConstraint(name="point_accuracy_non_negative",
                                    condition=Q(accuracy_m__isnull=True) | Q(accuracy_m__gte=0)),
         ]
+
+
+class SharingGap(models.Model):
+    """A driver on shift without live location for too long (Day 11).
+
+    Opened when the alert goes out, closed when location comes back or the
+    shift ends. Gaps are what the stop-sharing reports are built from.
+    """
+
+    shift = models.ForeignKey(Shift, on_delete=models.CASCADE, related_name="sharing_gaps")
+    since = models.DateTimeField(help_text="Last time location was known (or shift start)")
+    alerted_at = models.DateTimeField()
+    resolved_at = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        ordering = ["-since"]
+        constraints = [
+            models.UniqueConstraint(fields=["shift"], condition=Q(resolved_at__isnull=True),
+                                    name="one_open_gap_per_shift"),
+        ]
+
+    def __str__(self) -> str:
+        return f"{self.shift} · {self.since:%H:%M}"
