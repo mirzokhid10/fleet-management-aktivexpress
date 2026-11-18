@@ -2,10 +2,14 @@
 {% load i18n %}
 
 {% block content %}
-<div class="mb-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+<div class="mb-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
   <div class="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/3">
     <p class="text-sm text-gray-500 dark:text-gray-400">{% translate "On shift now" %}</p>
     <p class="mt-1 text-2xl font-semibold text-gray-800 dark:text-white/90" data-testid="on-shift">{{ on_shift }}</p>
+  </div>
+  <div class="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/3">
+    <p class="text-sm text-gray-500 dark:text-gray-400">{% translate "Sharing location" %}</p>
+    <p class="mt-1 text-2xl font-semibold {% if sharing_now < on_shift %}text-amber-600 dark:text-amber-400{% else %}text-gray-800 dark:text-white/90{% endif %}" data-testid="sharing">{{ sharing_now }} / {{ on_shift }}</p>
   </div>
 </div>
 
@@ -44,6 +48,7 @@
           <th class="px-5 py-3 text-left text-xs font-medium text-gray-500 sm:px-6 dark:text-gray-400">{% translate "Started" %}</th>
           <th class="px-5 py-3 text-left text-xs font-medium text-gray-500 sm:px-6 dark:text-gray-400">{% translate "Ended" %}</th>
           <th class="px-5 py-3 text-left text-xs font-medium text-gray-500 sm:px-6 dark:text-gray-400">{% translate "Duration" %}</th>
+          <th class="px-5 py-3 text-left text-xs font-medium text-gray-500 sm:px-6 dark:text-gray-400">{% translate "Location" %}</th>
           <th class="px-5 py-3 sm:px-6"></th>
         </tr>
       </thead>
@@ -61,6 +66,20 @@
             {% endif %}
           </td>
           <td class="whitespace-nowrap px-5 py-4 text-sm text-gray-500 sm:px-6 dark:text-gray-400" data-testid="duration">{% blocktranslate with h=s.hours m=s.minutes %}{{ h }} h {{ m }} min{% endblocktranslate %}</td>
+          <td class="whitespace-nowrap px-5 py-4 text-sm sm:px-6" data-testid="location">
+            {% if s.is_open %}
+              {% if s.sharing %}
+              <span class="rounded-full bg-green-50 px-2 py-0.5 text-xs font-medium text-green-700 dark:bg-green-500/15 dark:text-green-500" data-sharing="1">{% translate "Sharing" %}</span>
+              {% else %}
+              <span class="rounded-full bg-amber-50 px-2 py-0.5 text-xs font-medium text-amber-700 dark:bg-amber-500/15 dark:text-amber-400" data-sharing="0">{% translate "Not sharing" %}</span>
+              {% endif %}
+            {% endif %}
+            <span class="block text-xs text-gray-500 dark:text-gray-400" data-points="{{ s.n_points }}">{% blocktranslate with n=s.n_points %}Points: {{ n }}{% endblocktranslate %}</span>
+            {% if s.last_point %}
+            <a href="https://www.openstreetmap.org/?mlat={{ s.last_point.point.y|stringformat:'.6f' }}&amp;mlon={{ s.last_point.point.x|stringformat:'.6f' }}#map=16/{{ s.last_point.point.y|stringformat:'.6f' }}/{{ s.last_point.point.x|stringformat:'.6f' }}"
+               target="_blank" rel="noopener" class="text-xs text-brand-500 hover:underline" data-testid="last-point">{% blocktranslate with time=s.last_point.recorded_at|date:"d.m H:i" %}Last: {{ time }}{% endblocktranslate %}</a>
+            {% endif %}
+          </td>
           <td class="px-5 py-4 text-right sm:px-6">
             {% if s.is_open %}
             {% blocktranslate with driver=s.driver.full_name vehicle=s.vehicle.plate_display asvar question %}End the shift of {{ driver }} with {{ vehicle }}?{% endblocktranslate %}

@@ -1,4 +1,4 @@
-"""Vehicle and driver lists, the Excel import (Day 5) and the shift log (Day 8)."""
+"""Vehicle and driver lists, the Excel import (Day 5) and the shift log (Days 8–9)."""
 
 from __future__ import annotations
 
@@ -11,7 +11,7 @@ from zipfile import BadZipFile
 from django.conf import settings
 from django.contrib import messages
 from django.core.paginator import Paginator
-from django.db.models import Q
+from django.db.models import Count, Exists, OuterRef, Q
 from django.http import FileResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
@@ -23,6 +23,7 @@ from openpyxl.utils.exceptions import InvalidFileException
 from apps.accounts.roles import MANAGERS, role_required
 from apps.audit.models import AuditLog
 from apps.bot import notify
+from apps.tracking.models import LiveSession, LocationPoint
 from fleet_import.schema import DRIVERS, VEHICLES
 from fleet_import.workbook import build_workbook
 
@@ -195,16 +196,27 @@ def _shift_filters(request, qs):
 
 @role_required(*MANAGERS)
 def shift_list(request):
-    qs, filters = _shift_filters(request, Shift.objects.select_related("driver", "vehicle"))
+    sharing = LiveSession.objects.filter(shift=OuterRef("pk"), ended_at__isnull=True)
+    qs, filters = _shift_filters(request, Shift.objects.select_related("driver", "vehicle")
+                                 .annotate(n_points=Count("points"), sharing=Exists(sharing))
+                                 # GROUP BY drops Meta.ordering, so say it again.
+                                 .order_by("-started_at", "-pk"))
     page = Paginator(qs, PAGE_SIZE).get_page(request.GET.get("page"))
     keep = request.GET.copy()
     keep.pop("page", None)
     now = timezone.now()
+    # Day 9: the latest point of each shift on this page, in one query.
+    last = {p.shift_id: p for p in LocationPoint.objects
+            .filter(shift__in=[s.pk for s in page]).order_by("shift_id", "-recorded_at")
+            .distinct("shift_id")}
     for s in page:
         s.hours, s.minutes = shifts.hours_minutes(shifts.duration(s, now))
+        s.last_point = last.get(s.pk)
+    open_now = Shift.objects.filter(ended_at__isnull=True)
     return render(request, "fleet/shift_list.html", {
         "page_title": _("Shifts"), "page": page, **filters,
-        "on_shift": Shift.objects.filter(ended_at__isnull=True).count(),
+        "on_shift": open_now.count(),
+        "sharing_now": open_now.filter(Exists(sharing)).count(),
         "filtered": any(filters.values()), "page_query": keep.urlencode(),
     })
 
@@ -222,10 +234,11 @@ def shift_end(request, pk):
         person = shift.driver.user
         if person and person.telegram_id:
             ended_at = timezone.localtime(shift.ended_at)
-            notify.send(person.telegram_id, person.language, lambda: _(
+            notify.send(person.telegram_id, person.language, lambda: "\n".join([_(
                 "The dispatcher ended your shift with %(vehicle)s at %(time)s. Send "
                 "/start_shift when you take a vehicle again.") % {
-                    "vehicle": shift.vehicle.plate_display, "time": f"{ended_at:%H:%M}"})
+                    "vehicle": shift.vehicle.plate_display, "time": f"{ended_at:%H:%M}"},
+                _("You can stop sharing your location now.")]))
     back = request.POST.get("back", "")
     # Back to the same filtered list; only our own page, never another site.
     return redirect(back if back.startswith("/shifts/?") else "fleet:shifts")

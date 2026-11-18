@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-18 14:01+0500\n"
+"POT-Creation-Date: 2026-11-18 18:04+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -44,7 +44,7 @@ msgid "Storekeeper"
 msgstr "Кладовщик"
 
 #: apps/accounts/models.py:19 apps/bot/templates/bot/request_list.html:27
-#: apps/fleet/templates/fleet/shift_list.html:42
+#: apps/fleet/templates/fleet/shift_list.html:46
 msgid "Driver"
 msgstr "Водитель"
 
@@ -205,7 +205,8 @@ msgstr "Спасибо! Руководитель скоро подтвердит
 msgid "This sign-in link has expired. Start again on the website."
 msgstr "Срок этой ссылки для входа истёк. Начните заново на сайте."
 
-#: apps/bot/handlers.py:147 apps/bot/shift_handlers.py:83
+#: apps/bot/handlers.py:147 apps/bot/location_handlers.py:51
+#: apps/bot/shift_handlers.py:88
 msgid ""
 "You are not registered yet. Send /start and share your phone number first."
 msgstr "Вы ещё не зарегистрированы. Сначала отправьте /start и поделитесь номером телефона."
@@ -260,6 +261,35 @@ msgstr "Да, закончить смену"
 msgid "No, keep working"
 msgstr "Нет, продолжаю работать"
 
+#: apps/bot/location_handlers.py:21
+msgid ""
+"Share your live location: tap 📎, choose Location, then “Share My Live "
+"Location” and “Until I turn it off”."
+msgstr "Включите трансляцию геопозиции: нажмите 📎, выберите «Геопозиция», затем «Транслировать геопозицию» и «Пока не выключу»."
+
+#: apps/bot/location_handlers.py:36
+msgid "Your location is on. Keep sharing it until /end_shift."
+msgstr "Геопозиция включена. Не выключайте её до /end_shift."
+
+#: apps/bot/location_handlers.py:39
+msgid ""
+"You stopped sharing your location. While you are on shift, please share it "
+"again."
+msgstr "Вы остановили трансляцию геопозиции. Пока вы на смене, включите её снова."
+
+#: apps/bot/location_handlers.py:42
+msgid "This is a one-time location. I need a live one."
+msgstr "Это разовая геопозиция. Нужна трансляция."
+
+#: apps/bot/location_handlers.py:45
+msgid "Start a shift first with /start_shift, then share your live location."
+msgstr "Сначала начните смену через /start_shift, затем включите трансляцию геопозиции."
+
+#: apps/bot/location_handlers.py:49 apps/bot/shift_handlers.py:93
+#: apps/bot/shift_handlers.py:146
+msgid "Shifts are for drivers only."
+msgstr "Смены только для водителей."
+
 #: apps/bot/models.py:47
 msgid "Waiting"
 msgstr "Ожидает"
@@ -284,88 +314,88 @@ msgstr "Номер принадлежит другому человеку"
 msgid "Other"
 msgstr "Прочее"
 
-#: apps/bot/shift_handlers.py:45
+#: apps/bot/shift_handlers.py:46
 #, python-format
 msgid "%(hours)s h %(minutes)s min"
 msgstr "%(hours)s ч %(minutes)s мин"
 
-#: apps/bot/shift_handlers.py:46
+#: apps/bot/shift_handlers.py:47
 #, python-format
 msgid "%(minutes)s min"
 msgstr "%(minutes)s мин"
 
-#: apps/bot/shift_handlers.py:50
+#: apps/bot/shift_handlers.py:51
 #, python-format
 msgid ""
 "You are already on shift with %(vehicle)s since %(time)s. Send /end_shift to "
 "end it."
 msgstr "Вы на смене на %(vehicle)s с %(time)s. Чтобы закончить, отправьте /end_shift."
 
-#: apps/bot/shift_handlers.py:55
+#: apps/bot/shift_handlers.py:56
 #, python-format
 msgid ""
 "%(vehicle)s is on shift with %(driver)s since %(time)s. If that is wrong, "
 "call the dispatcher."
 msgstr "%(vehicle)s на смене у %(driver)s с %(time)s. Если это ошибка, позвоните диспетчеру."
 
-#: apps/bot/shift_handlers.py:63
+#: apps/bot/shift_handlers.py:64
 #, python-format
 msgid "Shift started: %(vehicle)s at %(time)s."
 msgstr "Смена начата: %(vehicle)s в %(time)s."
 
-#: apps/bot/shift_handlers.py:65
+#: apps/bot/shift_handlers.py:67
 msgid "Send /end_shift when you finish."
 msgstr "Когда закончите, отправьте /end_shift."
 
-#: apps/bot/shift_handlers.py:70
+#: apps/bot/shift_handlers.py:73
 #, python-format
 msgid "Shift ended: %(vehicle)s, %(start)s–%(end)s (%(duration)s)."
 msgstr "Смена закончена: %(vehicle)s, %(start)s–%(end)s (%(duration)s)."
 
-#: apps/bot/shift_handlers.py:88 apps/bot/shift_handlers.py:141
-msgid "Shifts are for drivers only."
-msgstr "Смены только для водителей."
+#: apps/bot/shift_handlers.py:76 apps/fleet/views.py:239
+msgid "You can stop sharing your location now."
+msgstr "Теперь можно выключить трансляцию геопозиции."
 
-#: apps/bot/shift_handlers.py:98
+#: apps/bot/shift_handlers.py:103
 #, python-format
 msgid "No free vehicle matches “%(text)s”. Try again or call the dispatcher."
 msgstr "Свободных машин по «%(text)s» не найдено. Попробуйте ещё раз или позвоните диспетчеру."
 
-#: apps/bot/shift_handlers.py:101
+#: apps/bot/shift_handlers.py:106
 msgid "There are no free vehicles. Call the dispatcher."
 msgstr "Свободных машин нет. Позвоните диспетчеру."
 
-#: apps/bot/shift_handlers.py:104
+#: apps/bot/shift_handlers.py:109
 msgid "Which vehicle are you taking?"
 msgstr "Какую машину вы берёте?"
 
-#: apps/bot/shift_handlers.py:106
+#: apps/bot/shift_handlers.py:111
 #, python-format
 msgid "Showing %(shown)s of %(total)s."
 msgstr "Показано %(shown)s из %(total)s."
 
-#: apps/bot/shift_handlers.py:108
+#: apps/bot/shift_handlers.py:113
 msgid "Not in the list? Type part of the plate number, for example 123."
 msgstr "Нет в списке? Напишите часть госномера, например 123."
 
-#: apps/bot/shift_handlers.py:153
+#: apps/bot/shift_handlers.py:158
 msgid "This vehicle can no longer be chosen. Send /start_shift again."
 msgstr "Эту машину больше нельзя выбрать. Отправьте /start_shift ещё раз."
 
-#: apps/bot/shift_handlers.py:166
+#: apps/bot/shift_handlers.py:171
 msgid "You have no open shift. Send /start_shift to start one."
 msgstr "У вас нет открытой смены. Чтобы начать, отправьте /start_shift."
 
-#: apps/bot/shift_handlers.py:169
+#: apps/bot/shift_handlers.py:174
 #, python-format
 msgid "End your shift with %(vehicle)s? Started at %(time)s, %(duration)s ago."
 msgstr "Закончить смену на %(vehicle)s? Начата в %(time)s, %(duration)s назад."
 
-#: apps/bot/shift_handlers.py:189 apps/fleet/views.py:218
+#: apps/bot/shift_handlers.py:194 apps/fleet/views.py:228
 msgid "This shift has already ended."
 msgstr "Эта смена уже закончена."
 
-#: apps/bot/shift_handlers.py:197
+#: apps/bot/shift_handlers.py:202
 msgid "OK, the shift goes on."
 msgstr "Хорошо, смена продолжается."
 
@@ -471,15 +501,15 @@ msgstr "Подтверждения"
 msgid "Fleet"
 msgstr "Автопарк"
 
-#: apps/core/menu.py:62 apps/fleet/views.py:56 apps/fleet/views.py:103
+#: apps/core/menu.py:62 apps/fleet/views.py:57 apps/fleet/views.py:104
 msgid "Vehicles"
 msgstr "Автомобили"
 
-#: apps/core/menu.py:63 apps/fleet/views.py:70 apps/fleet/views.py:103
+#: apps/core/menu.py:63 apps/fleet/views.py:71 apps/fleet/views.py:104
 msgid "Drivers"
 msgstr "Водители"
 
-#: apps/core/menu.py:65 apps/fleet/views.py:206
+#: apps/core/menu.py:65 apps/fleet/views.py:215
 msgid "Shifts"
 msgstr "Смены"
 
@@ -532,7 +562,7 @@ msgid "The file is larger than %(mb)s MB."
 msgstr "Файл больше %(mb)s МБ."
 
 #: apps/fleet/templates/fleet/driver_list.html:7
-#: apps/fleet/templates/fleet/vehicle_list.html:7 apps/fleet/views.py:111
+#: apps/fleet/templates/fleet/vehicle_list.html:7 apps/fleet/views.py:112
 msgid "Import from Excel"
 msgstr "Импорт из Excel"
 
@@ -582,7 +612,7 @@ msgid "Not yet"
 msgstr "Ещё нет"
 
 #: apps/fleet/templates/fleet/driver_list.html:57
-#: apps/fleet/templates/fleet/shift_list.html:82
+#: apps/fleet/templates/fleet/shift_list.html:101
 #: apps/fleet/templates/fleet/vehicle_list.html:52
 msgid "Nothing found."
 msgstr "Ничего не найдено."
@@ -671,62 +701,88 @@ msgstr "Отмена"
 msgid "On shift now"
 msgstr "Сейчас на смене"
 
-#: apps/fleet/templates/fleet/shift_list.html:15
+#: apps/fleet/templates/fleet/shift_list.html:11
+msgid "Sharing location"
+msgstr "Передают геопозицию"
+
+#: apps/fleet/templates/fleet/shift_list.html:19
 msgid "Driver or plate"
 msgstr "Водитель или номер"
 
-#: apps/fleet/templates/fleet/shift_list.html:20
+#: apps/fleet/templates/fleet/shift_list.html:24
 msgid "Day"
 msgstr "День"
 
-#: apps/fleet/templates/fleet/shift_list.html:27
+#: apps/fleet/templates/fleet/shift_list.html:31
 msgid "On shift now only"
 msgstr "Только сейчас на смене"
 
-#: apps/fleet/templates/fleet/shift_list.html:30
+#: apps/fleet/templates/fleet/shift_list.html:34
 msgid "Show"
 msgstr "Показать"
 
-#: apps/fleet/templates/fleet/shift_list.html:32
+#: apps/fleet/templates/fleet/shift_list.html:36
 msgid "Clear"
 msgstr "Сбросить"
 
-#: apps/fleet/templates/fleet/shift_list.html:43
+#: apps/fleet/templates/fleet/shift_list.html:47
 #: apps/fleet/templates/fleet/vehicle_list.html:20
 msgid "Vehicle"
 msgstr "Автомобиль"
 
-#: apps/fleet/templates/fleet/shift_list.html:44
+#: apps/fleet/templates/fleet/shift_list.html:48
 msgid "Started"
 msgstr "Начало"
 
-#: apps/fleet/templates/fleet/shift_list.html:45
+#: apps/fleet/templates/fleet/shift_list.html:49
 msgid "Ended"
 msgstr "Конец"
 
-#: apps/fleet/templates/fleet/shift_list.html:46
+#: apps/fleet/templates/fleet/shift_list.html:50
 msgid "Duration"
 msgstr "Длительность"
 
-#: apps/fleet/templates/fleet/shift_list.html:58
+#: apps/fleet/templates/fleet/shift_list.html:51
+msgid "Location"
+msgstr "Геопозиция"
+
+#: apps/fleet/templates/fleet/shift_list.html:63
 msgid "On shift"
 msgstr "На смене"
 
-#: apps/fleet/templates/fleet/shift_list.html:63
+#: apps/fleet/templates/fleet/shift_list.html:68
 #, python-format
 msgid "%(h)s h %(m)s min"
 msgstr "%(h)s ч %(m)s мин"
 
-#: apps/fleet/templates/fleet/shift_list.html:66
+#: apps/fleet/templates/fleet/shift_list.html:72
+msgid "Sharing"
+msgstr "Передаёт"
+
+#: apps/fleet/templates/fleet/shift_list.html:74
+msgid "Not sharing"
+msgstr "Не передаёт"
+
+#: apps/fleet/templates/fleet/shift_list.html:77
+#, python-format
+msgid "Points: %(n)s"
+msgstr "Точек: %(n)s"
+
+#: apps/fleet/templates/fleet/shift_list.html:80
+#, python-format
+msgid "Last: %(time)s"
+msgstr "Последняя: %(time)s"
+
+#: apps/fleet/templates/fleet/shift_list.html:85
 #, python-format
 msgid "End the shift of %(driver)s with %(vehicle)s?"
 msgstr "Закончить смену %(driver)s на %(vehicle)s?"
 
-#: apps/fleet/templates/fleet/shift_list.html:70
+#: apps/fleet/templates/fleet/shift_list.html:89
 msgid "End shift"
 msgstr "Закончить смену"
 
-#: apps/fleet/templates/fleet/shift_list.html:82
+#: apps/fleet/templates/fleet/shift_list.html:101
 msgid "No shifts yet. Drivers start them in the bot with /start_shift."
 msgstr "Смен пока нет. Водители начинают их в боте командой /start_shift."
 
@@ -766,47 +822,47 @@ msgstr "Неактивен"
 msgid "No vehicles yet. Import them from the company data template."
 msgstr "Автомобилей пока нет. Импортируйте их из шаблона данных компании."
 
-#: apps/fleet/views.py:98
+#: apps/fleet/views.py:99
 msgid "New vehicles"
 msgstr "Новые автомобили"
 
-#: apps/fleet/views.py:99
+#: apps/fleet/views.py:100
 msgid "Changed vehicles"
 msgstr "Изменённые автомобили"
 
-#: apps/fleet/views.py:100
+#: apps/fleet/views.py:101
 msgid "New drivers"
 msgstr "Новые водители"
 
-#: apps/fleet/views.py:101
+#: apps/fleet/views.py:102
 msgid "Changed drivers"
 msgstr "Изменённые водители"
 
-#: apps/fleet/views.py:122
+#: apps/fleet/views.py:123
 msgid "This is not a valid Excel file."
 msgstr "Это не файл Excel."
 
-#: apps/fleet/views.py:143
+#: apps/fleet/views.py:144
 msgid "The preview has expired. Upload the file again."
 msgstr "Предпросмотр устарел. Загрузите файл снова."
 
-#: apps/fleet/views.py:149
+#: apps/fleet/views.py:150
 msgid "The data changed since the preview. Upload the file again."
 msgstr "Данные изменились после предпросмотра. Загрузите файл снова."
 
-#: apps/fleet/views.py:155
+#: apps/fleet/views.py:156
 #, python-format
 msgid ""
 "Imported: %(nv)s new and %(uv)s changed vehicles, %(nd)s new and %(ud)s "
 "changed drivers."
 msgstr "Импортировано: автомобили — %(nv)s новых, %(uv)s изменённых; водители — %(nd)s новых, %(ud)s изменённых."
 
-#: apps/fleet/views.py:220
+#: apps/fleet/views.py:230
 #, python-format
 msgid "The shift of %(driver)s with %(vehicle)s is ended."
 msgstr "Смена %(driver)s на %(vehicle)s закончена."
 
-#: apps/fleet/views.py:226
+#: apps/fleet/views.py:236
 #, python-format
 msgid ""
 "The dispatcher ended your shift with %(vehicle)s at %(time)s. Send /"

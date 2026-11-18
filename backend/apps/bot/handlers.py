@@ -1,6 +1,6 @@
 """Bot conversation: language (Day 6), registration by phone and web sign-in (Day 7).
 
-Shifts (Day 8) live in shift_handlers.py.
+Shifts (Day 8) live in shift_handlers.py, live location (Day 9) in location_handlers.py.
 """
 
 from __future__ import annotations
@@ -17,7 +17,7 @@ from apps.accounts.models import User
 from fleet_import.fields import FieldError, parse_phone
 
 from . import registration as reg
-from . import shift_handlers
+from . import location_handlers, shift_handlers
 from .keyboards import (LANGUAGE_PREFIX, LOGIN_PREFIX, language_picker, login_numbers,
                         phone_request)
 from .models import BotUser, RegistrationRequest
@@ -198,6 +198,7 @@ def make_router() -> Router:
     router.message.register(show_help, Command("help"))
     router.message.register(contact_shared, F.contact)
     shift_handlers.register(router)
+    location_handlers.register(router)
     router.callback_query.register(language_chosen, F.data.startswith(LANGUAGE_PREFIX))
     router.callback_query.register(login_pick, F.data.startswith(LOGIN_PREFIX))
     router.message.register(anything_else)  # last: catches everything else

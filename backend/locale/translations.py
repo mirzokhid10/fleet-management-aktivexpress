@@ -386,6 +386,31 @@ T: dict[str, tuple[str, str]] = {
         "olganingizda /start_shift yuboring.",
         "Диспетчер закончил вашу смену на %(vehicle)s в %(time)s. Когда снова возьмёте машину, "
         "отправьте /start_shift."),
+    # live location (Day 9)
+    'Share your live location: tap 📎, choose Location, then “Share My Live Location” and “Until I turn it off”.': ("Jonli joylashuvni ulashing: 📎 ni bosing, «Joylashuv»ni tanlang, so'ng «Jonli joylashuvni ulashish» va «O'chirmagunimcha»ni tanlang.",
+        'Включите трансляцию геопозиции: нажмите 📎, выберите «Геопозиция», затем «Транслировать геопозицию» и «Пока не выключу».'),
+    'Your location is on. Keep sharing it until /end_shift.': ("Joylashuvingiz yoqildi. /end_shift gacha o'chirmang.",
+        'Геопозиция включена. Не выключайте её до /end_shift.'),
+    'You stopped sharing your location. While you are on shift, please share it again.': ("Siz joylashuvni ulashishni to'xtatdingiz. Smenada ekansiz, iltimos, uni qayta yoqing.",
+        'Вы остановили трансляцию геопозиции. Пока вы на смене, включите её снова.'),
+    'This is a one-time location. I need a live one.': ('Bu bir martalik joylashuv. Menga jonli joylashuv kerak.',
+        'Это разовая геопозиция. Нужна трансляция.'),
+    'Start a shift first with /start_shift, then share your live location.': ('Avval /start_shift bilan smenani boshlang, keyin jonli joylashuvni ulashing.',
+        'Сначала начните смену через /start_shift, затем включите трансляцию геопозиции.'),
+    'You can stop sharing your location now.': ("Endi joylashuvni ulashishni to'xtatishingiz mumkin.",
+        'Теперь можно выключить трансляцию геопозиции.'),
+    'Sharing location': ('Joylashuvni ulashmoqda',
+        'Передают геопозицию'),
+    'Location': ('Joylashuv',
+        'Геопозиция'),
+    'Sharing': ('Ulashmoqda',
+        'Передаёт'),
+    'Not sharing': ('Ulashmayapti',
+        'Не передаёт'),
+    'Points: %(n)s': ('Nuqtalar: %(n)s',
+        'Точек: %(n)s'),
+    'Last: %(time)s': ('Oxirgisi: %(time)s',
+        'Последняя: %(time)s'),
 }
 
 LANGS = {"uz": 0, "ru": 1}

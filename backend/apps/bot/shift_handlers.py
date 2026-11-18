@@ -22,6 +22,7 @@ from apps.fleet import shifts
 from apps.fleet.models import Driver, Shift
 
 from .keyboards import SHIFT_END, SHIFT_KEEP, SHIFT_TAKE, end_confirm, vehicle_picker
+from .location_handlers import how_to_share
 from .models import BotUser
 
 
@@ -62,14 +63,18 @@ def started_text(shift: Shift) -> str:
     return "\n".join([
         "✅ " + _("Shift started: %(vehicle)s at %(time)s.") % {
             "vehicle": shift.vehicle.plate_display, "time": when(shift.started_at)},
+        how_to_share(),
         _("Send /end_shift when you finish."),
     ])
 
 
 def ended_text(shift: Shift) -> str:
-    return "✅ " + _("Shift ended: %(vehicle)s, %(start)s–%(end)s (%(duration)s).") % {
-        "vehicle": shift.vehicle.plate_display, "start": when(shift.started_at),
-        "end": when(shift.ended_at), "duration": span(shifts.duration(shift))}
+    return "\n".join([
+        "✅ " + _("Shift ended: %(vehicle)s, %(start)s–%(end)s (%(duration)s).") % {
+            "vehicle": shift.vehicle.plate_display, "start": when(shift.started_at),
+            "end": when(shift.ended_at), "duration": span(shifts.duration(shift))},
+        _("You can stop sharing your location now."),
+    ])
 
 
 # --- who is asking ---------------------------------------------------------

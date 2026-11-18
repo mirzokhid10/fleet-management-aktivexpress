@@ -9,7 +9,7 @@ from typing import Any
 from aiogram import Bot
 from aiogram.client.session.base import BaseSession
 from aiogram.methods import (AnswerCallbackQuery, EditMessageText, SendMessage, TelegramMethod)
-from aiogram.types import CallbackQuery, Chat, Message, Update, User
+from aiogram.types import CallbackQuery, Chat, Location, Message, Update, User
 from asgiref.sync import async_to_sync
 
 from apps.bot.setup import build_bot, build_dispatcher
@@ -70,6 +70,34 @@ class FakeTelegram:
         query = CallbackQuery(id=str(next(_ids)), from_user=self.user, chat_instance="1",
                               data=data, message=on)
         self._feed(Update(update_id=next(_ids), callback_query=query))
+        return self.session.calls[start:]
+
+    # --- live location (Day 9) ---
+    LIVE = 0x7FFFFFFF  # "until I turn it off"
+
+    def share_location(self, lat: float, lon: float, live_period: int | None = LIVE,
+                       at: dt.datetime | None = None, **loc: Any) -> tuple[int, list]:
+        """Share a location; live unless live_period=None. Returns (message_id, calls)."""
+        start = len(self.session.calls)
+        message_id = next(_ids)
+        message = Message(message_id=message_id, date=at or dt.datetime.now(dt.UTC),
+                          chat=self.chat, from_user=self.user,
+                          location=Location(latitude=lat, longitude=lon,
+                                            live_period=live_period, **loc))
+        self._feed(Update(update_id=next(_ids), message=message))
+        return message_id, self.session.calls[start:]
+
+    def move(self, message_id: int, lat: float, lon: float, live_period: int | None = LIVE,
+             at: dt.datetime | None = None, started: dt.datetime | None = None,
+             **loc: Any) -> list:
+        """Telegram's edit of a live location. live_period=None: the driver stopped it."""
+        start = len(self.session.calls)
+        now = dt.datetime.now(dt.UTC)
+        message = Message(message_id=message_id, date=started or now - dt.timedelta(minutes=1),
+                          edit_date=int((at or now).timestamp()), chat=self.chat, from_user=self.user,
+                          location=Location(latitude=lat, longitude=lon,
+                                            live_period=live_period, **loc))
+        self._feed(Update(update_id=next(_ids), edited_message=message))
         return self.session.calls[start:]
 
     # what the person sees

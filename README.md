@@ -113,6 +113,12 @@ A registered driver sends `/start_shift` in the bot and taps the vehicle they ta
 
 Managers see every shift on **Shifts** (`/shifts/`): filter by driver or plate, day, or "on shift now", and end a forgotten shift. The driver gets a message in the bot. Every start and end is in the audit log.
 
+## Live location (Day 9)
+
+After `/start_shift` the bot asks the driver to share **live** location (📎 → Location → Share My Live Location → Until I turn it off). Telegram then sends an update every few seconds; each is stored as a point of the open shift (PostGIS, `tracking_locationpoint`). One share is one `LiveSession`. The bot only speaks when something changes: sharing started, sharing stopped, a one-time location, or no shift. Points outside a shift are not stored; ending the shift ends the share.
+
+The Shifts page shows whether each open shift is sharing, its number of points and a link to the last place on OpenStreetMap.
+
 ## Admin panel
 
 http://localhost:8000/admin/ for superusers (the demo director is one). Changes made there are written to the audit log; the audit log itself is read-only.
@@ -126,4 +132,5 @@ http://localhost:8000/admin/ for superusers (the demo director is one). Changes 
 - [x] Day 5 — admin panel; vehicle and driver lists; Excel import with preview (web + `import_fleet` command). Waiting for the company's filled template to load the real fleet.
 - [x] Day 6 — bot skeleton (aiogram 3, polling locally / webhook on the server), /start, language choice (uz/ru), /language, /help. Tested with real Telegram.
 - [x] Day 7 — registration by phone in the bot, managers confirm on New users; web sign-in confirmed in the bot (number matching), passwords for superusers only. Tested with real Telegram.
-- [x] Day 8 — `/start_shift` with vehicle picker, `/end_shift`, Shifts page for managers (filters, end a forgotten shift)
+- [x] Day 8 — `/start_shift` with vehicle picker, `/end_shift`, Shifts page for managers (filters, end a forgotten shift). Tested with real Telegram.
+- [x] Day 9 — live location from drivers on shift stored as points per shift; sharing status and points on the Shifts page. Tested with real Telegram.
