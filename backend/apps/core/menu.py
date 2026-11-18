@@ -51,7 +51,8 @@ class MenuGroup:
 MENU: tuple[MenuGroup, ...] = (
     MenuGroup(_("Menu"), (
         MenuItem("dashboard", _("Dashboard"), "grid", "core:dashboard"),
-        MenuItem("map", _("Live map"), "map", day=12, roles=MANAGERS),
+        # Day 12: where every vehicle is now (Telegram live location).
+        MenuItem("map", _("Live map"), "map", "tracking:map", roles=MANAGERS),
         MenuItem("trips", _("Trips"), "route", day=14, roles=MANAGERS),
         # Storekeepers confirm part requests here when marked as approvers.
         MenuItem("approvals", _("Approvals"), "check", day=21),

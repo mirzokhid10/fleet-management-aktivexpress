@@ -1,0 +1,174 @@
+{% extends "base.html" %}
+{% load i18n static %}
+{% comment %}
+Day 12: the live map. Data comes from apps.tracking.views.map_data (json_script below);
+the map is MapLibre GL (vendored) with the OpenFreeMap style from settings.MAP_STYLE_URL.
+Day 13 will refresh the same data every 10 s.
+{% endcomment %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'vendor/maplibre-gl.css' %}" />
+<script defer src="{% static 'vendor/maplibre-gl.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+{{ vehicles|json_script:"map-vehicles" }}
+{{ map_center|json_script:"map-center" }}
+
+<div x-data="liveMap('{{ map_style_url|escapejs }}')" class="flex flex-col gap-4">
+  <div class="flex flex-wrap gap-2" role="group" aria-label="{% translate 'Status' %}" data-testid="status-filters">
+    {% for s in statuses %}
+    <button type="button" @click="toggle('{{ s.key }}')" :aria-pressed="show['{{ s.key }}'].toString()"
+            :class="show['{{ s.key }}'] ? 'border-gray-300 bg-white text-gray-800 dark:border-gray-700 dark:bg-white/5 dark:text-white/90' : 'border-transparent bg-gray-100 text-gray-400 dark:bg-white/3 dark:text-gray-500'"
+            class="inline-flex h-10 items-center gap-2 rounded-full border px-4 text-sm font-medium shadow-theme-xs"
+            data-status="{{ s.key }}">
+      <span class="size-2.5 rounded-full" :class="dot('{{ s.key }}')"></span>
+      {{ s.label }}
+      <span class="text-gray-500 dark:text-gray-400" data-testid="count-{{ s.key }}">{{ s.count }}</span>
+    </button>
+    {% endfor %}
+  </div>
+
+  <div class="flex flex-col-reverse gap-4 lg:flex-row">
+    <div class="flex flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white lg:h-[calc(100vh-14rem)] lg:min-h-[480px] lg:w-80 lg:shrink-0 dark:border-gray-800 dark:bg-white/3">
+      <div class="border-b border-gray-100 p-3 dark:border-gray-800">
+        <label for="map-search" class="sr-only">{% translate "Driver or plate" %}</label>
+        <input id="map-search" type="search" x-model="q" placeholder="{% translate 'Driver or plate' %}"
+               class="h-10 w-full rounded-lg border border-gray-300 bg-transparent px-3 text-sm text-gray-800 shadow-theme-xs focus:border-brand-300 focus:ring-3 focus:ring-brand-500/10 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90" />
+      </div>
+      <ul class="flex-1 divide-y divide-gray-100 overflow-y-auto dark:divide-gray-800" data-testid="vehicle-list">
+        {% for v in vehicles %}
+        <li x-show="visible({{ forloop.counter0 }})" data-vehicle="{{ v.id }}" data-status="{{ v.status }}">
+          <button type="button" @click="focus({{ forloop.counter0 }})"
+                  :class="selected === {{ forloop.counter0 }} ? 'bg-brand-50 dark:bg-brand-500/10' : 'hover:bg-gray-50 dark:hover:bg-white/3'"
+                  class="flex w-full items-start gap-3 px-4 py-3 text-left">
+            <span class="mt-1.5 size-2.5 shrink-0 rounded-full" :class="dot('{{ v.status }}')"></span>
+            <span class="min-w-0 flex-1">
+              <span class="flex items-baseline justify-between gap-2">
+                <span class="text-sm font-semibold text-gray-800 dark:text-white/90">{{ v.plate }}</span>
+                <span class="shrink-0 text-xs text-gray-500 dark:text-gray-400">{{ v.status_label }}</span>
+              </span>
+              <span class="block truncate text-xs text-gray-500 dark:text-gray-400">{{ v.driver|default:v.model }}</span>
+              <span class="block text-xs text-gray-400">
+                {% if v.lat is None %}{% translate "No position yet" %}
+                {% else %}{% blocktranslate with time=v.when %}Last update {{ time }}{% endblocktranslate %}{% if v.status == "moving" and v.speed is not None %} · {% blocktranslate with v=v.speed %}{{ v }} km/h{% endblocktranslate %}{% endif %}{% endif %}
+              </span>
+            </span>
+          </button>
+        </li>
+        {% empty %}
+        <li class="px-4 py-6 text-sm text-gray-500 dark:text-gray-400">{% translate "No vehicles yet." %}</li>
+        {% endfor %}
+        <li x-show="vehicles.length && !vehicles.some((v, i) => visible(i))" x-cloak
+            class="px-4 py-6 text-sm text-gray-500 dark:text-gray-400">{% translate "Nothing matches." %}</li>
+      </ul>
+    </div>
+
+    <div class="relative h-[55vh] min-h-[320px] overflow-hidden lg:min-w-0 lg:flex-1 rounded-2xl border border-gray-200 lg:h-[calc(100vh-14rem)] lg:min-h-[480px] dark:border-gray-800">
+      <div x-ref="map" class="h-full w-full" data-testid="map" data-style="{{ map_style_url }}"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Colours per status; written out in full so Tailwind finds the classes.
+  const STATUS_DOT = {
+    moving: "bg-green-500", stopped: "bg-brand-500", no_signal: "bg-red-500", off_shift: "bg-gray-400",
+  };
+  {% blocktranslate with v="__V__" asvar speed_text %}{{ v }} km/h{% endblocktranslate %}
+  {% blocktranslate with time="__TIME__" asvar when_text %}Last update {{ time }}{% endblocktranslate %}
+  const SPEED_TEXT = "{{ speed_text|escapejs }}";
+  const WHEN_TEXT = "{{ when_text|escapejs }}";
+
+  function liveMap(styleUrl) {
+    const vehicles = JSON.parse(document.getElementById("map-vehicles").textContent);
+    const center = JSON.parse(document.getElementById("map-center").textContent);
+    return {
+      vehicles,
+      show: { moving: true, stopped: true, no_signal: true, off_shift: true },
+      q: "",
+      selected: null,
+      map: null,
+      markers: [],
+
+      dot(status) { return STATUS_DOT[status]; },
+
+      visible(i) {
+        const v = this.vehicles[i];
+        const q = this.q.trim().toLowerCase().replace(/\s+/g, "");
+        const text = (v.plate + v.driver + v.model).toLowerCase().replace(/\s+/g, "");
+        return this.show[v.status] && (!q || text.includes(q));
+      },
+
+      toggle(status) { this.show[status] = !this.show[status]; this.updateMarkers(); },
+
+      popup(v) {
+        const box = document.createElement("div");
+        box.className = "text-sm text-gray-800";
+        const line = (text, cls) => {
+          const el = document.createElement("div");
+          el.textContent = text;
+          if (cls) el.className = cls;
+          box.appendChild(el);
+        };
+        line(v.plate, "font-semibold");
+        line(v.driver || v.model, "text-gray-500");
+        let state = v.status_label;
+        if (v.status === "moving" && v.speed !== null) state += " · " + SPEED_TEXT.replace("__V__", v.speed);
+        line(state);
+        line(WHEN_TEXT.replace("__TIME__", v.when), "text-xs text-gray-500");
+        return box;
+      },
+
+      marker(v) {
+        const el = document.createElement("div");
+        el.className = "flex cursor-pointer items-center gap-1 rounded-full border border-white bg-white py-0.5 pl-1 pr-2 text-xs font-semibold text-gray-800 shadow-theme-md";
+        el.dataset.status = v.status;
+        const dot = document.createElement("span");
+        dot.className = "size-3 rounded-full " + STATUS_DOT[v.status];
+        const label = document.createElement("span");
+        label.textContent = v.plate;
+        el.append(dot, label);
+        return el;
+      },
+
+      updateMarkers() {
+        this.markers.forEach((m, i) => {
+          if (m) m.getElement().style.display = this.visible(i) ? "" : "none";
+        });
+      },
+
+      focus(i) {
+        this.selected = i;
+        const v = this.vehicles[i], m = this.markers[i];
+        if (!m) return;
+        this.map.flyTo({ center: [v.lon, v.lat], zoom: Math.max(this.map.getZoom(), 15) });
+        this.markers.forEach((other) => other && other.getPopup().isOpen() && other.togglePopup());
+        m.togglePopup();
+      },
+
+      init() {
+        this.map = new maplibregl.Map({
+          container: this.$refs.map, style: styleUrl, center, zoom: 11,
+          attributionControl: { compact: true },
+        });
+        this.map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-right");
+        this.markers = this.vehicles.map((v, i) => {
+          if (v.lat === null) return null;
+          const popup = new maplibregl.Popup({ offset: 14, closeButton: false }).setDOMContent(this.popup(v));
+          const el = this.marker(v);
+          el.addEventListener("click", () => { this.selected = i; });
+          return new maplibregl.Marker({ element: el }).setLngLat([v.lon, v.lat]).setPopup(popup).addTo(this.map);
+        });
+        // Show the vehicles that work now; if none, every last known place.
+        const working = this.vehicles.filter((v) => v.lat !== null && v.status !== "off_shift");
+        const fit = new maplibregl.LngLatBounds();
+        (working.length ? working : this.vehicles.filter((v) => v.lat !== null))
+          .forEach((v) => fit.extend([v.lon, v.lat]));
+        if (!fit.isEmpty()) this.map.fitBounds(fit, { padding: 60, maxZoom: 15, duration: 0 });
+        this.$watch("q", () => this.updateMarkers());
+      },
+    };
+  }
+</script>
+{% endblock %}

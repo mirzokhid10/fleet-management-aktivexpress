@@ -13,6 +13,8 @@
         document.documentElement.classList.add("dark");
       }
     </script>
+    {# Page scripts (deferred) run before Alpine starts, so components can use them. #}
+    {% block head %}{% endblock %}
     <script defer src="{% static 'vendor/alpine-persist.min.js' %}"></script>
     <script defer src="{% static 'vendor/alpine-collapse.min.js' %}"></script>
     <script defer src="{% static 'vendor/alpine.min.js' %}"></script>

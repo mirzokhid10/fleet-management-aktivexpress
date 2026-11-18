@@ -137,6 +137,17 @@ To set up the group:
 1. Create a Telegram group for the managers and add the bot to it. The bot says hello and remembers the group.
 2. In the admin, open **Company settings** and choose it under **Alert group**.
 
+## Live map (Day 12)
+
+http://localhost:8001/map/ for directors and dispatchers. Every active vehicle is listed with a status, and shown on the map at its last good point (Day 10 bad points never move a marker):
+
+- **Moving**: on shift, location coming, last point under 2 min old at 5 km/h or more.
+- **Stopped**: on shift, location coming, otherwise.
+- **No signal**: on shift, but not sharing, or no update for `stop_alert_minutes` (Company settings), as in the Day 11 watcher.
+- **Off shift**: nobody on shift; shown at its last known place, if any.
+
+The rules are in `apps/tracking/livemap.py`. The map is MapLibre GL 5.24 (vendored in `static/vendor/`) with the free OpenFreeMap style. Change `MAP_STYLE_URL` in `.env` to switch map source (e.g. self-hosted tiles). The page is server-rendered; Day 13 adds the refresh every 10 s.
+
 ## Admin panel
 
 http://localhost:8000/admin/ for superusers (the demo director is one). Changes made there are written to the audit log; the audit log itself is read-only.
@@ -154,3 +165,4 @@ http://localhost:8000/admin/ for superusers (the demo director is one). Changes 
 - [x] Day 9 — live location from drivers on shift stored as points per shift; sharing status and points on the Shifts page. Tested with real Telegram.
 - [x] Day 10 — distance and speed per point, bad points (accuracy >100 m, jumps >150 km/h) left out; distance on the Shifts page and in the bot. Committed.
 - [x] Day 11 — stop-sharing detection (every 30 s); alert with last place to the managers' group, reminder to the driver, "back on" message
+- [x] Day 12 — web live map (MapLibre + OpenFreeMap): vehicle list, statuses moving / stopped / no signal / off shift, filters and search

@@ -24,7 +24,7 @@ Feature: The web app runs locally
       | Hujjatlar     |
       | Hisobotlar    |
       | Sozlamalar    |
-    And "Jonli xarita" is marked as coming on day 12
+    And "Reyslar" is marked as coming on day 14
 
   Scenario: The services the app needs are up
     When I open the health check

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-18 22:42+0500\n"
+"POT-Creation-Date: 2026-11-19 00:28+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -341,7 +341,7 @@ msgstr "Не наш сотрудник"
 msgid "The number belongs to someone else"
 msgstr "Номер принадлежит другому человеку"
 
-#: apps/bot/models.py:54 apps/core/menu.py:72
+#: apps/bot/models.py:54 apps/core/menu.py:73
 msgid "Other"
 msgstr "Прочее"
 
@@ -481,7 +481,7 @@ msgstr "Никто не ждёт."
 msgid "Recently decided"
 msgstr "Недавние решения"
 
-#: apps/bot/views.py:30 apps/core/menu.py:59
+#: apps/bot/views.py:30 apps/core/menu.py:60
 msgid "New users"
 msgstr "Новые пользователи"
 
@@ -521,55 +521,55 @@ msgstr "Меню"
 msgid "Dashboard"
 msgstr "Главная"
 
-#: apps/core/menu.py:54
+#: apps/core/menu.py:55 apps/tracking/views.py:46
 msgid "Live map"
 msgstr "Карта онлайн"
 
-#: apps/core/menu.py:55
+#: apps/core/menu.py:56
 msgid "Trips"
 msgstr "Поездки"
 
-#: apps/core/menu.py:57
+#: apps/core/menu.py:58
 msgid "Approvals"
 msgstr "Подтверждения"
 
-#: apps/core/menu.py:61
+#: apps/core/menu.py:62
 msgid "Fleet"
 msgstr "Автопарк"
 
-#: apps/core/menu.py:62 apps/fleet/views.py:57 apps/fleet/views.py:104
+#: apps/core/menu.py:63 apps/fleet/views.py:57 apps/fleet/views.py:104
 msgid "Vehicles"
 msgstr "Автомобили"
 
-#: apps/core/menu.py:63 apps/fleet/views.py:71 apps/fleet/views.py:104
+#: apps/core/menu.py:64 apps/fleet/views.py:71 apps/fleet/views.py:104
 msgid "Drivers"
 msgstr "Водители"
 
-#: apps/core/menu.py:65 apps/fleet/views.py:223
+#: apps/core/menu.py:66 apps/fleet/views.py:223
 msgid "Shifts"
 msgstr "Смены"
 
-#: apps/core/menu.py:66 apps/fleet/templates/fleet/vehicle_list.html:22
+#: apps/core/menu.py:67 apps/fleet/templates/fleet/vehicle_list.html:22
 msgid "Fuel"
 msgstr "Топливо"
 
-#: apps/core/menu.py:68
+#: apps/core/menu.py:69
 msgid "Maintenance"
 msgstr "Техобслуживание"
 
-#: apps/core/menu.py:69
+#: apps/core/menu.py:70
 msgid "Store"
 msgstr "Склад"
 
-#: apps/core/menu.py:70
+#: apps/core/menu.py:71
 msgid "Documents"
 msgstr "Документы"
 
-#: apps/core/menu.py:73
+#: apps/core/menu.py:74
 msgid "Reports"
 msgstr "Отчёты"
 
-#: apps/core/menu.py:74
+#: apps/core/menu.py:75
 msgid "Settings"
 msgstr "Настройки"
 
@@ -742,6 +742,8 @@ msgid "Sharing location"
 msgstr "Передают геопозицию"
 
 #: apps/fleet/templates/fleet/shift_list.html:19
+#: apps/tracking/templates/tracking/live_map.html:35
+#: apps/tracking/templates/tracking/live_map.html:36
 msgid "Driver or plate"
 msgstr "Водитель или номер"
 
@@ -857,6 +859,7 @@ msgid "Odometer, km"
 msgstr "Пробег, км"
 
 #: apps/fleet/templates/fleet/vehicle_list.html:25
+#: apps/tracking/templates/tracking/live_map.html:19
 msgid "Status"
 msgstr "Статус"
 
@@ -918,6 +921,46 @@ msgid ""
 "The dispatcher ended your shift with %(vehicle)s at %(time)s. Send /"
 "start_shift when you take a vehicle again."
 msgstr "Диспетчер закончил вашу смену на %(vehicle)s в %(time)s. Когда снова возьмёте машину, отправьте /start_shift."
+
+#: apps/tracking/templates/tracking/live_map.html:53
+msgid "No position yet"
+msgstr "Местоположения ещё нет"
+
+#: apps/tracking/templates/tracking/live_map.html:54
+#: apps/tracking/templates/tracking/live_map.html:79
+#, python-format
+msgid "Last update %(time)s"
+msgstr "Обновлено %(time)s"
+
+#: apps/tracking/templates/tracking/live_map.html:54
+#: apps/tracking/templates/tracking/live_map.html:78
+#, python-format
+msgid "%(v)s km/h"
+msgstr "%(v)s км/ч"
+
+#: apps/tracking/templates/tracking/live_map.html:60
+msgid "No vehicles yet."
+msgstr "Автомобилей пока нет."
+
+#: apps/tracking/templates/tracking/live_map.html:63
+msgid "Nothing matches."
+msgstr "Ничего не найдено."
+
+#: apps/tracking/views.py:16
+msgid "Moving"
+msgstr "В движении"
+
+#: apps/tracking/views.py:16
+msgid "Stopped"
+msgstr "Стоит"
+
+#: apps/tracking/views.py:17
+msgid "No signal"
+msgstr "Нет сигнала"
+
+#: apps/tracking/views.py:17
+msgid "Off shift"
+msgstr "Не на смене"
 
 #: templates/403.html:3 templates/403.html:5
 msgid "No access"

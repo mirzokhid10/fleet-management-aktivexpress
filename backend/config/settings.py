@@ -138,3 +138,10 @@ BOT_MODE = env("BOT_MODE", "polling")
 BOT_WEBHOOK_URL = env("BOT_WEBHOOK_URL", "")
 BOT_WEBHOOK_SECRET = env("BOT_WEBHOOK_SECRET", "")
 BOT_WEBHOOK_PORT = int(env("BOT_WEBHOOK_PORT", "8080"))
+
+# --- Live map (Day 12) -----------------------------------------------------------
+# OpenFreeMap: free, no API key, commercial use allowed. The style URL is
+# switchable here, should that service change its rules (or for self-hosted tiles).
+MAP_STYLE_URL = env("MAP_STYLE_URL", "https://tiles.openfreemap.org/styles/liberty")
+# Where the map opens when no vehicle has a position yet: Tashkent (lon, lat).
+MAP_DEFAULT_CENTER = [69.2401, 41.2995]

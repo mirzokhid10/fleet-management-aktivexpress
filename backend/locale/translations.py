@@ -423,6 +423,16 @@ T: dict[str, tuple[str, str]] = {
     '%(who)s: location is on again (it was off for %(minutes)s min).': ("%(who)s: joylashuv yana yoqildi (%(minutes)s daqiqa o'chiq edi).", '%(who)s: геопозиция снова включена (была выключена %(minutes)s мин).'),
     'Your location has been off for %(minutes)s min. The dispatcher is informed.': ("Joylashuvingiz %(minutes)s daqiqadan beri o'chiq. Dispetcherga xabar berildi.", 'Ваша геопозиция выключена уже %(minutes)s мин. Диспетчер уведомлён.'),
     'Hello! I will post alerts here once the director chooses this group in Company settings.': ('Salom! Direktor bu guruhni kompaniya sozlamalarida tanlagach, ogohlantirishlarni shu yerga yuboraman.', 'Здравствуйте! Я буду присылать сюда оповещения, когда директор выберет эту группу в настройках компании.'),
+    # Day 12: live map
+    "Moving": ("Harakatda", "В движении"),
+    "Stopped": ("To'xtagan", "Стоит"),
+    "No signal": ("Signal yo'q", "Нет сигнала"),
+    "Off shift": ("Smenada emas", "Не на смене"),
+    "No position yet": ("Joylashuv hali yo'q", "Местоположения ещё нет"),
+    "Last update %(time)s": ("Oxirgi yangilanish %(time)s", "Обновлено %(time)s"),
+    "%(v)s km/h": ("%(v)s km/soat", "%(v)s км/ч"),
+    "No vehicles yet.": ("Hozircha avtomobillar yo'q.", "Автомобилей пока нет."),
+    "Nothing matches.": ("Hech narsa topilmadi.", "Ничего не найдено."),
 }
 
 LANGS = {"uz": 0, "ru": 1}
