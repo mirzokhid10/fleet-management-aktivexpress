@@ -1,12 +1,10 @@
 from django.contrib import admin
 
-from apps.core.admin_base import ModelAdmin
-
 from .models import BotGroup, BotUser
 
 
 @admin.register(BotUser)
-class BotUserAdmin(ModelAdmin):
+class BotUserAdmin(admin.ModelAdmin):
     list_display = ("telegram_id", "first_name", "last_name", "username", "language", "user",
                     "last_seen_at")
     list_filter = ("language",)
@@ -16,7 +14,7 @@ class BotUserAdmin(ModelAdmin):
 
 
 @admin.register(BotGroup)
-class BotGroupAdmin(ModelAdmin):
+class BotGroupAdmin(admin.ModelAdmin):
     """Groups the bot was added to; they come from Telegram, not typed in."""
 
     list_display = ("title", "chat_id", "is_member", "added_at")

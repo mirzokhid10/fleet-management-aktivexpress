@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-19 00:07+0500\n"
+"POT-Creation-Date: 2026-11-18 22:42+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -513,55 +513,11 @@ msgstr "❌ Регистрация не подтверждена. Если эт�
 msgid "The request was rejected."
 msgstr "Запрос отклонён."
 
-#: apps/core/admin_dashboard.py:21
-msgid "Development"
-msgstr "Тестовая копия"
-
-#: apps/core/admin_dashboard.py:30
-msgid "When"
-msgstr "Когда"
-
-#: apps/core/admin_dashboard.py:30
-msgid "Who"
-msgstr "Кто"
-
-#: apps/core/admin_dashboard.py:30
-msgid "Action"
-msgstr "Действие"
-
-#: apps/core/admin_dashboard.py:30
-msgid "What"
-msgstr "Что"
-
-#: apps/core/admin_dashboard.py:32
-msgid "system"
-msgstr "система"
-
-#: apps/core/admin_dashboard.py:48
-msgid "Active vehicles"
-msgstr "Активные автомобили"
-
-#: apps/core/admin_dashboard.py:50
-msgid "Active drivers"
-msgstr "Активные водители"
-
-#: apps/core/admin_dashboard.py:52 apps/fleet/templates/fleet/shift_list.html:7
-msgid "On shift now"
-msgstr "Сейчас на смене"
-
-#: apps/core/admin_dashboard.py:54
-msgid "Sharing location now"
-msgstr "Сейчас передают геопозицию"
-
-#: apps/core/admin_dashboard.py:56
-msgid "Location alerts open"
-msgstr "Открытые оповещения о геопозиции"
-
 #: apps/core/menu.py:52
 msgid "Menu"
 msgstr "Меню"
 
-#: apps/core/menu.py:53 apps/core/views.py:13 config/settings.py:182
+#: apps/core/menu.py:53 apps/core/views.py:13
 msgid "Dashboard"
 msgstr "Главная"
 
@@ -577,21 +533,19 @@ msgstr "Поездки"
 msgid "Approvals"
 msgstr "Подтверждения"
 
-#: apps/core/menu.py:61 config/settings.py:185
+#: apps/core/menu.py:61
 msgid "Fleet"
 msgstr "Автопарк"
 
 #: apps/core/menu.py:62 apps/fleet/views.py:57 apps/fleet/views.py:104
-#: config/settings.py:186
 msgid "Vehicles"
 msgstr "Автомобили"
 
 #: apps/core/menu.py:63 apps/fleet/views.py:71 apps/fleet/views.py:104
-#: config/settings.py:187
 msgid "Drivers"
 msgstr "Водители"
 
-#: apps/core/menu.py:65 apps/fleet/views.py:223 config/settings.py:188
+#: apps/core/menu.py:65 apps/fleet/views.py:223
 msgid "Shifts"
 msgstr "Смены"
 
@@ -607,7 +561,7 @@ msgstr "Техобслуживание"
 msgid "Store"
 msgstr "Склад"
 
-#: apps/core/menu.py:70 config/settings.py:189
+#: apps/core/menu.py:70
 msgid "Documents"
 msgstr "Документы"
 
@@ -778,6 +732,10 @@ msgstr "3. Импортировать"
 #: apps/fleet/templates/fleet/import.html:116
 msgid "Cancel"
 msgstr "Отмена"
+
+#: apps/fleet/templates/fleet/shift_list.html:7
+msgid "On shift now"
+msgstr "Сейчас на смене"
 
 #: apps/fleet/templates/fleet/shift_list.html:11
 msgid "Sharing location"
@@ -961,110 +919,6 @@ msgid ""
 "start_shift when you take a vehicle again."
 msgstr "Диспетчер закончил вашу смену на %(vehicle)s в %(time)s. Когда снова возьмёте машину, отправьте /start_shift."
 
-#: config/settings.py:162
-msgid "Admin"
-msgstr "Панель управления"
-
-#: config/settings.py:181
-msgid "Overview"
-msgstr "Обзор"
-
-#: config/settings.py:183
-msgid "Open the web app"
-msgstr "Открыть веб-приложение"
-
-#: config/settings.py:191
-msgid "Tracking"
-msgstr "Мониторинг"
-
-#: config/settings.py:192
-msgid "Location sharing"
-msgstr "Передача геопозиции"
-
-#: config/settings.py:193
-msgid "Location points"
-msgstr "Точки геопозиции"
-
-#: config/settings.py:194
-msgid "Location alerts"
-msgstr "Оповещения о геопозиции"
-
-#: config/settings.py:195
-msgid "Geofences"
-msgstr "Геозоны"
-
-#: config/settings.py:197
-msgid "Driver entries"
-msgstr "Записи водителей"
-
-#: config/settings.py:198
-msgid "Entries"
-msgstr "Записи"
-
-#: config/settings.py:199
-msgid "Photos"
-msgstr "Фото"
-
-#: config/settings.py:200
-msgid "Tyre change wheels"
-msgstr "Колёса при замене шин"
-
-#: config/settings.py:202
-msgid "Maintenance & store"
-msgstr "ТО и склад"
-
-#: config/settings.py:203
-msgid "Service records"
-msgstr "Записи о ТО"
-
-#: config/settings.py:204
-msgid "Service intervals"
-msgstr "Интервалы ТО"
-
-#: config/settings.py:206
-msgid "Store items"
-msgstr "Товары склада"
-
-#: config/settings.py:207
-msgid "Stock movements"
-msgstr "Движение по складу"
-
-#: config/settings.py:208
-msgid "Suppliers"
-msgstr "Поставщики"
-
-#: config/settings.py:210
-msgid "People & Telegram"
-msgstr "Люди и Telegram"
-
-#: config/settings.py:211
-msgid "Users"
-msgstr "Пользователи"
-
-#: config/settings.py:212
-msgid "Permission groups"
-msgstr "Группы прав"
-
-#: config/settings.py:213
-msgid "Telegram users"
-msgstr "Пользователи Telegram"
-
-#: config/settings.py:214
-msgid "Telegram groups"
-msgstr "Группы Telegram"
-
-#: config/settings.py:216
-msgid "System"
-msgstr "Система"
-
-#: config/settings.py:217
-msgid "Company settings"
-msgstr "Настройки компании"
-
-#: config/settings.py:218
-msgid "Audit log"
-msgstr "Журнал изменений"
-
 #: templates/403.html:3 templates/403.html:5
 msgid "No access"
 msgstr "Нет доступа"
@@ -1076,28 +930,6 @@ msgstr "Ваша роль не позволяет открыть эту стра
 #: templates/403.html:9 templates/partials/header.html:65
 msgid "Log out"
 msgstr "Выйти"
-
-#: templates/admin/index.html:18
-msgid "Alert group not set"
-msgstr "Группа оповещений не выбрана"
-
-#: templates/admin/index.html:20
-msgid ""
-"Location alerts are not posted anywhere yet. Add the bot to the managers' "
-"Telegram group, then choose it in Company settings."
-msgstr "Оповещения о геопозиции пока никуда не отправляются. Добавьте бота в Telegram-группу руководителей и выберите её в настройках компании."
-
-#: templates/admin/index.html:34
-msgid "Recent changes"
-msgstr "Последние изменения"
-
-#: templates/admin/index.html:35
-msgid "All changes"
-msgstr "Все изменения"
-
-#: templates/admin/index.html:40
-msgid "No changes yet."
-msgstr "Изменений пока нет."
 
 #: templates/base_auth.html:34
 msgid "Vehicles, drivers, fuel, service and store in one place."

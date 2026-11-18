@@ -1,5 +1,4 @@
 Django==5.2.8
-django-unfold==0.110.1
 psycopg[binary]==3.2.12
 redis==6.4.0
 openpyxl==3.1.5

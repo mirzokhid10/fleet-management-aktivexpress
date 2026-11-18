@@ -1,12 +1,10 @@
 from django.contrib import admin
 
-from apps.core.admin_base import ModelAdmin
-
 from . import log
 from .models import AuditLog
 
 
-class AuditedAdmin(ModelAdmin):
+class AuditedAdmin(admin.ModelAdmin):
     """ModelAdmin that writes an audit log row for every add, change and delete."""
 
     def save_model(self, request, obj, form, change):
@@ -32,7 +30,7 @@ class AuditedAdmin(ModelAdmin):
 
 
 @admin.register(AuditLog)
-class AuditLogAdmin(ModelAdmin):
+class AuditLogAdmin(admin.ModelAdmin):
     """Read-only: the database refuses UPDATE and DELETE on this table anyway."""
 
     list_display = ("at", "actor", "source", "action", "content_type", "object_repr")

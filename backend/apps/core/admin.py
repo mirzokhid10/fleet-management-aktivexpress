@@ -1,14 +1,14 @@
 from django import forms
 from django.contrib import admin
-from django.utils.translation import gettext_lazy
-from unfold.widgets import UnfoldAdminSelectWidget
 
 from apps.audit.admin import AuditedAdmin
 
 from .models import CompanySettings
 
-# Title of the admin home page (the rest of the branding is in settings.UNFOLD).
-admin.site.index_title = gettext_lazy("Dashboard")
+admin.site.site_header = "Aktiv Fleet — admin"
+admin.site.site_title = "Aktiv Fleet admin"
+admin.site.index_title = "Data"
+admin.site.site_url = "/"
 
 
 def _group_choices():
@@ -22,7 +22,6 @@ class CompanySettingsForm(forms.ModelForm):
     # Day 11: pick from the groups the bot was added to, not a raw chat id.
     alert_chat_id = forms.TypedChoiceField(
         label="Alert group", required=False, coerce=int, empty_value=None,
-        widget=UnfoldAdminSelectWidget,  # a custom field: give it the theme's look by hand
         help_text="Telegram group for manager alerts. Add the bot to the group first; "
                   "it then appears here.")
 

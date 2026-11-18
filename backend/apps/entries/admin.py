@@ -1,33 +1,31 @@
 from django.contrib import admin
 
-from apps.core.admin_base import ModelAdmin, StackedInline, TabularInline
-
 from .models import (DailyReport, Entry, OilChange, PartRequest, Photo, Refuel, TireChange,
                      TireChangeWheel)
 
 
-class DailyReportInline(StackedInline):
+class DailyReportInline(admin.StackedInline):
     model = DailyReport
 
 
-class RefuelInline(StackedInline):
+class RefuelInline(admin.StackedInline):
     model = Refuel
 
 
-class OilChangeInline(StackedInline):
+class OilChangeInline(admin.StackedInline):
     model = OilChange
 
 
-class TireChangeInline(StackedInline):
+class TireChangeInline(admin.StackedInline):
     model = TireChange
 
 
-class PartRequestInline(StackedInline):
+class PartRequestInline(admin.StackedInline):
     model = PartRequest
     autocomplete_fields = ("item",)
 
 
-class PhotoInline(TabularInline):
+class PhotoInline(admin.TabularInline):
     model = Photo
     fk_name = "entry"
     extra = 0
@@ -36,7 +34,7 @@ class PhotoInline(TabularInline):
 
 
 @admin.register(Entry)
-class EntryAdmin(ModelAdmin):
+class EntryAdmin(admin.ModelAdmin):
     """For looking things up. Confirming and rejecting happens in the web
     approval inbox (Day 21), which keeps the audit log and the rules."""
 
@@ -54,12 +52,12 @@ class EntryAdmin(ModelAdmin):
 
 
 @admin.register(TireChangeWheel)
-class TireChangeWheelAdmin(ModelAdmin):
+class TireChangeWheelAdmin(admin.ModelAdmin):
     list_display = ("tire_change", "position")
 
 
 @admin.register(Photo)
-class PhotoAdmin(ModelAdmin):
+class PhotoAdmin(admin.ModelAdmin):
     list_display = ("id", "kind", "entry", "document", "taken_at")
     list_filter = ("kind",)
     raw_id_fields = ("entry", "document", "uploaded_by")
