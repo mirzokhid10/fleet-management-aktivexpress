@@ -117,3 +117,43 @@ def test_staff_and_strangers_are_not_tracked():
     _, calls = stranger.share_location(41.3, 69.2)
     assert T.texts(calls)[0].startswith("Siz hali ro'yxatdan o'tmagansiz.")
     assert not LocationPoint.objects.exists()
+
+
+# --- clean track (Day 10) ----------------------------------------------------
+
+M_PER_DEG_LAT = 111_195
+
+
+def test_points_from_the_bot_get_distance_speed_and_jumps_are_marked():
+    d, tg, _ = on_shift()
+    t0 = dt.datetime.now(dt.UTC)
+    message_id, _ = tg.share_location(41.3, 69.2, at=t0, horizontal_accuracy=10)
+    path = [(30, 400, 10), (60, 6000, 10), (90, 800, 10), (120, 820, 400)]
+    for sec, meters, acc in path:
+        tg.move(message_id, 41.3 + meters / M_PER_DEG_LAT, 69.2, horizontal_accuracy=acc,
+                at=t0 + dt.timedelta(seconds=sec), started=t0)
+    points = list(d.shifts.get().points.all())
+    assert [p.is_valid for p in points] == [True, True, False, True, False]
+    assert points[1].distance_m == pytest.approx(400, rel=0.005)
+    assert points[1].speed_kmh == pytest.approx(48, rel=0.005)
+    assert points[2].distance_m is None
+
+
+def test_end_of_shift_message_gives_the_distance():
+    d, tg, _ = on_shift()
+    t0 = dt.datetime.now(dt.UTC) - dt.timedelta(minutes=5)
+    message_id, _ = tg.share_location(41.3, 69.2, at=t0)
+    for n in range(1, 5):  # 4 × 500 m, one minute apart (30 km/h)
+        tg.move(message_id, 41.3 + 500 * n / M_PER_DEG_LAT, 69.2,
+                at=t0 + dt.timedelta(minutes=n), started=t0)
+    shift = d.shifts.get()
+    tg.send("/end_shift")
+    text = T.texts(tg.tap(f"shift:end:{shift.pk}"))[0]
+    assert "\nMasofa: 2,0 km.\n" in text
+
+
+def test_end_of_shift_without_location_says_no_distance():
+    d, tg, _ = on_shift()
+    shift = d.shifts.get()
+    tg.send("/end_shift")
+    assert "Masofa" not in T.texts(tg.tap(f"shift:end:{shift.pk}"))[0]

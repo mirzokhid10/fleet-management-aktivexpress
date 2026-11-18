@@ -119,6 +119,16 @@ After `/start_shift` the bot asks the driver to share **live** location (📎 �
 
 The Shifts page shows whether each open shift is sharing, its number of points and a link to the last place on OpenStreetMap.
 
+## Clean track (Day 10)
+
+Each point gets the distance and speed from the last good point of the shift (`apps/tracking/track.py`). A point is **bad** (kept, but left out of distance, speed and alerts) when Telegram's accuracy is worse than 100 m, or when reaching it would need more than 150 km/h (a GPS jump). Moves under 15 m count as 0 (standing still). If the "jump" was right after all — the next point agrees with it — the track continues from there.
+
+The Shifts page shows each shift's distance and top speed; the bot gives the distance when the shift ends. After changing the rules, or for points stored before Day 10:
+
+```bash
+docker compose exec web python manage.py recalculate_track
+```
+
 ## Admin panel
 
 http://localhost:8000/admin/ for superusers (the demo director is one). Changes made there are written to the audit log; the audit log itself is read-only.
@@ -134,3 +144,4 @@ http://localhost:8000/admin/ for superusers (the demo director is one). Changes 
 - [x] Day 7 — registration by phone in the bot, managers confirm on New users; web sign-in confirmed in the bot (number matching), passwords for superusers only. Tested with real Telegram.
 - [x] Day 8 — `/start_shift` with vehicle picker, `/end_shift`, Shifts page for managers (filters, end a forgotten shift). Tested with real Telegram.
 - [x] Day 9 — live location from drivers on shift stored as points per shift; sharing status and points on the Shifts page. Tested with real Telegram.
+- [x] Day 10 — distance and speed per point, bad points (accuracy >100 m, jumps >150 km/h) left out; distance on the Shifts page and in the bot

@@ -11,7 +11,7 @@ from zipfile import BadZipFile
 from django.conf import settings
 from django.contrib import messages
 from django.core.paginator import Paginator
-from django.db.models import Count, Exists, OuterRef, Q
+from django.db.models import Count, Exists, Max, OuterRef, Q, Sum
 from django.http import FileResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
@@ -198,7 +198,12 @@ def _shift_filters(request, qs):
 def shift_list(request):
     sharing = LiveSession.objects.filter(shift=OuterRef("pk"), ended_at__isnull=True)
     qs, filters = _shift_filters(request, Shift.objects.select_related("driver", "vehicle")
-                                 .annotate(n_points=Count("points"), sharing=Exists(sharing))
+                                 .annotate(n_points=Count("points"), sharing=Exists(sharing),
+                                           # Day 10: clean track only
+                                           meters=Sum("points__distance_m",
+                                                      filter=Q(points__is_valid=True)),
+                                           top_speed=Max("points__speed_kmh",
+                                                         filter=Q(points__is_valid=True)))
                                  # GROUP BY drops Meta.ordering, so say it again.
                                  .order_by("-started_at", "-pk"))
     page = Paginator(qs, PAGE_SIZE).get_page(request.GET.get("page"))
@@ -212,6 +217,7 @@ def shift_list(request):
     for s in page:
         s.hours, s.minutes = shifts.hours_minutes(shifts.duration(s, now))
         s.last_point = last.get(s.pk)
+        s.km = round((s.meters or 0) / 1000, 1)
     open_now = Shift.objects.filter(ended_at__isnull=True)
     return render(request, "fleet/shift_list.html", {
         "page_title": _("Shifts"), "page": page, **filters,

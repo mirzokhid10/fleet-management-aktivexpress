@@ -173,3 +173,23 @@ def test_ended_shift_shows_points_but_no_sharing_badge(login_as):
     body = page(login_as("dispatcher", language="uz").get(URL))
     assert "Nuqtalar: 2" in body
     assert "Ulashmayapti" not in body and "Ulashmoqda" not in body
+
+
+def test_distance_column_counts_the_clean_track_only(login_as):
+    from django.contrib.gis.geos import Point
+
+    from apps.tracking.models import LocationPoint
+
+    sh = f.shift()
+    t = sh.started_at
+    for n, (meters, speed, valid) in enumerate([(None, None, True), (800.0, 48.0, True),
+                                                (9000.0, 900.0, False), (1250.0, 75.0, True)]):
+        LocationPoint.objects.create(shift=sh, vehicle=sh.vehicle, point=Point(69.2, 41.3),
+                                     recorded_at=t + dt.timedelta(minutes=n),
+                                     distance_m=meters, speed_kmh=speed, is_valid=valid)
+    r = login_as("dispatcher", language="uz").get(URL)
+    assert r.context["page"][0].km == 2.0
+    body = page(r)
+    assert "2,0 km" in body
+    assert "maks. 75 km/soat" in body
+    assert "maks. 900" not in body

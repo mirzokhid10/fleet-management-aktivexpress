@@ -80,7 +80,9 @@ class FakeTelegram:
         """Share a location; live unless live_period=None. Returns (message_id, calls)."""
         start = len(self.session.calls)
         message_id = next(_ids)
-        message = Message(message_id=message_id, date=at or dt.datetime.now(dt.UTC),
+        # Telegram times are whole seconds.
+        at = (at or dt.datetime.now(dt.UTC)).replace(microsecond=0)
+        message = Message(message_id=message_id, date=at,
                           chat=self.chat, from_user=self.user,
                           location=Location(latitude=lat, longitude=lon,
                                             live_period=live_period, **loc))
@@ -93,7 +95,8 @@ class FakeTelegram:
         """Telegram's edit of a live location. live_period=None: the driver stopped it."""
         start = len(self.session.calls)
         now = dt.datetime.now(dt.UTC)
-        message = Message(message_id=message_id, date=started or now - dt.timedelta(minutes=1),
+        started = (started or now - dt.timedelta(minutes=1)).replace(microsecond=0)
+        message = Message(message_id=message_id, date=started,
                           edit_date=int((at or now).timestamp()), chat=self.chat, from_user=self.user,
                           location=Location(latitude=lat, longitude=lon,
                                             live_period=live_period, **loc))

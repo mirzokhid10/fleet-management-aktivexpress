@@ -16,10 +16,12 @@ from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import CallbackQuery, Message
 from asgiref.sync import sync_to_async
 from django.utils import timezone
+from django.utils.formats import number_format
 from django.utils.translation import gettext as _
 
 from apps.fleet import shifts
 from apps.fleet.models import Driver, Shift
+from apps.tracking import track
 
 from .keyboards import SHIFT_END, SHIFT_KEEP, SHIFT_TAKE, end_confirm, vehicle_picker
 from .location_handlers import how_to_share
@@ -68,13 +70,15 @@ def started_text(shift: Shift) -> str:
     ])
 
 
-def ended_text(shift: Shift) -> str:
-    return "\n".join([
-        "✅ " + _("Shift ended: %(vehicle)s, %(start)s–%(end)s (%(duration)s).") % {
-            "vehicle": shift.vehicle.plate_display, "start": when(shift.started_at),
-            "end": when(shift.ended_at), "duration": span(shifts.duration(shift))},
-        _("You can stop sharing your location now."),
-    ])
+def ended_text(shift: Shift, totals: track.Totals | None = None) -> str:
+    lines = ["✅ " + _("Shift ended: %(vehicle)s, %(start)s–%(end)s (%(duration)s).") % {
+        "vehicle": shift.vehicle.plate_display, "start": when(shift.started_at),
+        "end": when(shift.ended_at), "duration": span(shifts.duration(shift))}]
+    if totals and totals.points:
+        lines.append(_("Distance: %(km)s km.") % {
+            "km": number_format(totals.distance_km, decimal_pos=1)})
+    lines.append(_("You can stop sharing your location now."))
+    return "\n".join(lines)
 
 
 # --- who is asking ---------------------------------------------------------
@@ -193,7 +197,8 @@ async def end_confirmed(query: CallbackQuery, bot_user: BotUser) -> None:
     if not await sync_to_async(shifts.end)(shift, actor=shift.driver.user):
         await query.message.edit_text(_("This shift has already ended."))
         return
-    await query.message.edit_text(ended_text(shift))
+    totals = await sync_to_async(track.totals)(shift)
+    await query.message.edit_text(ended_text(shift, totals))
 
 
 async def end_cancelled(query: CallbackQuery) -> None:

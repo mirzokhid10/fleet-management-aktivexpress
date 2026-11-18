@@ -24,6 +24,7 @@ from django.utils import timezone
 from apps.fleet.models import Shift
 from apps.fleet.shifts import driver_of, open_shift
 
+from . import track
 from .models import LiveSession, LocationPoint
 
 logger = logging.getLogger(__name__)
@@ -50,10 +51,13 @@ class Fix:
 def _save_point(session: LiveSession, fix: Fix) -> LocationPoint | None:
     if session.points.filter(recorded_at=fix.at).exists():  # Telegram sent it twice
         return None
-    return LocationPoint.objects.create(
+    point = LocationPoint(
         vehicle_id=session.shift.vehicle_id, shift=session.shift, session=session,
         recorded_at=fix.at, point=Point(fix.longitude, fix.latitude, srid=4326),
         accuracy_m=fix.accuracy_m, heading=fix.heading)
+    track.apply(point)  # Day 10: distance, speed, bad points
+    point.save()
+    return point
 
 
 def _close(session: LiveSession, at: dt.datetime, reason: str) -> None:

@@ -411,6 +411,11 @@ T: dict[str, tuple[str, str]] = {
         'Точек: %(n)s'),
     'Last: %(time)s': ('Oxirgisi: %(time)s',
         'Последняя: %(time)s'),
+    # clean track (Day 10)
+    'Distance': ('Masofa', 'Пробег'),
+    '%(km)s km': ('%(km)s km', '%(km)s км'),
+    'max %(v)s km/h': ('maks. %(v)s km/soat', 'макс. %(v)s км/ч'),
+    'Distance: %(km)s km.': ('Masofa: %(km)s km.', 'Пробег: %(km)s км.'),
 }
 
 LANGS = {"uz": 0, "ru": 1}
