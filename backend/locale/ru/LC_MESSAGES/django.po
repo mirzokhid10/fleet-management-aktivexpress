@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-17 18:23+0500\n"
+"POT-Creation-Date: 2026-11-17 22:12+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,13 +19,17 @@ msgstr ""
 "n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
 "(n%100>=11 && n%100<=14)? 2 : 3);\n"
 
-#: apps/accounts/forms.py:9 apps/accounts/templates/accounts/login.html:48
+#: apps/accounts/forms.py:9
 msgid "Keep me logged in"
 msgstr "Запомнить меня"
 
 #: apps/accounts/forms.py:13
 msgid "Drivers use the Telegram bot, not the web app."
 msgstr "Водители работают через Telegram-бот, а не через веб-приложение."
+
+#: apps/accounts/forms.py:14
+msgid "Sign in with Telegram. Passwords are only for administrators."
+msgstr "Войдите через Telegram. Пароль — только для администраторов."
 
 #: apps/accounts/models.py:16
 msgid "Director"
@@ -39,79 +43,290 @@ msgstr "Диспетчер"
 msgid "Storekeeper"
 msgstr "Кладовщик"
 
-#: apps/accounts/models.py:19
+#: apps/accounts/models.py:19 apps/bot/templates/bot/request_list.html:27
 msgid "Driver"
 msgstr "Водитель"
 
 #: apps/accounts/templates/accounts/login.html:4
 #: apps/accounts/templates/accounts/login.html:8
-#: apps/accounts/templates/accounts/login.html:52
 msgid "Sign in"
 msgstr "Вход"
 
 #: apps/accounts/templates/accounts/login.html:9
-msgid "Enter your username and password."
-msgstr "Введите логин и пароль."
+msgid "Confirm the sign-in in the company Telegram bot."
+msgstr "Подтвердите вход в Telegram-боте компании."
 
-#: apps/accounts/templates/accounts/login.html:24
-msgid "Username"
-msgstr "Логин"
+#: apps/accounts/templates/accounts/login.html:17
+#: apps/accounts/templates/accounts/telegram_wait.html:4
+#: apps/accounts/templates/accounts/telegram_wait.html:8
+msgid "Sign in with Telegram"
+msgstr "Войти через Telegram"
 
-#: apps/accounts/templates/accounts/login.html:32
-msgid "Password"
-msgstr "Пароль"
-
-#: apps/accounts/templates/accounts/login.html:37
-msgid "Hide password"
-msgstr "Скрыть пароль"
-
-#: apps/accounts/templates/accounts/login.html:37
-msgid "Show password"
-msgstr "Показать пароль"
-
-#: apps/accounts/templates/accounts/login.html:55
+#: apps/accounts/templates/accounts/login.html:20
 msgid "Drivers: use the company Telegram bot."
 msgstr "Водители: пользуйтесь Telegram-ботом компании."
 
-#: apps/bot/handlers.py:22
+#: apps/accounts/templates/accounts/login.html:24
+msgid "Administrator sign-in with password"
+msgstr "Вход администратора по паролю"
+
+#: apps/accounts/templates/accounts/telegram_wait.html:12
+msgid "Open the bot: tap the button, or scan the code with your phone."
+msgstr "Откройте бота: нажмите кнопку или отсканируйте код телефоном."
+
+#: apps/accounts/templates/accounts/telegram_wait.html:13
+msgid "In the bot, tap this number:"
+msgstr "В боте нажмите это число:"
+
+#: apps/accounts/templates/accounts/telegram_wait.html:20
+msgid "Open Telegram"
+msgstr "Открыть Telegram"
+
+#: apps/accounts/templates/accounts/telegram_wait.html:25
+msgid "Waiting for confirmation…"
+msgstr "Ждём подтверждения…"
+
+#: apps/accounts/templates/accounts/telegram_wait.html:31
+msgid "The sign-in was cancelled in the bot."
+msgstr "Вход отменён в боте."
+
+#: apps/accounts/templates/accounts/telegram_wait.html:32
+msgid "Time is up. Start again."
+msgstr "Время вышло. Начните заново."
+
+#: apps/accounts/templates/accounts/telegram_wait.html:36
+msgid "Try again"
+msgstr "Попробовать снова"
+
+#: apps/accounts/templates/accounts/telegram_wait.html:40
+msgid "Back"
+msgstr "Назад"
+
+#: apps/bot/handlers.py:27
 #, python-format
 msgid "Hello, %(name)s! This is the Aktiv Fleet bot."
 msgstr "Здравствуйте, %(name)s! Это бот Aktiv Fleet."
 
-#: apps/bot/handlers.py:24
+#: apps/bot/handlers.py:29
 msgid ""
 "Here you will start and end shifts, share your location and send vehicle "
 "data."
 msgstr "Здесь вы будете начинать и заканчивать смену, делиться геопозицией и отправлять данные по машине."
 
-#: apps/bot/handlers.py:25
+#: apps/bot/handlers.py:30
 msgid "Commands: /help"
 msgstr "Команды: /help"
 
-#: apps/bot/handlers.py:31
+#: apps/bot/handlers.py:36
 msgid "What the bot can do:"
 msgstr "Что умеет бот:"
 
-#: apps/bot/handlers.py:32 apps/bot/setup.py:33
+#: apps/bot/handlers.py:37 apps/bot/setup.py:33
 msgid "start"
 msgstr "начать"
 
-#: apps/bot/handlers.py:33 apps/bot/setup.py:34
+#: apps/bot/handlers.py:38 apps/bot/setup.py:34
 msgid "change the language"
 msgstr "сменить язык"
 
-#: apps/bot/handlers.py:34 apps/bot/setup.py:35
+#: apps/bot/handlers.py:39 apps/bot/setup.py:35
 msgid "this help"
 msgstr "эта справка"
 
-#: apps/bot/handlers.py:65
+#: apps/bot/handlers.py:44
+msgid ""
+"To start, send your phone number with the button below. It must be the "
+"number the company has for you."
+msgstr "Для начала отправьте свой номер телефона кнопкой ниже. Это должен быть номер, который есть у компании."
+
+#: apps/bot/handlers.py:58 apps/bot/handlers.py:121
+msgid ""
+"Your registration is waiting for a manager to confirm it. I will write to "
+"you here."
+msgstr "Ваша регистрация ждёт подтверждения руководителя. Я напишу вам здесь."
+
+#: apps/bot/handlers.py:90
 #, python-format
 msgid "Language: %(language)s"
 msgstr "Язык: %(language)s"
 
-#: apps/bot/handlers.py:80
+#: apps/bot/handlers.py:107
+msgid "Please send your own number with the button."
+msgstr "Пожалуйста, отправьте свой номер кнопкой."
+
+#: apps/bot/handlers.py:113
+msgid "Only Uzbek phone numbers (+998) can be registered."
+msgstr "Зарегистрироваться можно только с узбекским номером (+998)."
+
+#: apps/bot/handlers.py:119
+msgid "You are already registered."
+msgstr "Вы уже зарегистрированы."
+
+#: apps/bot/handlers.py:124
+#, python-format
+msgid ""
+"The number %(phone)s is not in the company list. Ask the dispatcher to add "
+"you, then send it again with /start."
+msgstr "Номера %(phone)s нет в списке компании. Попросите диспетчера добавить вас, затем отправьте его снова через /start."
+
+#: apps/bot/handlers.py:128
+msgid ""
+"Thank you! A manager will confirm your registration soon. I will write to "
+"you here."
+msgstr "Спасибо! Руководитель скоро подтвердит регистрацию. Я напишу вам здесь."
+
+#: apps/bot/handlers.py:140
+msgid "This sign-in link has expired. Start again on the website."
+msgstr "Срок этой ссылки для входа истёк. Начните заново на сайте."
+
+#: apps/bot/handlers.py:141
+msgid ""
+"You are not registered yet. Send /start and share your phone number first."
+msgstr "Вы ещё не зарегистрированы. Сначала отправьте /start и поделитесь номером телефона."
+
+#: apps/bot/handlers.py:143
+msgid "Your account cannot use the web app. Drivers work in this bot only."
+msgstr "Ваш аккаунт не может пользоваться веб-приложением. Водители работают только в этом боте."
+
+#: apps/bot/handlers.py:144
+msgid "Wrong number. The sign-in was cancelled. Start again on the website."
+msgstr "Неверное число. Вход отменён. Начните заново на сайте."
+
+#: apps/bot/handlers.py:146
+msgid ""
+"The sign-in was cancelled. If you did not try to sign in, tell the director."
+msgstr "Вход отменён. Если это были не вы, сообщите директору."
+
+#: apps/bot/handlers.py:158
+msgid "Sign in to the Aktiv Fleet web app?"
+msgstr "Войти в веб-приложение Aktiv Fleet?"
+
+#: apps/bot/handlers.py:160
+#, python-format
+msgid "Browser: %(browser)s"
+msgstr "Браузер: %(browser)s"
+
+#: apps/bot/handlers.py:161
+msgid "Tap the number shown on your screen."
+msgstr "Нажмите число, которое видите на экране."
+
+#: apps/bot/handlers.py:174
+msgid "You are signed in. You can go back to the browser."
+msgstr "Вы вошли. Можно вернуться в браузер."
+
+#: apps/bot/handlers.py:182
 msgid "I don't understand this yet. Send /help to see what I can do."
 msgstr "Пока не понимаю. Отправьте /help, чтобы увидеть, что я умею."
+
+#: apps/bot/keyboards.py:22
+msgid "Send my phone number"
+msgstr "Отправить мой номер"
+
+#: apps/bot/keyboards.py:30
+msgid "It wasn't me"
+msgstr "Это не я"
+
+#: apps/bot/models.py:47
+msgid "Waiting"
+msgstr "Ожидает"
+
+#: apps/bot/models.py:48
+msgid "Approved"
+msgstr "Подтверждён"
+
+#: apps/bot/models.py:49
+msgid "Rejected"
+msgstr "Отклонён"
+
+#: apps/bot/models.py:52
+msgid "Not our employee"
+msgstr "Не наш сотрудник"
+
+#: apps/bot/models.py:53
+msgid "The number belongs to someone else"
+msgstr "Номер принадлежит другому человеку"
+
+#: apps/bot/models.py:54 apps/core/menu.py:70
+msgid "Other"
+msgstr "Прочее"
+
+#: apps/bot/templates/bot/request_list.html:7
+msgid "Waiting for confirmation"
+msgstr "Ждут подтверждения"
+
+#: apps/bot/templates/bot/request_list.html:8
+msgid ""
+"People who shared their phone number in the bot. Check that the Telegram "
+"name fits the person before confirming."
+msgstr "Те, кто отправил номер телефона в боте. Перед подтверждением проверьте, что имя в Telegram подходит человеку."
+
+#: apps/bot/templates/bot/request_list.html:15
+msgid "Person in our list"
+msgstr "Человек в нашем списке"
+
+#: apps/bot/templates/bot/request_list.html:16
+msgid "Telegram account"
+msgstr "Аккаунт Telegram"
+
+#: apps/bot/templates/bot/request_list.html:17
+msgid "Phone"
+msgstr "Телефон"
+
+#: apps/bot/templates/bot/request_list.html:18
+msgid "Sent"
+msgstr "Отправлено"
+
+#: apps/bot/templates/bot/request_list.html:36
+msgid "Confirm"
+msgstr "Подтвердить"
+
+#: apps/bot/templates/bot/request_list.html:40
+msgid "Reason"
+msgstr "Причина"
+
+#: apps/bot/templates/bot/request_list.html:44
+msgid "Reject"
+msgstr "Отклонить"
+
+#: apps/bot/templates/bot/request_list.html:54
+msgid "Nobody is waiting."
+msgstr "Никто не ждёт."
+
+#: apps/bot/templates/bot/request_list.html:60
+msgid "Recently decided"
+msgstr "Недавние решения"
+
+#: apps/bot/views.py:30 apps/core/menu.py:59
+msgid "New users"
+msgstr "Новые пользователи"
+
+#: apps/bot/views.py:43
+msgid "Someone has already decided this request."
+msgstr "По этому запросу уже приняли решение."
+
+#: apps/bot/views.py:55
+#, python-format
+msgid "✅ Your registration is confirmed. Welcome, %(name)s!"
+msgstr "✅ Регистрация подтверждена. Добро пожаловать, %(name)s!"
+
+#: apps/bot/views.py:57
+#, python-format
+msgid "%(name)s is registered."
+msgstr "%(name)s зарегистрирован(а)."
+
+#: apps/bot/views.py:59
+msgid "The bot could not send them a message."
+msgstr "Боту не удалось отправить сообщение."
+
+#: apps/bot/views.py:73
+msgid ""
+"❌ Your registration was not confirmed. Ask the dispatcher if this is a "
+"mistake."
+msgstr "❌ Регистрация не подтверждена. Если это ошибка, обратитесь к диспетчеру."
+
+#: apps/bot/views.py:74
+msgid "The request was rejected."
+msgstr "Запрос отклонён."
 
 #: apps/core/menu.py:52
 msgid "Menu"
@@ -133,43 +348,39 @@ msgstr "Поездки"
 msgid "Approvals"
 msgstr "Подтверждения"
 
-#: apps/core/menu.py:59
+#: apps/core/menu.py:61
 msgid "Fleet"
 msgstr "Автопарк"
 
-#: apps/core/menu.py:60 apps/fleet/views.py:52 apps/fleet/views.py:99
+#: apps/core/menu.py:62 apps/fleet/views.py:52 apps/fleet/views.py:99
 msgid "Vehicles"
 msgstr "Автомобили"
 
-#: apps/core/menu.py:61 apps/fleet/views.py:66 apps/fleet/views.py:99
+#: apps/core/menu.py:63 apps/fleet/views.py:66 apps/fleet/views.py:99
 msgid "Drivers"
 msgstr "Водители"
 
-#: apps/core/menu.py:62 apps/fleet/templates/fleet/vehicle_list.html:22
+#: apps/core/menu.py:64 apps/fleet/templates/fleet/vehicle_list.html:22
 msgid "Fuel"
 msgstr "Топливо"
 
-#: apps/core/menu.py:64
+#: apps/core/menu.py:66
 msgid "Maintenance"
 msgstr "Техобслуживание"
 
-#: apps/core/menu.py:65
+#: apps/core/menu.py:67
 msgid "Store"
 msgstr "Склад"
 
-#: apps/core/menu.py:66
+#: apps/core/menu.py:68
 msgid "Documents"
 msgstr "Документы"
 
-#: apps/core/menu.py:68
-msgid "Other"
-msgstr "Прочее"
-
-#: apps/core/menu.py:69
+#: apps/core/menu.py:71
 msgid "Reports"
 msgstr "Отчёты"
 
-#: apps/core/menu.py:70
+#: apps/core/menu.py:72
 msgid "Settings"
 msgstr "Настройки"
 

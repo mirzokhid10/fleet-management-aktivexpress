@@ -196,6 +196,119 @@ T: dict[str, tuple[str, str]] = {
     "I don't understand this yet. Send /help to see what I can do.": (
         "Buni hali tushunmayman. Nimalar qila olishimni ko'rish uchun /help yuboring.",
         "Пока не понимаю. Отправьте /help, чтобы увидеть, что я умею."),
+    # Day 7: sign in with Telegram
+    "Confirm the sign-in in the company Telegram bot.": (
+        "Kirishni kompaniya Telegram botida tasdiqlang.",
+        "Подтвердите вход в Telegram-боте компании."),
+    "Sign in with Telegram": ("Telegram orqali kirish", "Войти через Telegram"),
+    "Sign in with Telegram. Passwords are only for administrators.": (
+        "Telegram orqali kiring. Parol faqat administratorlar uchun.",
+        "Войдите через Telegram. Пароль — только для администраторов."),
+    "Administrator sign-in with password": ("Administrator uchun parol bilan kirish",
+                                            "Вход администратора по паролю"),
+    "Open the bot: tap the button, or scan the code with your phone.": (
+        "Botni oching: tugmani bosing yoki kodni telefoningiz bilan skanerlang.",
+        "Откройте бота: нажмите кнопку или отсканируйте код телефоном."),
+    "In the bot, tap this number:": ("Botda shu raqamni bosing:", "В боте нажмите это число:"),
+    "Open Telegram": ("Telegramni ochish", "Открыть Telegram"),
+    "Waiting for confirmation…": ("Tasdiq kutilmoqda…", "Ждём подтверждения…"),
+    "The sign-in was cancelled in the bot.": ("Kirish botda bekor qilindi.",
+                                              "Вход отменён в боте."),
+    "Time is up. Start again.": ("Vaqt tugadi. Qaytadan boshlang.",
+                                 "Время вышло. Начните заново."),
+    "Try again": ("Qayta urinish", "Попробовать снова"),
+    "Back": ("Orqaga", "Назад"),
+    # Day 7: bot
+    "To start, send your phone number with the button below. It must be the number the "
+    "company has for you.": (
+        "Boshlash uchun pastdagi tugma orqali telefon raqamingizni yuboring. Bu kompaniyadagi "
+        "raqamingiz bo'lishi kerak.",
+        "Для начала отправьте свой номер телефона кнопкой ниже. Это должен быть номер, "
+        "который есть у компании."),
+    "Your registration is waiting for a manager to confirm it. I will write to you here.": (
+        "Ro'yxatdan o'tishingiz rahbar tasdig'ini kutmoqda. Shu yerda sizga yozaman.",
+        "Ваша регистрация ждёт подтверждения руководителя. Я напишу вам здесь."),
+    "Please send your own number with the button.": (
+        "Iltimos, tugma orqali o'z raqamingizni yuboring.",
+        "Пожалуйста, отправьте свой номер кнопкой."),
+    "Only Uzbek phone numbers (+998) can be registered.": (
+        "Faqat O'zbekiston raqamlari (+998) bilan ro'yxatdan o'tish mumkin.",
+        "Зарегистрироваться можно только с узбекским номером (+998)."),
+    "You are already registered.": ("Siz allaqachon ro'yxatdan o'tgansiz.",
+                                    "Вы уже зарегистрированы."),
+    "The number %(phone)s is not in the company list. Ask the dispatcher to add you, then "
+    "send it again with /start.": (
+        "%(phone)s raqami kompaniya ro'yxatida yo'q. Dispetcherdan sizni qo'shishini so'rang, "
+        "keyin /start orqali qayta yuboring.",
+        "Номера %(phone)s нет в списке компании. Попросите диспетчера добавить вас, затем "
+        "отправьте его снова через /start."),
+    "Thank you! A manager will confirm your registration soon. I will write to you here.": (
+        "Rahmat! Rahbar tez orada ro'yxatdan o'tishingizni tasdiqlaydi. Shu yerda sizga yozaman.",
+        "Спасибо! Руководитель скоро подтвердит регистрацию. Я напишу вам здесь."),
+    "This sign-in link has expired. Start again on the website.": (
+        "Bu kirish havolasining muddati tugagan. Saytda qaytadan boshlang.",
+        "Срок этой ссылки для входа истёк. Начните заново на сайте."),
+    "You are not registered yet. Send /start and share your phone number first.": (
+        "Siz hali ro'yxatdan o'tmagansiz. Avval /start yuboring va telefon raqamingizni "
+        "ulashing.",
+        "Вы ещё не зарегистрированы. Сначала отправьте /start и поделитесь номером телефона."),
+    "Your account cannot use the web app. Drivers work in this bot only.": (
+        "Hisobingiz veb-ilovadan foydalana olmaydi. Haydovchilar faqat shu botda ishlaydi.",
+        "Ваш аккаунт не может пользоваться веб-приложением. Водители работают только в этом "
+        "боте."),
+    "Wrong number. The sign-in was cancelled. Start again on the website.": (
+        "Noto'g'ri raqam. Kirish bekor qilindi. Saytda qaytadan boshlang.",
+        "Неверное число. Вход отменён. Начните заново на сайте."),
+    "The sign-in was cancelled. If you did not try to sign in, tell the director.": (
+        "Kirish bekor qilindi. Agar siz kirmoqchi bo'lmagan bo'lsangiz, direktorga xabar "
+        "bering.",
+        "Вход отменён. Если это были не вы, сообщите директору."),
+    "Sign in to the Aktiv Fleet web app?": ("Aktiv Fleet veb-ilovasiga kirasizmi?",
+                                            "Войти в веб-приложение Aktiv Fleet?"),
+    "Browser: %(browser)s": ("Brauzer: %(browser)s", "Браузер: %(browser)s"),
+    "Tap the number shown on your screen.": ("Ekraningizda ko'rsatilgan raqamni bosing.",
+                                             "Нажмите число, которое видите на экране."),
+    "You are signed in. You can go back to the browser.": (
+        "Siz tizimga kirdingiz. Brauzerga qaytishingiz mumkin.",
+        "Вы вошли. Можно вернуться в браузер."),
+    "Send my phone number": ("Telefon raqamimni yuborish", "Отправить мой номер"),
+    "It wasn't me": ("Bu men emasman", "Это не я"),
+    # Day 7: new users page
+    "New users": ("Yangi foydalanuvchilar", "Новые пользователи"),
+    "Waiting": ("Kutilmoqda", "Ожидает"),
+    "Approved": ("Tasdiqlangan", "Подтверждён"),
+    "Rejected": ("Rad etilgan", "Отклонён"),
+    "Not our employee": ("Bizning xodim emas", "Не наш сотрудник"),
+    "The number belongs to someone else": ("Raqam boshqa odamga tegishli",
+                                           "Номер принадлежит другому человеку"),
+    "Waiting for confirmation": ("Tasdiq kutayotganlar", "Ждут подтверждения"),
+    "People who shared their phone number in the bot. Check that the Telegram name fits the "
+    "person before confirming.": (
+        "Botda telefon raqamini yuborganlar. Tasdiqlashdan oldin Telegram ismi shu odamga "
+        "mosligini tekshiring.",
+        "Те, кто отправил номер телефона в боте. Перед подтверждением проверьте, что имя в "
+        "Telegram подходит человеку."),
+    "Person in our list": ("Ro'yxatimizdagi shaxs", "Человек в нашем списке"),
+    "Telegram account": ("Telegram hisobi", "Аккаунт Telegram"),
+    "Phone": ("Telefon", "Телефон"),
+    "Sent": ("Yuborilgan", "Отправлено"),
+    "Confirm": ("Tasdiqlash", "Подтвердить"),
+    "Reason": ("Sabab", "Причина"),
+    "Reject": ("Rad etish", "Отклонить"),
+    "Nobody is waiting.": ("Hech kim kutmayapti.", "Никто не ждёт."),
+    "Recently decided": ("Yaqinda hal qilinganlar", "Недавние решения"),
+    "Someone has already decided this request.": ("Bu so'rov allaqachon hal qilingan.",
+                                                  "По этому запросу уже приняли решение."),
+    "✅ Your registration is confirmed. Welcome, %(name)s!": (
+        "✅ Ro'yxatdan o'tishingiz tasdiqlandi. Xush kelibsiz, %(name)s!",
+        "✅ Регистрация подтверждена. Добро пожаловать, %(name)s!"),
+    "%(name)s is registered.": ("%(name)s ro'yxatdan o'tdi.", "%(name)s зарегистрирован(а)."),
+    "The bot could not send them a message.": ("Bot unga xabar yubora olmadi.",
+                                               "Боту не удалось отправить сообщение."),
+    "❌ Your registration was not confirmed. Ask the dispatcher if this is a mistake.": (
+        "❌ Ro'yxatdan o'tishingiz tasdiqlanmadi. Xato bo'lsa, dispetcherga murojaat qiling.",
+        "❌ Регистрация не подтверждена. Если это ошибка, обратитесь к диспетчеру."),
+    "The request was rejected.": ("So'rov rad etildi.", "Запрос отклонён."),
 }
 
 LANGS = {"uz": 0, "ru": 1}
@@ -214,25 +327,43 @@ ENTRY = re.compile(r'(msgid ((?:"(?:[^"\\]|\\.)*"\n?)+))(msgstr ((?:"(?:[^"\\]|\
 
 
 def fill(lang: str) -> list[str]:
-    """Fill msgstr for every msgid we know. Returns msgids still untranslated."""
+    """Fill msgstr for every msgid we know. Returns msgids still untranslated.
+
+    This file is the only source: a msgid it does not know is emptied and
+    reported. So gettext's "fuzzy" guesses from similar strings (e.g.
+    "Approved" guessed as "Approvals") can never reach the screen.
+    """
     path = BASE / lang / "LC_MESSAGES" / "django.po"
-    text = path.read_text(encoding="utf-8")
+    blocks = path.read_text(encoding="utf-8").split("\n\n")
     missing: list[str] = []
 
-    def replace(m: re.Match) -> str:
-        msgid = _unquote(m.group(2))
-        if not msgid:  # header
-            return m.group(0)
-        if msgid in T:
-            return f"{m.group(1)}msgstr {_quote(T[msgid][LANGS[lang]])}\n"
-        if not _unquote(m.group(4)):
-            missing.append(msgid)
-        return m.group(0)
+    def fix(block: str) -> str:
+        lines = block.split("\n")
+        fuzzy = any(ln.startswith("#,") and "fuzzy" in ln for ln in lines)
+        if fuzzy:
+            lines = [ln for ln in lines if not ln.startswith("#|")]
+            lines = [_drop_fuzzy(ln) if ln.startswith("#,") else ln for ln in lines]
+            lines = [ln for ln in lines if ln != "#,"]
+        block = "\n".join(lines)
 
-    text = ENTRY.sub(replace, text)
-    text = text.replace("#, fuzzy\n", "")
-    path.write_text(text, encoding="utf-8")
+        def replace(m: re.Match) -> str:
+            msgid = _unquote(m.group(2))
+            if not msgid:  # header
+                return m.group(0)
+            if msgid in T:
+                return f"{m.group(1)}msgstr {_quote(T[msgid][LANGS[lang]])}\n"
+            missing.append(msgid)
+            return f'{m.group(1)}msgstr ""\n'
+
+        return ENTRY.sub(replace, block + "\n").removesuffix("\n")
+
+    path.write_text("\n\n".join(fix(b) for b in blocks), encoding="utf-8")
     return missing
+
+
+def _drop_fuzzy(flags: str) -> str:
+    kept = [f.strip() for f in flags[2:].split(",") if f.strip() and f.strip() != "fuzzy"]
+    return "#, " + ", ".join(kept) if kept else "#,"
 
 
 if __name__ == "__main__":

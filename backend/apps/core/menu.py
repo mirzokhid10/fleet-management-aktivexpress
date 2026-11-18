@@ -55,6 +55,8 @@ MENU: tuple[MenuGroup, ...] = (
         MenuItem("trips", _("Trips"), "route", day=14, roles=MANAGERS),
         # Storekeepers confirm part requests here when marked as approvers.
         MenuItem("approvals", _("Approvals"), "check", day=21),
+        # Day 7: people who registered in the bot, waiting for a manager.
+        MenuItem("registrations", _("New users"), "user-plus", "bot:requests", roles=MANAGERS),
     )),
     MenuGroup(_("Fleet"), (
         MenuItem("vehicles", _("Vehicles"), "truck", "fleet:vehicles", roles=MANAGERS),

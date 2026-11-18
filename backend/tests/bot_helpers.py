@@ -89,3 +89,32 @@ class FakeTelegram:
     @staticmethod
     def popups(calls) -> list[str]:
         return [c.text for c in calls if isinstance(c, AnswerCallbackQuery) and c.text]
+
+
+# --- staff with Telegram (Day 7) -------------------------------------------
+
+def link_telegram(user, telegram_id: int | None = None) -> FakeTelegram:
+    """An approved registration: user's Telegram is linked to the bot."""
+    from apps.bot.models import BotUser
+
+    telegram_id = telegram_id or 500_000 + user.pk
+    BotUser.objects.create(telegram_id=telegram_id, user=user, language=user.language,
+                           first_name=user.first_name)
+    user.telegram_id = telegram_id
+    user.save(update_fields=["telegram_id"])
+    return FakeTelegram(telegram_id=telegram_id, first_name=user.first_name or "Staff",
+                        language_code=user.language)
+
+
+def telegram_sign_in(client, tg: FakeTelegram, next: str = "", pick: str = "right"):
+    """The whole browser + bot dance. Returns the browser's last status response."""
+    client.post("/accounts/login/telegram/start/", {"next": next})
+    login = client.get("/accounts/login/telegram/").context["login"]
+    calls = tg.send(f"/start login_{login.token}")
+    buttons = dict(FakeTelegram.buttons(calls))
+    if buttons:
+        wrong = [t for t in buttons if t.isdigit() and t != str(login.code)][0]
+        refuse = [t for t in buttons if not t.isdigit()][0]
+        label = {"right": str(login.code), "wrong": wrong, "no": refuse}[pick]
+        tg.tap(buttons[label])
+    return client.get("/accounts/login/telegram/status/")

@@ -11,9 +11,12 @@ class StaffLoginForm(AuthenticationForm):
     error_messages = {
         **AuthenticationForm.error_messages,
         "driver": _("Drivers use the Telegram bot, not the web app."),
+        "telegram": _("Sign in with Telegram. Passwords are only for administrators."),
     }
 
     def confirm_login_allowed(self, user):
         super().confirm_login_allowed(user)
         if not can_use_web(user):
             raise forms.ValidationError(self.error_messages["driver"], code="driver")
+        if not user.is_superuser:  # Day 7: staff sign in through the bot
+            raise forms.ValidationError(self.error_messages["telegram"], code="telegram")

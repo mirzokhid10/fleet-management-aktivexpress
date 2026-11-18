@@ -33,7 +33,7 @@ Running `manage.py runserver` on your machine instead? Postgres (5432) and Redis
 docker compose exec web python manage.py createsuperuser
 ```
 
-To try each role locally (director, dispatcher, storekeeper, driver), create demo users. It prints one password for all of them; it refuses to run unless `DJANGO_DEBUG=1`.
+To try each role locally (director, dispatcher, storekeeper, driver), create demo users. It prints one password for all of them; it refuses to run unless `DJANGO_DEBUG=1`. Since Day 7 only superusers (the demo director) can use the password; everyone else signs in with Telegram (below).
 
 ```bash
 docker compose exec web python manage.py create_demo_users
@@ -97,7 +97,15 @@ docker compose logs -f bot
 
 On the server it runs in webhook mode: set `BOT_MODE=webhook`, `BOT_WEBHOOK_URL=https://<domain>/bot/webhook` and a long random `BOT_WEBHOOK_SECRET`; the reverse proxy forwards `/bot/` to the bot container on port 8080. Telegram updates without the secret are refused.
 
-Running Django from `backend/venv` on your machine? Install the new requirements there too: `pip install -r backend/requirements.txt`.
+Running Django from `backend/venv` on your machine? Install the new requirements there too: `pip install -r backend/requirements.txt`, then `python manage.py migrate`.
+
+## Sign-in and registration (Day 7)
+
+Staff sign in with **Telegram orqali kirish**: the page shows a number and a link/QR code to the bot; the person taps the same number in the bot and the browser signs in. The link works once, for 3 minutes. Passwords work only for superusers (a backup for when Telegram is unavailable).
+
+Before that, a person registers once: `/start` in the bot → pick the language → **Send my phone number**. The number must match a staff user (`phone` in the admin) or a driver. A manager confirms on **New users**: dispatchers confirm drivers, the director confirms staff. The bot tells the person the result.
+
+To link yourself locally: sign in as the demo director (password), put your Telegram phone number on a staff user in the admin, share your number in the bot, then confirm yourself on **New users**.
 
 ## Admin panel
 
@@ -110,4 +118,5 @@ http://localhost:8000/admin/ for superusers (the demo director is one). Changes 
 - [x] Day 3 — database design: 9 apps, PostGIS, rules enforced by DB constraints (`docs/day-03-database.md`). Approved.
 - [x] Day 4 — login by role, role-based menu and access, Uzbek/Russian interface with language switch
 - [x] Day 5 — admin panel; vehicle and driver lists; Excel import with preview (web + `import_fleet` command). Waiting for the company's filled template to load the real fleet.
-- [x] Day 6 — bot skeleton (aiogram 3, polling locally / webhook on the server), /start, language choice (uz/ru), /language, /help. Live test waits for the bot token.
+- [x] Day 6 — bot skeleton (aiogram 3, polling locally / webhook on the server), /start, language choice (uz/ru), /language, /help. Tested with real Telegram.
+- [x] Day 7 — registration by phone in the bot, managers confirm on New users; web sign-in confirmed in the bot (number matching), passwords for superusers only

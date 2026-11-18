@@ -130,6 +130,8 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # --- Telegram bot (Day 6) ------------------------------------------------------
 # The token comes from @BotFather and lives only in .env.
 TELEGRAM_BOT_TOKEN = env("TELEGRAM_BOT_TOKEN", "")
+# Optional: asked from Telegram (getMe) and cached when empty.
+TELEGRAM_BOT_USERNAME = env("TELEGRAM_BOT_USERNAME", "")
 # polling: local development, no public URL needed.
 # webhook: on the server; Telegram calls BOT_WEBHOOK_URL, checked with BOT_WEBHOOK_SECRET.
 BOT_MODE = env("BOT_MODE", "polling")

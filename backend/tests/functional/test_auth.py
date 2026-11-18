@@ -27,11 +27,11 @@ def test_health_and_login_page_need_no_login(client):
     assert client.get("/health/").status_code == 200
     page = client.get("/accounts/login/")
     assert page.status_code == 200
-    assert "Login va parolingizni kiriting." in page.content.decode()
+    assert "Kirishni kompaniya Telegram botida tasdiqlang." in page.content.decode()
 
 
-def test_staff_login_lands_on_dashboard_in_their_language(client):
-    user = make_user(language="ru")
+def test_administrator_password_login_lands_on_dashboard_in_their_language(client):
+    user = make_user(role="director", language="ru", is_superuser=True, is_staff=True)
     response = client.post("/accounts/login/", {"username": user.username, "password": PASSWORD,
                                                 "remember": "on"})
     assert response.status_code == 302 and response["Location"] == "/"
@@ -39,11 +39,18 @@ def test_staff_login_lands_on_dashboard_in_their_language(client):
 
     page = client.get("/").content.decode()
     assert "<title>Главная | Aktiv Fleet</title>" in page
-    assert "Диспетчер" in page  # role under the user's name
+    assert "Директор" in page  # role under the user's name
+
+
+def test_staff_cannot_use_a_password_any_more(client):
+    user = make_user(role="dispatcher")
+    response = client.post("/accounts/login/", {"username": user.username, "password": PASSWORD})
+    assert "Telegram orqali kiring" in response.content.decode()
+    assert "_auth_user_id" not in client.session
 
 
 def test_login_without_remember_ends_with_the_browser(client):
-    user = make_user()
+    user = make_user(role="director", is_superuser=True)
     client.post("/accounts/login/", {"username": user.username, "password": PASSWORD})
     assert client.session.get_expire_at_browser_close() is True
 
@@ -58,7 +65,7 @@ def test_driver_cannot_log_in_to_the_web(client):
 
 
 def test_wrong_password_is_refused(client):
-    user = make_user()
+    user = make_user(role="director", is_superuser=True)
     response = client.post("/accounts/login/", {"username": user.username, "password": "nope"})
     assert response.status_code == 200
     assert "_auth_user_id" not in client.session
@@ -102,7 +109,8 @@ def test_language_switch_works_before_login(client):
     response = client.post("/accounts/language/", {"language": "ru",
                                                    "next": "/accounts/login/"})
     assert response.cookies[settings.LANGUAGE_COOKIE_NAME].value == "ru"
-    assert "Введите логин и пароль." in client.get("/accounts/login/").content.decode()
+    assert "Подтвердите вход в Telegram-боте компании." in \
+        client.get("/accounts/login/").content.decode()
 
 
 @pytest.mark.parametrize("role, shown, hidden", [

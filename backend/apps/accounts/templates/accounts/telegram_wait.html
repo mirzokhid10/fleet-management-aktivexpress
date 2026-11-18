@@ -1,0 +1,64 @@
+{% extends "base_auth.html" %}
+{% load i18n %}
+
+{% block title %}{% translate "Sign in with Telegram" %}{% endblock %}
+
+{% block content %}
+<div x-data="telegramLogin('{% url 'accounts:telegram_status' %}', {{ seconds }})" x-init="poll()">
+  <h1 class="mb-2 text-title-sm font-semibold text-gray-800 sm:text-title-lg dark:text-white/90">{% translate "Sign in with Telegram" %}</h1>
+
+  <div x-show="state === 'pending'">
+    <ol class="mb-6 list-decimal space-y-1 pl-5 text-sm text-gray-500 dark:text-gray-400">
+      <li>{% translate "Open the bot: tap the button, or scan the code with your phone." %}</li>
+      <li>{% translate "In the bot, tap this number:" %}</li>
+    </ol>
+
+    <p class="mb-6 text-center text-heading-four font-bold tracking-widest text-gray-800 dark:text-white/90" data-testid="login-code" aria-live="polite">{{ login.code }}</p>
+
+    <a href="{{ link }}" target="_blank" rel="noopener" data-testid="bot-link"
+       class="mb-6 flex w-full items-center justify-center gap-3 rounded-lg bg-[#2AABEE] px-4 py-3 text-sm font-medium text-white shadow-theme-xs hover:bg-[#229ED9]">
+      {% translate "Open Telegram" %}
+    </a>
+
+    <div class="mx-auto mb-4 w-fit rounded-xl bg-white p-2" data-testid="qr">{{ qr|safe }}</div>
+    <p class="text-center text-xs text-gray-500 dark:text-gray-400">
+      {% translate "Waiting for confirmation…" %} <span x-text="left"></span>
+    </p>
+  </div>
+
+  <div x-cloak x-show="state !== 'pending'" class="space-y-5">
+    <div role="alert" class="rounded-lg border border-red-500 bg-red-50 p-3 text-sm text-red-600 dark:border-red-500/30 dark:bg-red-500/15 dark:text-red-500">
+      <p x-show="state === 'denied'">{% translate "The sign-in was cancelled in the bot." %}</p>
+      <p x-show="state === 'expired'">{% translate "Time is up. Start again." %}</p>
+    </div>
+    <form method="post" action="{% url 'accounts:telegram_start' %}">
+      {% csrf_token %}
+      <button type="submit" class="flex w-full items-center justify-center rounded-lg bg-brand-500 px-4 py-3 text-sm font-medium text-white hover:bg-brand-600">{% translate "Try again" %}</button>
+    </form>
+  </div>
+
+  <a href="{% url 'accounts:login' %}" class="mt-6 inline-block text-sm text-gray-500 hover:underline dark:text-gray-400">{% translate "Back" %}</a>
+</div>
+
+<script>
+  function telegramLogin(url, seconds) {
+    const until = Date.now() + seconds * 1000;
+    return {
+      state: "pending",
+      left: "",
+      async poll() {
+        while (this.state === "pending") {
+          const s = Math.max(0, Math.round((until - Date.now()) / 1000));
+          this.left = `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
+          try {
+            const data = await (await fetch(url, { headers: { Accept: "application/json" } })).json();
+            if (data.status === "ok") { window.location.assign(data.next); return; }
+            if (data.status !== "pending") { this.state = data.status; return; }
+          } catch (e) { /* network hiccup: try again */ }
+          await new Promise((r) => setTimeout(r, 2000));
+        }
+      },
+    };
+  }
+</script>
+{% endblock %}

@@ -14,6 +14,7 @@ Feature: The web app runs locally
       | Jonli xarita  |
       | Reyslar       |
       | Tasdiqlash    |
+      | Yangi foydalanuvchilar |
       | Avtomobillar  |
       | Haydovchilar  |
       | Yoqilg'i      |

@@ -21,7 +21,7 @@ def keys(user):
     return [item.key for group in menu_for(user) for item in group.items]
 
 
-EVERYTHING = ["dashboard", "map", "trips", "approvals", "vehicles", "drivers", "fuel",
+EVERYTHING = ["dashboard", "map", "trips", "approvals", "registrations", "vehicles", "drivers", "fuel",
               "maintenance", "store", "documents", "reports", "settings"]
 
 
@@ -67,7 +67,10 @@ def test_login_form_turns_drivers_away():
     with pytest.raises(ValidationError) as exc:
         form.confirm_login_allowed(User(role="driver", is_active=True))
     assert exc.value.code == "driver"
-    form.confirm_login_allowed(User(role="dispatcher", is_active=True))
+    with pytest.raises(ValidationError) as exc:  # Day 7: staff use Telegram
+        form.confirm_login_allowed(User(role="dispatcher", is_active=True))
+    assert exc.value.code == "telegram"
+    form.confirm_login_allowed(User(role="director", is_active=True, is_superuser=True))
 
 
 @pytest.mark.parametrize("lang", ["uz", "ru"])

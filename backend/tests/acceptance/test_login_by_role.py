@@ -5,13 +5,11 @@ import pytest
 from pytest_bdd import given, parsers, scenarios, then, when
 
 from tests import factories as f
+from tests.bot_helpers import FakeTelegram, link_telegram, telegram_sign_in
 
 pytestmark = [pytest.mark.acceptance, pytest.mark.django_db]
 
 scenarios("login_by_role.feature")
-
-PASSWORD = "acceptance-Passw0rd"
-
 
 @pytest.fixture
 def ctx(client):
@@ -19,10 +17,9 @@ def ctx(client):
 
 
 def _account(ctx, role, language="uz"):
-    user = f.user(role=role, language=language)
-    user.set_password(PASSWORD)
-    user.save()
+    user = f.user(role=role, language=language, first_name="Ali")
     ctx["user"] = user
+    ctx["tg"] = link_telegram(user)
 
 
 def _labels(response) -> list[str]:
@@ -44,11 +41,14 @@ def account(ctx, role):
     _account(ctx, role)
 
 
-@when("they sign in with their username and password")
+@when("they sign in with Telegram")
 def sign_in(ctx):
-    ctx["response"] = ctx["client"].post("/accounts/login/", {
-        "username": ctx["user"].username, "password": PASSWORD, "remember": "on"},
-        follow=True)
+    client = ctx["client"]
+    ctx["status"] = telegram_sign_in(client, ctx["tg"])
+    ctx["bot_said"] = FakeTelegram.texts(ctx["tg"].session.calls)
+    data = ctx["status"].json()
+    ctx["response"] = client.get(data["next"]) if data["status"] == "ok" else \
+        client.get("/accounts/login/")
 
 
 @when("they switch the language to Russian")
@@ -71,7 +71,7 @@ def open_anonymously(ctx):
 
 @then("they land on the dashboard")
 def on_dashboard(ctx):
-    assert ctx["response"].redirect_chain[-1][0] == "/"
+    assert ctx["status"].json() == {"status": "ok", "next": "/"}
     assert ctx["response"].status_code == 200
 
 
@@ -95,9 +95,9 @@ def still_on_login(ctx):
     assert "_auth_user_id" not in ctx["client"].session
 
 
-@then(parsers.parse('they read "{text}"'))
-def reads(ctx, text):
-    assert text in html.unescape(ctx["response"].content.decode())
+@then(parsers.parse('the bot tells them "{text}"'))
+def bot_tells(ctx, text):
+    assert any(text in t for t in ctx["bot_said"]), ctx["bot_said"]
 
 
 @then("they are sent to the sign-in page")

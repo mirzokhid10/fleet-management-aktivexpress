@@ -52,3 +52,41 @@ class User(AbstractUser):
 
     def __str__(self) -> str:
         return self.get_full_name() or self.username
+
+
+class TelegramLogin(models.Model):
+    """One attempt to sign in to the web through the bot.
+
+    The browser gets a deep link t.me/<bot>?start=login_<token>. The person
+    confirms in the bot by tapping the number shown on the screen, then the
+    browser (which polls) is signed in. Valid for a few minutes, used once.
+    """
+
+    class Status(models.TextChoices):
+        PENDING = "pending", "Waiting"
+        APPROVED = "approved", "Approved in the bot"
+        DENIED = "denied", "Denied in the bot"
+        USED = "used", "Signed in"
+
+    token = models.CharField(max_length=43, unique=True)
+    code = models.PositiveSmallIntegerField(help_text="Shown in the browser, picked in the bot")
+    status = models.CharField(max_length=10, choices=Status.choices, default=Status.PENDING)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True,
+                             related_name="telegram_logins")
+    created_at = models.DateTimeField(auto_now_add=True)
+    expires_at = models.DateTimeField()
+    decided_at = models.DateTimeField(null=True, blank=True)
+    browser = models.CharField(max_length=200, blank=True)
+    ip = models.GenericIPAddressField(null=True, blank=True)
+
+    class Meta:
+        constraints = [
+            models.CheckConstraint(name="telegram_login_code_two_digits",
+                                   condition=models.Q(code__gte=10, code__lte=99)),
+            models.CheckConstraint(name="telegram_login_approved_has_user",
+                                   condition=models.Q(status__in=["pending", "denied"])
+                                   | models.Q(user__isnull=False)),
+        ]
+
+    def __str__(self) -> str:
+        return f"{self.status} {self.user or ''} {self.created_at:%d.%m.%Y %H:%M}"

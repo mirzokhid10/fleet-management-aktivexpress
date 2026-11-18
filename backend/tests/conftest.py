@@ -51,7 +51,7 @@ VALID_DATA: dict[str, list[dict]] = {
          "latitude": 41.2265, "longitude": 69.2210, "radius_m": 150},
     ],
     "approvers": [
-        {"full_name": "Karimova Dilnoza", "phone": "+998 93 000 11 22", "role": "Dispatcher",
+        {"full_name": "Karimova Dilnoza", "phone": "+998 90 016 95 06", "role": "Dispatcher",
          "daily_data": "Yes", "fuel": "Yes", "service": "No", "parts": "No"},
     ],
     "settings": [
@@ -109,3 +109,21 @@ def login_as(client, db):
         return client
 
     return _login
+
+
+@pytest.fixture(autouse=True)
+def _bot_username(settings):
+    """Deep links need the bot's @username; tests never ask Telegram for it."""
+    settings.TELEGRAM_BOT_USERNAME = "fleet_test_bot"
+
+
+@pytest.fixture
+def sent_by_bot(monkeypatch):
+    """Messages the web app sends through the bot: [(chat_id, text)], nothing leaves."""
+    sent: list[tuple[int, str]] = []
+
+    async def fake_send(chat_id, text):
+        sent.append((chat_id, text))
+
+    monkeypatch.setattr("apps.bot.notify._send", fake_send)
+    return sent

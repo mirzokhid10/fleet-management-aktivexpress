@@ -176,7 +176,7 @@ APPROVERS = Sheet(
     fields=(
         Field("full_name", "F.I.Sh.", "Ф.И.О.", example="Karimova Dilnoza", width=28),
         Field("phone", "Telegram telefon raqami", "Телефон в Telegram", parse_phone, unique=True,
-              example="+998 93 765 43 21", width=22),
+              example="+998 90 016 95 06", width=22),
         Field("role", "Lavozimi", "Роль", choices=STAFF_ROLES, example="Dispatcher"),
         Field("daily_data", "Kunlik ma'lumot", "Ежедневные данные", parse_yes_no,
               choices=YES_NO, example="Yes"),
