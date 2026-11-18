@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.contrib.gis.admin import GISModelAdmin
 
 from apps.audit.admin import AuditedAdmin
+from apps.core.admin_base import ModelAdmin
 
 from .models import Geofence, LiveSession, LocationPoint, SharingGap
 
@@ -14,14 +15,14 @@ class GeofenceAdmin(AuditedAdmin, GISModelAdmin):
 
 
 @admin.register(LiveSession)
-class LiveSessionAdmin(admin.ModelAdmin):
+class LiveSessionAdmin(ModelAdmin):
     list_display = ("shift", "started_at", "last_update_at", "ended_at", "end_reason")
     date_hierarchy = "started_at"
     raw_id_fields = ("shift",)
 
 
 @admin.register(LocationPoint)
-class LocationPointAdmin(admin.ModelAdmin):
+class LocationPointAdmin(ModelAdmin):
     """Points come from the bot only; the admin can look but not touch."""
 
     list_display = ("vehicle", "recorded_at", "speed_kmh", "accuracy_m", "is_valid")
@@ -37,7 +38,7 @@ class LocationPointAdmin(admin.ModelAdmin):
 
 
 @admin.register(SharingGap)
-class SharingGapAdmin(admin.ModelAdmin):
+class SharingGapAdmin(ModelAdmin):
     list_display = ("shift", "since", "alerted_at", "resolved_at")
     date_hierarchy = "since"
     raw_id_fields = ("shift",)

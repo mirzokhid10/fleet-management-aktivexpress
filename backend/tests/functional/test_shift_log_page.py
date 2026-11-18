@@ -54,11 +54,13 @@ def test_lists_shifts_newest_first_with_open_ones_marked(login_as):
 def test_filters(login_as):
     now = timezone.now()
     yesterday = timezone.localdate() - dt.timedelta(days=1)
+    nine = timezone.make_aware(dt.datetime.combine(yesterday, dt.time(9)))
     vali = f.driver(full_name="Aliyev Vali")
+    # Fixed hours yesterday, and b starts now: right after midnight "now - 2 h" is yesterday too.
     a = f.shift(driver=vali, vehicle=f.vehicle(plate="01A123BC"),
-                started_at=now - dt.timedelta(days=1, hours=1),
-                ended_at=now - dt.timedelta(days=1))
-    b = f.shift(driver=f.driver(full_name="Karimov Ali"), vehicle=f.vehicle(plate="01A777AA"))
+                started_at=nine, ended_at=nine + dt.timedelta(hours=1))
+    b = f.shift(driver=f.driver(full_name="Karimov Ali"), vehicle=f.vehicle(plate="01A777AA"),
+                started_at=now)
     client = login_as("dispatcher")
     assert rows(client.get(URL, {"q": "vali"})) == [a.pk]
     assert rows(client.get(URL, {"q": "777 aa"})) == [b.pk]

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-18 22:42+0500\n"
+"POT-Creation-Date: 2026-11-19 00:07+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -511,11 +511,55 @@ msgstr "❌ Ro'yxatdan o'tishingiz tasdiqlanmadi. Xato bo'lsa, dispetcherga muro
 msgid "The request was rejected."
 msgstr "So'rov rad etildi."
 
+#: apps/core/admin_dashboard.py:21
+msgid "Development"
+msgstr "Sinov nusxasi"
+
+#: apps/core/admin_dashboard.py:30
+msgid "When"
+msgstr "Qachon"
+
+#: apps/core/admin_dashboard.py:30
+msgid "Who"
+msgstr "Kim"
+
+#: apps/core/admin_dashboard.py:30
+msgid "Action"
+msgstr "Amal"
+
+#: apps/core/admin_dashboard.py:30
+msgid "What"
+msgstr "Nima"
+
+#: apps/core/admin_dashboard.py:32
+msgid "system"
+msgstr "tizim"
+
+#: apps/core/admin_dashboard.py:48
+msgid "Active vehicles"
+msgstr "Faol avtomobillar"
+
+#: apps/core/admin_dashboard.py:50
+msgid "Active drivers"
+msgstr "Faol haydovchilar"
+
+#: apps/core/admin_dashboard.py:52 apps/fleet/templates/fleet/shift_list.html:7
+msgid "On shift now"
+msgstr "Hozir smenada"
+
+#: apps/core/admin_dashboard.py:54
+msgid "Sharing location now"
+msgstr "Hozir joylashuvni ulashmoqda"
+
+#: apps/core/admin_dashboard.py:56
+msgid "Location alerts open"
+msgstr "Ochiq joylashuv ogohlantirishlari"
+
 #: apps/core/menu.py:52
 msgid "Menu"
 msgstr "Menyu"
 
-#: apps/core/menu.py:53 apps/core/views.py:13
+#: apps/core/menu.py:53 apps/core/views.py:13 config/settings.py:182
 msgid "Dashboard"
 msgstr "Bosh sahifa"
 
@@ -531,19 +575,21 @@ msgstr "Reyslar"
 msgid "Approvals"
 msgstr "Tasdiqlash"
 
-#: apps/core/menu.py:61
+#: apps/core/menu.py:61 config/settings.py:185
 msgid "Fleet"
 msgstr "Avtopark"
 
 #: apps/core/menu.py:62 apps/fleet/views.py:57 apps/fleet/views.py:104
+#: config/settings.py:186
 msgid "Vehicles"
 msgstr "Avtomobillar"
 
 #: apps/core/menu.py:63 apps/fleet/views.py:71 apps/fleet/views.py:104
+#: config/settings.py:187
 msgid "Drivers"
 msgstr "Haydovchilar"
 
-#: apps/core/menu.py:65 apps/fleet/views.py:223
+#: apps/core/menu.py:65 apps/fleet/views.py:223 config/settings.py:188
 msgid "Shifts"
 msgstr "Smenalar"
 
@@ -559,7 +605,7 @@ msgstr "Texnik xizmat"
 msgid "Store"
 msgstr "Ombor"
 
-#: apps/core/menu.py:70
+#: apps/core/menu.py:70 config/settings.py:189
 msgid "Documents"
 msgstr "Hujjatlar"
 
@@ -730,10 +776,6 @@ msgstr "3. Import qilish"
 #: apps/fleet/templates/fleet/import.html:116
 msgid "Cancel"
 msgstr "Bekor qilish"
-
-#: apps/fleet/templates/fleet/shift_list.html:7
-msgid "On shift now"
-msgstr "Hozir smenada"
 
 #: apps/fleet/templates/fleet/shift_list.html:11
 msgid "Sharing location"
@@ -917,6 +959,110 @@ msgid ""
 "start_shift when you take a vehicle again."
 msgstr "Dispetcher %(vehicle)s bilan smenangizni %(time)s da tugatdi. Avtomobilni yana olganingizda /start_shift yuboring."
 
+#: config/settings.py:162
+msgid "Admin"
+msgstr "Boshqaruv paneli"
+
+#: config/settings.py:181
+msgid "Overview"
+msgstr "Umumiy ko'rinish"
+
+#: config/settings.py:183
+msgid "Open the web app"
+msgstr "Veb-ilovani ochish"
+
+#: config/settings.py:191
+msgid "Tracking"
+msgstr "Kuzatuv"
+
+#: config/settings.py:192
+msgid "Location sharing"
+msgstr "Joylashuvni ulashish"
+
+#: config/settings.py:193
+msgid "Location points"
+msgstr "Joylashuv nuqtalari"
+
+#: config/settings.py:194
+msgid "Location alerts"
+msgstr "Joylashuv ogohlantirishlari"
+
+#: config/settings.py:195
+msgid "Geofences"
+msgstr "Geozonalar"
+
+#: config/settings.py:197
+msgid "Driver entries"
+msgstr "Haydovchi yozuvlari"
+
+#: config/settings.py:198
+msgid "Entries"
+msgstr "Yozuvlar"
+
+#: config/settings.py:199
+msgid "Photos"
+msgstr "Rasmlar"
+
+#: config/settings.py:200
+msgid "Tyre change wheels"
+msgstr "Shina almashtirishdagi g'ildiraklar"
+
+#: config/settings.py:202
+msgid "Maintenance & store"
+msgstr "Texnik xizmat va ombor"
+
+#: config/settings.py:203
+msgid "Service records"
+msgstr "Texnik xizmat yozuvlari"
+
+#: config/settings.py:204
+msgid "Service intervals"
+msgstr "Texnik xizmat oraliqlari"
+
+#: config/settings.py:206
+msgid "Store items"
+msgstr "Ombor mahsulotlari"
+
+#: config/settings.py:207
+msgid "Stock movements"
+msgstr "Ombor harakatlari"
+
+#: config/settings.py:208
+msgid "Suppliers"
+msgstr "Yetkazib beruvchilar"
+
+#: config/settings.py:210
+msgid "People & Telegram"
+msgstr "Odamlar va Telegram"
+
+#: config/settings.py:211
+msgid "Users"
+msgstr "Foydalanuvchilar"
+
+#: config/settings.py:212
+msgid "Permission groups"
+msgstr "Ruxsat guruhlari"
+
+#: config/settings.py:213
+msgid "Telegram users"
+msgstr "Telegram foydalanuvchilari"
+
+#: config/settings.py:214
+msgid "Telegram groups"
+msgstr "Telegram guruhlari"
+
+#: config/settings.py:216
+msgid "System"
+msgstr "Tizim"
+
+#: config/settings.py:217
+msgid "Company settings"
+msgstr "Kompaniya sozlamalari"
+
+#: config/settings.py:218
+msgid "Audit log"
+msgstr "O'zgarishlar jurnali"
+
 #: templates/403.html:3 templates/403.html:5
 msgid "No access"
 msgstr "Ruxsat yo'q"
@@ -928,6 +1074,28 @@ msgstr "Sizning lavozimingiz bu sahifani ocha olmaydi."
 #: templates/403.html:9 templates/partials/header.html:65
 msgid "Log out"
 msgstr "Chiqish"
+
+#: templates/admin/index.html:18
+msgid "Alert group not set"
+msgstr "Ogohlantirish guruhi tanlanmagan"
+
+#: templates/admin/index.html:20
+msgid ""
+"Location alerts are not posted anywhere yet. Add the bot to the managers' "
+"Telegram group, then choose it in Company settings."
+msgstr "Joylashuv ogohlantirishlari hozircha hech qayerga yuborilmayapti. Botni rahbarlarning Telegram guruhiga qo'shing, so'ng uni Kompaniya sozlamalarida tanlang."
+
+#: templates/admin/index.html:34
+msgid "Recent changes"
+msgstr "So'nggi o'zgarishlar"
+
+#: templates/admin/index.html:35
+msgid "All changes"
+msgstr "Barcha o'zgarishlar"
+
+#: templates/admin/index.html:40
+msgid "No changes yet."
+msgstr "Hozircha o'zgarishlar yo'q."
 
 #: templates/base_auth.html:34
 msgid "Vehicles, drivers, fuel, service and store in one place."

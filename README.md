@@ -141,6 +141,13 @@ To set up the group:
 
 http://localhost:8000/admin/ for superusers (the demo director is one). Changes made there are written to the audit log; the audit log itself is read-only.
 
+It uses the [Unfold](https://unfoldadmin.com) theme (`django-unfold`, Tailwind, brand blue of the web app):
+
+- **Home page**: active vehicles and drivers, who is on shift, who is sharing location, open location alerts, the latest audit-log changes, and a warning while no alert group is chosen. See `apps/core/admin_dashboard.py` and `templates/admin/index.html`.
+- **Sidebar**: grouped by topic (Fleet, Tracking, Driver entries, Maintenance & store, People & Telegram, System). It is set in `UNFOLD` in `config/settings.py`, and a link shows only to users who can view that model.
+- **New admin classes** inherit `ModelAdmin` / `StackedInline` / `TabularInline` from `apps/core/admin_base.py` (or `AuditedAdmin`); a plain `django.contrib.admin` class would render unstyled. Tests fail if a model is registered without the theme or missing from the sidebar.
+- A "Sinov nusxasi" (development copy) badge shows while `DJANGO_DEBUG` is on.
+
 ## Progress
 
 - [x] Day 1 — kickoff: scope, roles, approval rules (`docs/day-01-kickoff.md`), data template + checker. Signed off.

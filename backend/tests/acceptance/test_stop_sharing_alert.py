@@ -1,4 +1,5 @@
 import datetime as dt
+from unittest import mock
 
 import pytest
 from aiogram.methods import SendMessage
@@ -101,7 +102,9 @@ def share_again(ctx, hhmm):
 @when(parsers.parse("they end the shift at {hhmm}"))
 def end_shift(ctx, hhmm):
     _check(ctx, hhmm)
-    shifts.end(Shift.objects.get(pk=ctx["shift"].pk))
+    # The clock of the scenario, not the real one (just after midnight 10:05 is still ahead).
+    with mock.patch("django.utils.timezone.now", return_value=at(hhmm)):
+        shifts.end(Shift.objects.get(pk=ctx["shift"].pk))
 
 
 @then(parsers.parse("at {hhmm} nobody has been alerted"))

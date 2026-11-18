@@ -5,6 +5,8 @@ import os
 from dotenv import load_dotenv
 
 from django.core.exceptions import ImproperlyConfigured
+from django.urls import reverse_lazy
+from django.utils.translation import gettext_lazy as _
 
 load_dotenv()
 
@@ -31,6 +33,10 @@ SECRET_KEY = env("DJANGO_SECRET_KEY", "dev-only-insecure-key" if DEBUG else None
 ALLOWED_HOSTS = env_list("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1" if DEBUG else "")
 
 INSTALLED_APPS = [
+    # Unfold (admin theme) must come before django.contrib.admin.
+    "unfold",
+    "unfold.contrib.filters",
+    "unfold.contrib.forms",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -138,3 +144,79 @@ BOT_MODE = env("BOT_MODE", "polling")
 BOT_WEBHOOK_URL = env("BOT_WEBHOOK_URL", "")
 BOT_WEBHOOK_SECRET = env("BOT_WEBHOOK_SECRET", "")
 BOT_WEBHOOK_PORT = int(env("BOT_WEBHOOK_PORT", "8080"))
+
+
+# --- Django admin look: Unfold (https://unfoldadmin.com) -----------------------
+# For superusers only. Colours follow the brand blue of the web app (TailAdmin).
+def _admin_link(title, icon, app, model):
+    return {
+        "title": title, "icon": icon,
+        "link": reverse_lazy(f"admin:{app}_{model}_changelist"),
+        "permission": lambda request: request.user.has_perm(f"{app}.view_{model}"),
+    }
+
+
+UNFOLD = {
+    "SITE_TITLE": "Aktiv Fleet admin",
+    "SITE_HEADER": "Aktiv Fleet",
+    "SITE_SUBHEADER": _("Admin"),
+    "SITE_URL": "/",
+    "SITE_SYMBOL": "local_shipping",
+    "ENVIRONMENT": "apps.core.admin_dashboard.environment",
+    "DASHBOARD_CALLBACK": "apps.core.admin_dashboard.dashboard",
+    "SHOW_HISTORY": True,
+    "SHOW_VIEW_ON_SITE": True,
+    "COLORS": {
+        "primary": {
+            "50": "rgb(236 243 255)", "100": "rgb(221 233 255)", "200": "rgb(194 214 255)",
+            "300": "rgb(156 185 255)", "400": "rgb(117 146 255)", "500": "rgb(70 95 255)",
+            "600": "rgb(54 65 245)", "700": "rgb(42 49 216)", "800": "rgb(37 45 174)",
+            "900": "rgb(38 46 137)", "950": "rgb(22 25 80)",
+        },
+    },
+    "SIDEBAR": {
+        "show_search": True,
+        "show_all_applications": True,
+        "navigation": [
+            {"title": _("Overview"), "items": [
+                {"title": _("Dashboard"), "icon": "dashboard", "link": reverse_lazy("admin:index")},
+                {"title": _("Open the web app"), "icon": "open_in_new", "link": "/"},
+            ]},
+            {"title": _("Fleet"), "collapsible": True, "items": [
+                _admin_link(_("Vehicles"), "local_shipping", "fleet", "vehicle"),
+                _admin_link(_("Drivers"), "badge", "fleet", "driver"),
+                _admin_link(_("Shifts"), "schedule", "fleet", "shift"),
+                _admin_link(_("Documents"), "description", "documents", "document"),
+            ]},
+            {"title": _("Tracking"), "collapsible": True, "items": [
+                _admin_link(_("Location sharing"), "share_location", "tracking", "livesession"),
+                _admin_link(_("Location points"), "location_on", "tracking", "locationpoint"),
+                _admin_link(_("Location alerts"), "location_off", "tracking", "sharinggap"),
+                _admin_link(_("Geofences"), "fence", "tracking", "geofence"),
+            ]},
+            {"title": _("Driver entries"), "collapsible": True, "items": [
+                _admin_link(_("Entries"), "assignment", "entries", "entry"),
+                _admin_link(_("Photos"), "photo_camera", "entries", "photo"),
+                _admin_link(_("Tyre change wheels"), "tire_repair", "entries", "tirechangewheel"),
+            ]},
+            {"title": _("Maintenance & store"), "collapsible": True, "items": [
+                _admin_link(_("Service records"), "build", "maintenance", "servicerecord"),
+                _admin_link(_("Service intervals"), "event_repeat", "maintenance",
+                            "serviceinterval"),
+                _admin_link(_("Store items"), "inventory_2", "store", "storeitem"),
+                _admin_link(_("Stock movements"), "swap_vert", "store", "stockmovement"),
+                _admin_link(_("Suppliers"), "storefront", "store", "supplier"),
+            ]},
+            {"title": _("People & Telegram"), "collapsible": True, "items": [
+                _admin_link(_("Users"), "person", "accounts", "user"),
+                _admin_link(_("Permission groups"), "group", "auth", "group"),
+                _admin_link(_("Telegram users"), "chat", "bot", "botuser"),
+                _admin_link(_("Telegram groups"), "forum", "bot", "botgroup"),
+            ]},
+            {"title": _("System"), "collapsible": True, "items": [
+                _admin_link(_("Company settings"), "settings", "core", "companysettings"),
+                _admin_link(_("Audit log"), "history", "audit", "auditlog"),
+            ]},
+        ],
+    },
+}
