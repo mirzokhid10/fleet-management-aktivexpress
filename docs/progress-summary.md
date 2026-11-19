@@ -1,4 +1,4 @@
-# Aktivexpress Fleet: where we are (after Day 14, 19 Nov 2026)
+# Aktivexpress Fleet: where we are (after Day 15, 19 Nov 2026)
 
 A handoff note for the next chat. The plan is *Fleet App — Roadmap & Tech Stack.docx* (70 working days, in `~/Downloads`). The README has setup, commands and a section per day; this note is the short version plus the decisions and open items.
 
@@ -41,20 +41,20 @@ Fleet management for Aktivexpress (about 50 vehicles), later sold as SaaS to oth
 | 11 | Stop-sharing alert after 10 min to the managers' group, reminder to the driver, "back on" message | c7e77ab |
 | 12 | Live map `/map/`: list, statuses (moving, stopped, no signal, off shift), filters, search | ad7fa50 |
 | 13 | Map updates every 10 s without reloading, pins glide smoothly; vehicle panel (driver, phone, speed, last update, shift distance) with Follow | 1bc4070 |
-| 14 | Trips `/trips/`: a stop of 5+ min (or a parked, silent phone) splits trips; A → B with place names, time, km, top speed; trips kept after retention | not committed yet |
+| 14 | Trips `/trips/`: a stop of 5+ min (or a parked, silent phone) splits trips; A → B with place names, time, km, top speed; trips kept after retention | ad01ec2 |
+| 15 | Route history `/history/`: vehicle + 1–7 days, trips coloured on the map, stops, playback 10×/60×/300× with slider; `demo_drives` command for test data | not committed yet |
 
-Days 7–11 were tested live with a real phone. Days 12–14 were checked in the browser with a simulated drive; a real-phone run is still to do.
+Days 7–11 were tested live with a real phone. Days 12–15 were checked in the browser with simulated drives; a real-phone run is still to do.
 
 ## Open items
 
-1. **Real data:** the owner shares the real vehicles and drivers by filling the Excel template in `backend/media/` (real data is never pasted in chat). Then: import (`/vehicles/import/`), drivers register in the bot, remove the demo data (vehicles 01 D 001–003 AA, "Demo Haydovchi Bir/Ikki", demo users), and run real tests to show the client.
+1. **Real data:** the owner shares the real vehicles and drivers by filling the Excel template in `backend/media/` (real data is never pasted in chat). Then: import (`/vehicles/import/`), drivers register in the bot, remove the demo data (`manage.py demo_drives --remove` first for the simulated days and "Demo · …" places, then vehicles 01 D 001–003 AA, "Demo Haydovchi Bir/Ikki", demo users), and run real tests to show the client.
 2. **Alert group:** the manager adds @manfleetbot to their Telegram group, then the director chooses it in admin, *Company settings → Alert group*. Until then, alerts are only logged.
 3. **Phone test of the live map and trips:** start a shift in the bot, share live location, drive with a stop of 5+ minutes, and watch `/map/` and `/trips/` on a computer.
 4. **The owner's Telegram** is linked to the demo driver "Demo Haydovchi Bir" for testing. Link it back to the director once real drivers exist.
 
 ## Next on the roadmap
 
-- **Day 15:** route history. Pick a vehicle and dates to see the roads driven, with playback.
 - **Day 16:** retention of 1 or 3 months (Company settings), nightly cleanup.
 - **Day 17:** test drive with 3 phones, fix bugs, demo (the tracking milestone).
 - **Days 18–20:** approval engine, bot `/daily` with an odometer photo, photo storage (MinIO).
@@ -65,6 +65,7 @@ Days 7–11 were tested live with a real phone. Days 12–14 were checked in the
 - Commit only when the owner asks; they sometimes commit themselves. Don't push. Commit messages end with the Co-Authored-By line.
 - Never put secrets in chat. The bot token is in `backend/.env`, which is git-ignored.
 - Use they/them for people.
+- Local test data: `manage.py demo_drives` (simulated past days with real roads); `--remove` undoes it.
 
 ## Gotchas learned
 

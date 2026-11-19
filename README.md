@@ -159,6 +159,18 @@ http://localhost:8001/trips/ for directors and dispatchers. Each shift's clean t
 
 Trips are rebuilt from the points each time a point arrives and when the shift ends. Opening the page ends the trips of vehicles that have been silent for 5 minutes. The last trip of an open shift shows **On the way**. Ends of a trip are named after the company's places (Geofences from the template, circle or drawn area); otherwise coordinates linking to OpenStreetMap. Filter by driver/plate and day; the cards show the number of trips and kilometres for the filter. Trips are kept when retention deletes old points (Day 16). After changing the rules, `docker compose exec web python manage.py recalculate_track` rebuilds tracks and trips. Rules: `apps/tracking/trips.py`.
 
+**Test trips without a phone:** `docker compose exec web python manage.py demo_drives` simulates the last 5 working days (ending yesterday) of the drivers whose name starts with "Demo": loading at a warehouse, 3–4 client places, a lunch with the phone silent, back. Roads come from the public OSRM demo router (`--offline` for simple paths). It also makes the places, named "Demo · …". Days that overlap a driver's real shift are skipped. `--days N` changes how many days; `--remove` deletes exactly what it made (shifts with points but no live session, and the demo places).
+
+## Route history (Day 15)
+
+http://localhost:8001/history/ for directors and dispatchers. Pick a vehicle, a day and how many days (1, 2, 3 or 7). It opens on the vehicle that drove last, on its last day with trips. The "Days with trips" chips jump to recent days. "On the map" on each Trips row opens that trip; "Route history" in the live map's vehicle panel opens that vehicle.
+
+- The map shows the roads driven (good points only, Day 10). Each trip has its own colour, and stops are "P" markers.
+- On the left: distance, trips and driving time, then the day as a list of trips and stops. Click a trip (in the list or on the map) to zoom to it and fade the others; click a stop to fly there.
+- Playback: play/pause, 10×, 60× or 300×, and a slider to jump to any time. The clock shows Tashkent time and the speed at that moment. Nights between shifts are skipped.
+
+Data: `apps/tracking/history.py`. Stops are found with the same rules as trips (Day 14).
+
 ## Admin panel
 
 http://localhost:8000/admin/ for superusers (the demo director is one). Changes made there are written to the audit log; the audit log itself is read-only.
@@ -179,3 +191,4 @@ http://localhost:8000/admin/ for superusers (the demo director is one). Changes 
 - [x] Day 12 — web live map (MapLibre + OpenFreeMap): vehicle list, statuses moving / stopped / no signal / off shift, filters and search
 - [x] Day 13 — map updates every 10 s without reloading, pins glide smoothly; vehicle panel (driver, phone, speed, last update, shift distance) with Follow
 - [x] Day 14 — trip detection (stop of 5+ min splits trips, parked silent phones count), Trips page: A → B with place names, time, km, top speed
+- [x] Day 15 — route history: vehicle + day(s), roads and trips on the map, stops, playback (10×/60×/300×) with a time slider; links from Trips and the live map

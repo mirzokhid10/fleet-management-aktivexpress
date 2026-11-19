@@ -124,8 +124,12 @@ Data shape: apps.tracking.views.feed(). Map: MapLibre GL (vendored) + settings.M
                      class="size-4 rounded border-gray-300 text-brand-500 dark:border-gray-700" />
               <span x-text="t.follow"></span>
             </label>
-            <a class="ml-auto text-sm text-brand-500 hover:underline"
-               :href="'{% url 'fleet:shifts' %}?q=' + encodeURIComponent(selected.plate)" x-text="t.shift_log"></a>
+            <span class="ml-auto flex gap-3">
+              <a class="text-sm text-brand-500 hover:underline"
+                 :href="'{% url 'tracking:history' %}?vehicle=' + selected.id" x-text="t.history"></a>
+              <a class="text-sm text-brand-500 hover:underline"
+                 :href="'{% url 'fleet:shifts' %}?q=' + encodeURIComponent(selected.plate)" x-text="t.shift_log"></a>
+            </span>
           </div>
         </section>
       </template>

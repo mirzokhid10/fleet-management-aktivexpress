@@ -1,0 +1,323 @@
+{% extends "base.html" %}
+{% load i18n static %}
+{% comment %}
+Route history (Day 15): pick a vehicle and day(s); the map shows the roads driven (good
+points only), each trip in its own colour, and the stops between them. Playback moves a
+pin along the route at 10×, 60× or 300×; the slider jumps to any time.
+Data shape: apps.tracking.history.build().
+{% endcomment %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'vendor/maplibre-gl.css' %}" />
+<script defer src="{% static 'vendor/maplibre-gl.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<form method="get" class="mb-4 flex flex-col gap-3 rounded-2xl border border-gray-200 bg-white px-5 py-4 sm:flex-row sm:flex-wrap sm:items-end sm:px-6 dark:border-gray-800 dark:bg-white/3">
+  <div class="w-full sm:w-64">
+    <label for="history-vehicle" class="mb-1.5 block text-xs font-medium text-gray-500 dark:text-gray-400">{% translate "Vehicle" %}</label>
+    <select id="history-vehicle" name="vehicle"
+            class="h-11 w-full rounded-lg border border-gray-300 bg-transparent px-3 text-sm text-gray-800 shadow-theme-xs focus:border-brand-300 focus:ring-3 focus:ring-brand-500/10 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90">
+      {% for v in vehicles %}
+      <option value="{{ v.pk }}" {% if v.pk == choice.vehicle.pk %}selected{% endif %}>{{ v.plate_display }} · {{ v.brand }} {{ v.model }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div>
+    <label for="history-day" class="mb-1.5 block text-xs font-medium text-gray-500 dark:text-gray-400">{% translate "Day" %}</label>
+    <input id="history-day" type="date" name="day" value="{{ choice.day|date:'Y-m-d' }}"
+           class="h-11 rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs focus:border-brand-300 focus:ring-3 focus:ring-brand-500/10 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90" />
+  </div>
+  <div>
+    <label for="history-days" class="mb-1.5 block text-xs font-medium text-gray-500 dark:text-gray-400">{% translate "Days" %}</label>
+    <select id="history-days" name="days"
+            class="h-11 w-20 rounded-lg border border-gray-300 bg-transparent px-3 text-sm text-gray-800 shadow-theme-xs focus:border-brand-300 focus:ring-3 focus:ring-brand-500/10 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90">
+      {% for n in day_choices %}
+      <option value="{{ n }}" {% if n == choice.days %}selected{% endif %}>{{ n }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <button type="submit" class="h-11 rounded-lg bg-brand-500 px-4 text-sm font-medium text-white shadow-theme-xs hover:bg-brand-600">{% translate "Show" %}</button>
+  {% if recent %}
+  <div class="flex flex-wrap items-center gap-1.5 sm:ml-auto" data-testid="recent-days">
+    <span class="text-xs text-gray-500 dark:text-gray-400">{% translate "Days with trips:" %}</span>
+    {% for d in recent %}
+    <a href="?vehicle={{ choice.vehicle.pk }}&amp;day={{ d|date:'Y-m-d' }}&amp;days=1"
+       class="rounded-full border px-2.5 py-1 text-xs font-medium {% if d == choice.day and choice.days == 1 %}border-brand-500 bg-brand-50 text-brand-600 dark:bg-brand-500/10 dark:text-brand-400{% else %}border-gray-200 text-gray-600 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-white/3{% endif %}">{{ d|date:"d.m" }}</a>
+    {% endfor %}
+  </div>
+  {% endif %}
+</form>
+
+{% if not choice.vehicle %}
+<p class="rounded-2xl border border-gray-200 bg-white px-5 py-10 text-center text-sm text-gray-500 dark:border-gray-800 dark:bg-white/3 dark:text-gray-400" data-testid="empty">{% translate "No vehicles yet." %}</p>
+{% elif not data.shifts %}
+<p class="rounded-2xl border border-gray-200 bg-white px-5 py-10 text-center text-sm text-gray-500 dark:border-gray-800 dark:bg-white/3 dark:text-gray-400" data-testid="empty">
+  {% translate "No route for these days. The vehicle had no shift with live location." %}
+</p>
+{% else %}
+{{ data|json_script:"history-data" }}
+{{ texts|json_script:"history-texts" }}
+{{ map_config|json_script:"history-config" }}
+{{ trip_id|json_script:"history-trip" }}
+
+<div x-data="routeHistory()" class="flex flex-col-reverse gap-4 lg:flex-row">
+  <div class="flex flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white lg:h-[calc(100vh-16rem)] lg:min-h-[480px] lg:w-80 lg:shrink-0 dark:border-gray-800 dark:bg-white/3">
+    <dl class="grid grid-cols-3 divide-x divide-gray-100 border-b border-gray-100 dark:divide-gray-800 dark:border-gray-800" data-testid="history-summary">
+      <div class="p-3">
+        <dt class="text-xs text-gray-500 dark:text-gray-400">{% translate "Distance" %}</dt>
+        <dd class="mt-0.5 text-base font-semibold text-gray-800 dark:text-white/90">{% blocktranslate with km=data.summary.km %}{{ km }} km{% endblocktranslate %}</dd>
+      </div>
+      <div class="p-3">
+        <dt class="text-xs text-gray-500 dark:text-gray-400">{% translate "Trips" %}</dt>
+        <dd class="mt-0.5 text-base font-semibold text-gray-800 dark:text-white/90">{{ data.summary.trips }}</dd>
+      </div>
+      <div class="p-3">
+        <dt class="text-xs text-gray-500 dark:text-gray-400">{% translate "Driving" %}</dt>
+        <dd class="mt-0.5 text-base font-semibold text-gray-800 dark:text-white/90">{{ data.summary.driving }}</dd>
+      </div>
+    </dl>
+    <ol class="flex-1 divide-y divide-gray-100 overflow-y-auto dark:divide-gray-800" data-testid="timeline">
+      <template x-for="item in timeline" :key="item.key">
+        <li :data-kind="item.kind" :data-trip="item.kind === 'trip' ? item.id : null">
+          <button type="button" @click="item.kind === 'trip' ? selectTrip(item.id) : selectStop(item)"
+                  :class="(item.kind === 'trip' && item.id === selectedTrip) ? 'bg-brand-50 dark:bg-brand-500/10' : (item.kind === 'trip' && item.id === currentTrip ? 'bg-gray-50 dark:bg-white/3' : 'hover:bg-gray-50 dark:hover:bg-white/3')"
+                  class="flex w-full items-start gap-3 px-4 py-3 text-left">
+            <span class="mt-1.5 size-2.5 shrink-0 rounded-full" :style="'background:' + (item.kind === 'trip' ? item.color : '#98a2b3')"></span>
+            <span class="min-w-0 flex-1">
+              <template x-if="item.kind === 'trip'">
+                <span class="block">
+                  <span class="flex items-baseline justify-between gap-2">
+                    <span class="text-sm font-semibold text-gray-800 dark:text-white/90" x-text="item.start_label + ' → ' + (item.end_label || t.on_the_way)"></span>
+                    <span class="shrink-0 text-xs font-medium text-gray-700 dark:text-gray-300" x-text="item.km + ' km'"></span>
+                  </span>
+                  <span class="block truncate text-xs text-gray-500 dark:text-gray-400" x-show="item.from || item.to" x-text="(item.from || '…') + ' → ' + (item.to || '…')"></span>
+                  <span class="block text-xs text-gray-400" x-text="item.duration + (item.max_speed !== null ? ' · ' + t.max_speed.replace('%(v)s', item.max_speed) : '')"></span>
+                </span>
+              </template>
+              <template x-if="item.kind === 'stop'">
+                <span class="block">
+                  <span class="block text-sm text-gray-700 dark:text-gray-300" x-text="item.label + ' · ' + t.stop_at + ' ' + item.duration"></span>
+                  <span class="block truncate text-xs text-gray-500 dark:text-gray-400" x-show="item.place" x-text="item.place"></span>
+                </span>
+              </template>
+            </span>
+          </button>
+        </li>
+      </template>
+    </ol>
+  </div>
+
+  <div class="relative h-[60vh] min-h-[360px] overflow-hidden rounded-2xl border border-gray-200 lg:h-[calc(100vh-16rem)] lg:min-h-[480px] lg:min-w-0 lg:flex-1 dark:border-gray-800">
+    <div x-ref="map" class="h-full w-full" data-testid="map"></div>
+
+    <div class="absolute inset-x-3 bottom-3 z-10 flex items-center gap-3 rounded-2xl border border-gray-200 bg-white px-3 py-2.5 shadow-theme-lg dark:border-gray-800 dark:bg-gray-900" data-testid="playback">
+      <button type="button" @click="playing ? pause() : play()" :aria-label="playing ? t.pause : t.play" :title="playing ? t.pause : t.play"
+              class="flex size-10 shrink-0 items-center justify-center rounded-full bg-brand-500 text-white hover:bg-brand-600" data-testid="play">
+        <svg x-show="!playing" class="size-4" viewBox="0 0 16 16" fill="currentColor"><path d="M4 2.5v11l9-5.5z"/></svg>
+        <svg x-show="playing" x-cloak class="size-4" viewBox="0 0 16 16" fill="currentColor"><path d="M3.5 2.5h3v11h-3zM9.5 2.5h3v11h-3z"/></svg>
+      </button>
+      <div class="min-w-0 flex-1">
+        <input type="range" class="w-full accent-brand-500" :min="tStart" :max="tEnd" step="1000"
+               :value="t_" @input="seek(+$event.target.value)" :aria-label="t.position" data-testid="slider" />
+        <p class="flex justify-between gap-2 text-xs text-gray-500 dark:text-gray-400">
+          <span class="font-medium text-gray-800 dark:text-white/90" data-testid="clock" x-text="clockLabel"></span>
+          <span data-testid="speed-now" x-text="speedNow + ' ' + t.kmh"></span>
+        </p>
+      </div>
+      <label class="sr-only" for="playback-rate" x-text="t.speed"></label>
+      <select id="playback-rate" x-model.number="rate"
+              class="h-9 shrink-0 rounded-lg border border-gray-300 bg-transparent px-2 text-sm text-gray-800 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90">
+        <option value="10">10×</option>
+        <option value="60">60×</option>
+        <option value="300">300×</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Trip colours, one after another; stops are grey.
+  const TRIP_COLORS = ["#465fff", "#12b76a", "#f79009", "#ee46bc", "#0ba5ec", "#7a5af8", "#f04438"];
+
+  function routeHistory() {
+    const read = (id) => JSON.parse(document.getElementById(id).textContent);
+    const data = read("history-data"), config = read("history-config");
+    // Big arrays and MapLibre objects stay outside Alpine's reactive data.
+    const T = [], LON = [], LAT = [], SPD = [], SHIFT = [];
+    data.shifts.forEach((s, n) => s.points.forEach(([t, lon, lat, v]) => {
+      T.push(t); LON.push(lon); LAT.push(lat); SPD.push(v); SHIFT.push(n);
+    }));
+    const offset = data.tz_offset_min * 60000;
+    const pad = (n) => String(n).padStart(2, "0");
+    // Room for the playback bar at the bottom of the map.
+    const FIT = { top: 50, right: 60, bottom: 120, left: 50 };
+    let map = null, pin = null, frame = null, last = 0;
+
+    const trips = data.trips.map((tr, n) => ({ ...tr, kind: "trip", key: "t" + tr.id, color: TRIP_COLORS[n % TRIP_COLORS.length] }));
+    const stops = data.stops.map((s, n) => ({ ...s, kind: "stop", key: "s" + n }));
+
+    function lastAtOrBefore(t) {
+      let lo = 0, hi = T.length;
+      while (lo < hi) { const mid = (lo + hi) >> 1; if (T[mid] <= t) lo = mid + 1; else hi = mid; }
+      return lo - 1;
+    }
+
+    return {
+      t: read("history-texts"),
+      timeline: [...trips, ...stops].sort((a, b) => a.start - b.start || (a.kind === "stop" ? -1 : 1)),
+      tStart: T[0], tEnd: T[T.length - 1],
+      t_: T[0],  // playback time (epoch ms); "t" holds the texts
+      rate: 60,
+      playing: false,
+      selectedTrip: null,
+      currentTrip: null,
+      clockLabel: "",
+      speedNow: 0,
+
+      clock(ms) {
+        const d = new Date(ms + offset);
+        const hms = pad(d.getUTCHours()) + ":" + pad(d.getUTCMinutes()) + ":" + pad(d.getUTCSeconds());
+        return data.multi_day ? pad(d.getUTCDate()) + "." + pad(d.getUTCMonth() + 1) + " " + hms : hms;
+      },
+
+      // Where the vehicle was at time ms: between two points of the same shift.
+      at(ms) {
+        const i = lastAtOrBefore(ms);
+        if (i < 0) return { lon: LON[0], lat: LAT[0], speed: 0 };
+        const j = i + 1;
+        if (j >= T.length || SHIFT[j] !== SHIFT[i] || T[j] === T[i]) return { lon: LON[i], lat: LAT[i], speed: 0 };
+        const k = (ms - T[i]) / (T[j] - T[i]);
+        const standing = stops.some((s) => s.start <= ms && ms <= s.end);
+        return { lon: LON[i] + (LON[j] - LON[i]) * k, lat: LAT[i] + (LAT[j] - LAT[i]) * k,
+                 speed: standing ? 0 : (SPD[j] ?? 0) };
+      },
+
+      seek(ms) {
+        this.t_ = Math.min(Math.max(ms, this.tStart), this.tEnd);
+        const p = this.at(this.t_);
+        if (pin) pin.setLngLat([p.lon, p.lat]);
+        this.clockLabel = this.clock(this.t_);
+        this.speedNow = p.speed;
+        const tr = trips.find((x) => x.start <= this.t_ && this.t_ <= x.end);
+        this.currentTrip = tr ? tr.id : null;
+        // Keep the pin in view while it plays.
+        if (map && this.playing && !map.getBounds().contains([p.lon, p.lat])) map.easeTo({ center: [p.lon, p.lat], duration: 500 });
+      },
+
+      play() {
+        if (this.t_ >= this.tEnd) this.seek(this.tStart);
+        this.playing = true;
+        last = performance.now();
+        frame = requestAnimationFrame((now) => this.step(now));
+      },
+
+      pause() {
+        this.playing = false;
+        if (frame) cancelAnimationFrame(frame);
+        frame = null;
+      },
+
+      step(now) {
+        if (!this.playing) return;
+        let next = this.t_ + (now - last) * this.rate;
+        last = now;
+        // Nights and other time between shifts are skipped.
+        const i = lastAtOrBefore(next);
+        if (i >= 0 && i + 1 < T.length && SHIFT[i + 1] !== SHIFT[i]) {
+          const shiftEnd = T[i];
+          if (next > shiftEnd) next = T[i + 1];
+        }
+        this.seek(next);
+        if (this.t_ >= this.tEnd) { this.pause(); return; }
+        frame = requestAnimationFrame((n) => this.step(n));
+      },
+
+      bounds(i0, i1) {
+        const b = new maplibregl.LngLatBounds();
+        for (let i = i0; i <= i1; i++) b.extend([LON[i], LAT[i]]);
+        return b;
+      },
+
+      offsetOf(tr) {  // index in the flat arrays of a trip's first point
+        let base = 0;
+        for (let n = 0; n < tr.shift; n++) base += data.shifts[n].points.length;
+        return base;
+      },
+
+      selectTrip(id) {
+        this.selectedTrip = this.selectedTrip === id ? null : id;
+        this.paintTrips();
+        const tr = trips.find((x) => x.id === id);
+        if (!tr || this.selectedTrip === null) return;
+        this.pause();
+        const base = this.offsetOf(tr);
+        map.fitBounds(this.bounds(base + tr.i0, base + tr.i1), { padding: FIT, maxZoom: 16 });
+        this.seek(tr.start);
+      },
+
+      selectStop(s) {
+        this.pause();
+        map.flyTo({ center: [s.lon, s.lat], zoom: Math.max(map.getZoom(), 15) });
+        this.seek(s.start);
+      },
+
+      paintTrips() {
+        if (!map || !map.getLayer("trip-lines")) return;
+        map.setPaintProperty("trip-lines", "line-opacity", this.selectedTrip === null ? 0.9
+          : ["case", ["==", ["get", "id"], this.selectedTrip], 1, 0.25]);
+      },
+
+      draw() {
+        const shiftLines = data.shifts.map((s) => ({
+          type: "Feature", properties: {},
+          geometry: { type: "LineString", coordinates: s.points.map((p) => [p[1], p[2]]) },
+        }));
+        const tripLines = trips.map((tr) => ({
+          type: "Feature", properties: { id: tr.id, color: tr.color },
+          geometry: { type: "LineString", coordinates: data.shifts[tr.shift].points.slice(tr.i0, tr.i1 + 1).map((p) => [p[1], p[2]]) },
+        }));
+        map.addSource("route", { type: "geojson", data: { type: "FeatureCollection", features: shiftLines } });
+        map.addSource("trips", { type: "geojson", data: { type: "FeatureCollection", features: tripLines } });
+        map.addLayer({ id: "route-base", type: "line", source: "route",
+                       layout: { "line-join": "round", "line-cap": "round" },
+                       paint: { "line-color": "#98a2b3", "line-width": 3, "line-opacity": 0.6 } });
+        map.addLayer({ id: "trip-lines", type: "line", source: "trips",
+                       layout: { "line-join": "round", "line-cap": "round" },
+                       paint: { "line-color": ["get", "color"], "line-width": 5, "line-opacity": 0.9 } });
+        map.on("click", "trip-lines", (e) => this.selectTrip(e.features[0].properties.id));
+        map.on("mouseenter", "trip-lines", () => { map.getCanvas().style.cursor = "pointer"; });
+        map.on("mouseleave", "trip-lines", () => { map.getCanvas().style.cursor = ""; });
+
+        for (const s of stops) {
+          const el = document.createElement("div");
+          el.innerHTML = '<div class="flex size-6 cursor-pointer items-center justify-center rounded-full border-2 border-white bg-gray-500 text-[10px] font-bold text-white shadow-theme-md">P</div>';
+          el.title = s.label + " · " + s.duration + (s.place ? " · " + s.place : "");
+          el.addEventListener("click", (e) => { e.stopPropagation(); this.selectStop(s); });
+          new maplibregl.Marker({ element: el }).setLngLat([s.lon, s.lat]).addTo(map);
+        }
+        const el = document.createElement("div");
+        el.innerHTML = '<div class="size-5 rounded-full border-[3px] border-white bg-brand-500 shadow-theme-lg" data-testid="playback-pin"></div>';
+        pin = new maplibregl.Marker({ element: el }).setLngLat([LON[0], LAT[0]]).addTo(map);
+        this.paintTrips();
+      },
+
+      init() {
+        map = new maplibregl.Map({
+          container: this.$refs.map, style: config.style, center: config.center, zoom: 11,
+          attributionControl: { compact: true },
+        });
+        map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-right");
+        map.fitBounds(this.bounds(0, T.length - 1), { padding: FIT, maxZoom: 15, duration: 0 });
+        map.on("load", () => {
+          this.draw();
+          const wanted = read("history-trip");
+          if (wanted !== null && trips.some((x) => x.id === wanted)) this.selectTrip(wanted);
+        });
+        this.seek(this.tStart);
+      },
+    };
+  }
+</script>
+{% endif %}
+{% endblock %}

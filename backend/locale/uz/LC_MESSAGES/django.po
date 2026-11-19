@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-19 14:56+0500\n"
+"POT-Creation-Date: 2026-11-19 15:41+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -43,7 +43,7 @@ msgstr "Omborchi"
 
 #: apps/accounts/models.py:19 apps/bot/templates/bot/request_list.html:27
 #: apps/fleet/templates/fleet/shift_list.html:46
-#: apps/tracking/templates/tracking/trip_list.html:43 apps/tracking/views.py:64
+#: apps/tracking/templates/tracking/trip_list.html:43 apps/tracking/views.py:66
 msgid "Driver"
 msgstr "Haydovchi"
 
@@ -340,7 +340,7 @@ msgstr "Bizning xodim emas"
 msgid "The number belongs to someone else"
 msgstr "Raqam boshqa odamga tegishli"
 
-#: apps/bot/models.py:54 apps/core/menu.py:74
+#: apps/bot/models.py:54 apps/core/menu.py:76
 msgid "Other"
 msgstr "Boshqa"
 
@@ -452,7 +452,7 @@ msgstr "Ro'yxatimizdagi shaxs"
 msgid "Telegram account"
 msgstr "Telegram hisobi"
 
-#: apps/bot/templates/bot/request_list.html:17 apps/tracking/views.py:64
+#: apps/bot/templates/bot/request_list.html:17 apps/tracking/views.py:66
 msgid "Phone"
 msgstr "Telefon"
 
@@ -480,7 +480,7 @@ msgstr "Hech kim kutmayapti."
 msgid "Recently decided"
 msgstr "Yaqinda hal qilinganlar"
 
-#: apps/bot/views.py:30 apps/core/menu.py:61
+#: apps/bot/views.py:30 apps/core/menu.py:63
 msgid "New users"
 msgstr "Yangi foydalanuvchilar"
 
@@ -520,56 +520,60 @@ msgstr "Menyu"
 msgid "Dashboard"
 msgstr "Bosh sahifa"
 
-#: apps/core/menu.py:55 apps/tracking/views.py:81
+#: apps/core/menu.py:55 apps/tracking/views.py:84
 msgid "Live map"
 msgstr "Jonli xarita"
 
-#: apps/core/menu.py:57 apps/tracking/templates/tracking/trip_list.html:7
-#: apps/tracking/views.py:132
+#: apps/core/menu.py:57 apps/tracking/templates/tracking/history.html:72
+#: apps/tracking/templates/tracking/trip_list.html:7 apps/tracking/views.py:135
 msgid "Trips"
 msgstr "Reyslar"
 
-#: apps/core/menu.py:59
+#: apps/core/menu.py:59 apps/tracking/views.py:69 apps/tracking/views.py:192
+msgid "Route history"
+msgstr "Yo'l tarixi"
+
+#: apps/core/menu.py:61
 msgid "Approvals"
 msgstr "Tasdiqlash"
 
-#: apps/core/menu.py:63
+#: apps/core/menu.py:65
 msgid "Fleet"
 msgstr "Avtopark"
 
-#: apps/core/menu.py:64 apps/fleet/views.py:57 apps/fleet/views.py:104
+#: apps/core/menu.py:66 apps/fleet/views.py:57 apps/fleet/views.py:104
 msgid "Vehicles"
 msgstr "Avtomobillar"
 
-#: apps/core/menu.py:65 apps/fleet/views.py:71 apps/fleet/views.py:104
+#: apps/core/menu.py:67 apps/fleet/views.py:71 apps/fleet/views.py:104
 msgid "Drivers"
 msgstr "Haydovchilar"
 
-#: apps/core/menu.py:67 apps/fleet/views.py:223
+#: apps/core/menu.py:69 apps/fleet/views.py:223
 msgid "Shifts"
 msgstr "Smenalar"
 
-#: apps/core/menu.py:68 apps/fleet/templates/fleet/vehicle_list.html:22
+#: apps/core/menu.py:70 apps/fleet/templates/fleet/vehicle_list.html:22
 msgid "Fuel"
 msgstr "Yoqilg'i"
 
-#: apps/core/menu.py:70
+#: apps/core/menu.py:72
 msgid "Maintenance"
 msgstr "Texnik xizmat"
 
-#: apps/core/menu.py:71
+#: apps/core/menu.py:73
 msgid "Store"
 msgstr "Ombor"
 
-#: apps/core/menu.py:72
+#: apps/core/menu.py:74
 msgid "Documents"
 msgstr "Hujjatlar"
 
-#: apps/core/menu.py:75
+#: apps/core/menu.py:77
 msgid "Reports"
 msgstr "Hisobotlar"
 
-#: apps/core/menu.py:76
+#: apps/core/menu.py:78
 msgid "Settings"
 msgstr "Sozlamalar"
 
@@ -650,7 +654,7 @@ msgstr "Hali yo'q"
 #: apps/fleet/templates/fleet/driver_list.html:57
 #: apps/fleet/templates/fleet/shift_list.html:106
 #: apps/fleet/templates/fleet/vehicle_list.html:52
-#: apps/tracking/templates/tracking/trip_list.html:82
+#: apps/tracking/templates/tracking/trip_list.html:85
 msgid "Nothing found."
 msgstr "Hech narsa topilmadi."
 
@@ -750,6 +754,7 @@ msgid "Driver or plate"
 msgstr "Haydovchi yoki raqam"
 
 #: apps/fleet/templates/fleet/shift_list.html:24
+#: apps/tracking/templates/tracking/history.html:27
 #: apps/tracking/templates/tracking/trip_list.html:24
 msgid "Day"
 msgstr "Kun"
@@ -759,6 +764,7 @@ msgid "On shift now only"
 msgstr "Faqat hozir smenadagilar"
 
 #: apps/fleet/templates/fleet/shift_list.html:34
+#: apps/tracking/templates/tracking/history.html:40
 #: apps/tracking/templates/tracking/trip_list.html:29
 msgid "Show"
 msgstr "Ko'rsatish"
@@ -770,6 +776,7 @@ msgstr "Tozalash"
 
 #: apps/fleet/templates/fleet/shift_list.html:47
 #: apps/fleet/templates/fleet/vehicle_list.html:20
+#: apps/tracking/templates/tracking/history.html:18
 #: apps/tracking/templates/tracking/trip_list.html:42
 msgid "Vehicle"
 msgstr "Avtomobil"
@@ -790,6 +797,7 @@ msgid "Duration"
 msgstr "Davomiyligi"
 
 #: apps/fleet/templates/fleet/shift_list.html:51
+#: apps/tracking/templates/tracking/history.html:68
 #: apps/tracking/templates/tracking/trip_list.html:11
 #: apps/tracking/templates/tracking/trip_list.html:48
 msgid "Distance"
@@ -803,13 +811,14 @@ msgstr "Joylashuv"
 msgid "On shift"
 msgstr "Smenada"
 
-#: apps/fleet/templates/fleet/shift_list.html:69
+#: apps/fleet/templates/fleet/shift_list.html:69 apps/tracking/history.py:50
 #: apps/tracking/templates/tracking/trip_list.html:69
 #, python-format
 msgid "%(h)s h %(m)s min"
 msgstr "%(h)s soat %(m)s daqiqa"
 
 #: apps/fleet/templates/fleet/shift_list.html:71
+#: apps/tracking/templates/tracking/history.html:69
 #: apps/tracking/templates/tracking/trip_list.html:12
 #: apps/tracking/templates/tracking/trip_list.html:71
 #, python-format
@@ -818,6 +827,7 @@ msgstr "%(km)s km"
 
 #: apps/fleet/templates/fleet/shift_list.html:72
 #: apps/tracking/templates/tracking/trip_list.html:72
+#: apps/tracking/views.py:183
 #, python-format
 msgid "max %(v)s km/h"
 msgstr "maks. %(v)s km/soat"
@@ -937,9 +947,31 @@ msgid ""
 "start_shift when you take a vehicle again."
 msgstr "Dispetcher %(vehicle)s bilan smenangizni %(time)s da tugatdi. Avtomobilni yana olganingizda /start_shift yuboring."
 
+#: apps/tracking/history.py:51
+#, python-format
+msgid "%(n)s min"
+msgstr "%(n)s daqiqa"
+
+#: apps/tracking/templates/tracking/history.html:32
+msgid "Days"
+msgstr "Kunlar"
+
+#: apps/tracking/templates/tracking/history.html:43
+msgid "Days with trips:"
+msgstr "Reys bo'lgan kunlar:"
+
+#: apps/tracking/templates/tracking/history.html:53
 #: apps/tracking/templates/tracking/live_map.html:63
 msgid "No vehicles yet."
 msgstr "Hozircha avtomobillar yo'q."
+
+#: apps/tracking/templates/tracking/history.html:56
+msgid "No route for these days. The vehicle had no shift with live location."
+msgstr "Bu kunlarda yo'l yo'q. Avtomobilda jonli joylashuv yuborilgan smena bo'lmagan."
+
+#: apps/tracking/templates/tracking/history.html:76
+msgid "Driving"
+msgstr "Harakatda"
 
 #: apps/tracking/templates/tracking/live_map.html:65
 msgid "Nothing matches."
@@ -955,93 +987,118 @@ msgid "Route"
 msgstr "Yo'nalish"
 
 #: apps/tracking/templates/tracking/trip_list.html:64
+#: apps/tracking/views.py:181
 msgid "On the way"
 msgstr "Yo'lda"
 
-#: apps/tracking/templates/tracking/trip_list.html:82
+#: apps/tracking/templates/tracking/trip_list.html:75
+msgid "On the map"
+msgstr "Xaritada"
+
+#: apps/tracking/templates/tracking/trip_list.html:85
 msgid ""
 "No trips yet. They appear when a driver on shift shares live location and "
 "drives."
 msgstr "Hali reyslar yo'q. Smenadagi haydovchi jonli joylashuvni yuborib yo'lga chiqqanda paydo bo'ladi."
 
-#: apps/tracking/views.py:27
+#: apps/tracking/views.py:29
 msgid "Moving"
 msgstr "Harakatda"
 
-#: apps/tracking/views.py:27
+#: apps/tracking/views.py:29
 msgid "Stopped"
 msgstr "To'xtagan"
 
-#: apps/tracking/views.py:28
+#: apps/tracking/views.py:30
 msgid "No signal"
 msgstr "Signal yo'q"
 
-#: apps/tracking/views.py:28
+#: apps/tracking/views.py:30
 msgid "Off shift"
 msgstr "Smenada emas"
 
-#: apps/tracking/views.py:62
+#: apps/tracking/views.py:64
 msgid "No position yet"
 msgstr "Joylashuv hali yo'q"
 
-#: apps/tracking/views.py:63
+#: apps/tracking/views.py:65 apps/tracking/views.py:180
 msgid "km/h"
 msgstr "km/soat"
 
-#: apps/tracking/views.py:63
+#: apps/tracking/views.py:65
 msgid "km"
 msgstr "km"
 
-#: apps/tracking/views.py:64
+#: apps/tracking/views.py:66
 msgid "Speed"
 msgstr "Tezlik"
 
-#: apps/tracking/views.py:65
+#: apps/tracking/views.py:67
 msgid "Last update"
 msgstr "Oxirgi yangilanish"
 
-#: apps/tracking/views.py:65
+#: apps/tracking/views.py:67
 msgid "On shift since"
 msgstr "Smena boshlangan"
 
-#: apps/tracking/views.py:66
+#: apps/tracking/views.py:68
 msgid "Distance on this shift"
 msgstr "Smenadagi masofa"
 
-#: apps/tracking/views.py:66
+#: apps/tracking/views.py:68
 msgid "Shift log"
 msgstr "Smenalar jurnali"
 
-#: apps/tracking/views.py:67
+#: apps/tracking/views.py:70
 msgid "Follow"
 msgstr "Kuzatib borish"
 
-#: apps/tracking/views.py:67
+#: apps/tracking/views.py:70
 msgid "Close"
 msgstr "Yopish"
 
-#: apps/tracking/views.py:68
+#: apps/tracking/views.py:71
 #, python-format
 msgid "Updated %(time)s"
 msgstr "Yangilandi: %(time)s"
 
-#: apps/tracking/views.py:68
+#: apps/tracking/views.py:71
 msgid "No connection. Trying again…"
 msgstr "Aloqa yo'q. Qayta urinilmoqda…"
 
-#: apps/tracking/views.py:69
+#: apps/tracking/views.py:72
 msgid "just now"
 msgstr "hozirgina"
 
-#: apps/tracking/views.py:69
+#: apps/tracking/views.py:72
 #, python-format
 msgid "%(n)s min ago"
 msgstr "%(n)s daqiqa oldin"
 
-#: apps/tracking/views.py:70
+#: apps/tracking/views.py:73
 #, python-format
 msgid "%(n)s h ago"
 msgstr "%(n)s soat oldin"
+
+#: apps/tracking/views.py:180
+msgid "Play"
+msgstr "Ijro etish"
+
+#: apps/tracking/views.py:180
+msgid "Pause"
+msgstr "Pauza"
+
+#: apps/tracking/views.py:181
+msgid "Stop"
+msgstr "To'xtash"
+
+#: apps/tracking/views.py:182
+msgid "Playback speed"
+msgstr "Ijro tezligi"
+
+#: apps/tracking/views.py:182
+msgid "Time on the route"
+msgstr "Yo'ldagi vaqt"
 
 #: templates/403.html:3 templates/403.html:5
 msgid "No access"

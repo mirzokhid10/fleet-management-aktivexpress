@@ -135,3 +135,12 @@ def test_language_switch_offers_uzbek_and_russian(login_as, url):
     body = page.content.decode()
     assert 'name="language" value="uz"' in body
     assert 'name="language" value="ru"' in body
+
+
+def test_password_toggle_label_survives_the_uzbek_apostrophe(client):
+    """"Parolni ko'rsatish" inside an Alpine expression must not end the JS string."""
+    from django.conf import settings
+
+    client.cookies[settings.LANGUAGE_COOKIE_NAME] = "uz"
+    body = client.get("/accounts/login/").content.decode()
+    assert ":aria-label=\"show ? 'Parolni yashirish' : 'Parolni ko\\u0027rsatish'\"" in body

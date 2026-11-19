@@ -13,6 +13,7 @@ Feature: The web app runs locally
       | Bosh sahifa   |
       | Jonli xarita  |
       | Reyslar       |
+      | Yo'l tarixi   |
       | Tasdiqlash    |
       | Yangi foydalanuvchilar |
       | Avtomobillar  |

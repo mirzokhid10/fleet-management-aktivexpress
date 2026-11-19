@@ -21,8 +21,8 @@ def keys(user):
     return [item.key for group in menu_for(user) for item in group.items]
 
 
-EVERYTHING = ["dashboard", "map", "trips", "approvals", "registrations", "vehicles", "drivers",
-              "shifts", "fuel", "maintenance", "store", "documents", "reports", "settings"]
+EVERYTHING = ["dashboard", "map", "trips", "history", "approvals", "registrations", "vehicles",
+              "drivers", "shifts", "fuel", "maintenance", "store", "documents", "reports", "settings"]
 
 
 @pytest.mark.parametrize("role, expected", [

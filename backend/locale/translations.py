@@ -446,6 +446,21 @@ T: dict[str, tuple[str, str]] = {
     "just now": ("hozirgina", "только что"),
     "%(n)s min ago": ("%(n)s daqiqa oldin", "%(n)s мин назад"),
     "%(n)s h ago": ("%(n)s soat oldin", "%(n)s ч назад"),
+    # route history (Day 15)
+    "Route history": ("Yo'l tarixi", "История маршрутов"),
+    "Days": ("Kunlar", "Дней"),
+    "Days with trips:": ("Reys bo'lgan kunlar:", "Дни с поездками:"),
+    "Driving": ("Harakatda", "В движении"),
+    "No route for these days. The vehicle had no shift with live location.": (
+        "Bu kunlarda yo'l yo'q. Avtomobilda jonli joylashuv yuborilgan smena bo'lmagan.",
+        "За эти дни маршрута нет. У автомобиля не было смены с трансляцией геопозиции."),
+    "Play": ("Ijro etish", "Воспроизвести"),
+    "Pause": ("Pauza", "Пауза"),
+    "Stop": ("To'xtash", "Остановка"),
+    "Playback speed": ("Ijro tezligi", "Скорость воспроизведения"),
+    "Time on the route": ("Yo'ldagi vaqt", "Время на маршруте"),
+    "On the map": ("Xaritada", "На карте"),
+    "%(n)s min": ("%(n)s daqiqa", "%(n)s мин"),
     # trips (Day 14)
     "Route": ("Yo'nalish", "Маршрут"),
     "On the way": ("Yo'lda", "В пути"),

@@ -1,4 +1,5 @@
-"""Web pages of tracking: the live map (Day 12), its 10-second feed (Day 13), trips (Day 14)."""
+"""Web pages of tracking: the live map (Day 12), its 10-second feed (Day 13), trips (Day 14),
+route history with playback (Day 15)."""
 
 from __future__ import annotations
 
@@ -15,9 +16,10 @@ from django.utils.formats import get_format
 from django.utils.translation import gettext as _
 
 from apps.accounts.roles import MANAGERS, role_required
+from apps.fleet.models import Vehicle
 from apps.fleet.shifts import hours_minutes
 
-from . import livemap, trips
+from . import history, livemap, trips
 from .models import Trip
 
 PAGE_SIZE = 50
@@ -64,6 +66,7 @@ def _texts() -> dict[str, str]:
         "driver": _("Driver"), "phone": _("Phone"), "speed": _("Speed"),
         "last_update": _("Last update"), "on_shift_since": _("On shift since"),
         "distance": _("Distance on this shift"), "shift_log": _("Shift log"),
+        "history": _("Route history"),
         "follow": _("Follow"), "close": _("Close"),
         "updated": _("Updated %(time)s"), "offline": _("No connection. Trying again…"),
         "just_now": _("just now"), "minutes_ago": _("%(n)s min ago"),
@@ -133,4 +136,64 @@ def trip_list(request):
         "total_trips": total["n"], "total_km": round((total["m"] or 0) / 1000, 1),
         "stop_minutes": trips.STOP_MINUTES,
         "filtered": any(filters.values()), "page_query": keep.urlencode(),
+    })
+
+
+# --- route history (Day 15) ------------------------------------------------------
+
+def _history_choice(request) -> tuple[history.Choice, Trip | None]:
+    """?vehicle=&day=&days= or ?trip= (opens that trip's vehicle and day)."""
+    vehicles = Vehicle.objects.filter(is_active=True)
+    trip = None
+    if request.GET.get("trip", "").isdigit():
+        trip = Trip.objects.select_related("vehicle").filter(pk=request.GET["trip"]).first()
+    vid = request.GET.get("vehicle", "")
+    vehicle = vehicles.filter(pk=vid).first() if vid.isdigit() else None
+    if vehicle is None and trip is not None:
+        vehicle = trip.vehicle
+    if vehicle is None:  # the vehicle that drove last, else the first one
+        last = Trip.objects.filter(vehicle__is_active=True).select_related("vehicle").first()
+        vehicle = last.vehicle if last else vehicles.order_by("plate").first()
+    try:
+        day = parse_date(request.GET.get("day", "").strip())
+    except ValueError:
+        day = None
+    if day is None and trip is not None:
+        day = timezone.localtime(trip.started_at).date()
+    if day is None and vehicle is not None:
+        # Today if it drove today, else its last day with trips.
+        recent = history.recent_days(vehicle, 1)
+        today = timezone.localdate()
+        day = today if not recent or recent[0] >= today else recent[0]
+    try:
+        days = int(request.GET.get("days", "1"))
+    except ValueError:
+        days = 1
+    days = days if days in history.DAY_CHOICES else 1
+    if trip is not None and trip.vehicle_id != getattr(vehicle, "pk", None):
+        trip = None
+    return history.Choice(vehicle, day or timezone.localdate(), days), trip
+
+
+def _history_texts() -> dict[str, str]:
+    return {
+        "play": _("Play"), "pause": _("Pause"), "kmh": _("km/h"),
+        "stop_at": _("Stop"), "on_the_way": _("On the way"),
+        "speed": _("Playback speed"), "position": _("Time on the route"),
+        "max_speed": _("max %(v)s km/h"),
+    }
+
+
+@role_required(*MANAGERS)
+def route_history(request):
+    choice, trip = _history_choice(request)
+    data = history.build(choice) if choice.vehicle else None
+    return render(request, "tracking/history.html", {
+        "page_title": _("Route history"),
+        "vehicles": Vehicle.objects.filter(is_active=True).order_by("plate"),
+        "choice": choice, "day_choices": history.DAY_CHOICES,
+        "recent": history.recent_days(choice.vehicle) if choice.vehicle else [],
+        "data": data, "trip_id": trip.pk if trip else None,
+        "texts": _history_texts(),
+        "map_config": {"style": settings.MAP_STYLE_URL, "center": settings.MAP_DEFAULT_CENTER},
     })
