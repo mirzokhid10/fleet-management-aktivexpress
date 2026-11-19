@@ -125,3 +125,53 @@ class SharingGap(models.Model):
 
     def __str__(self) -> str:
         return f"{self.shift} · {self.since:%H:%M}"
+
+
+class Trip(models.Model):
+    """One drive from A to B within a shift (Day 14).
+
+    Made from the shift's good points by apps/tracking/trips.py: a stop of
+    5 minutes or more ends one trip and starts the next. Trips are rebuilt
+    while points arrive, so the last one of an open shift may still be on
+    the way (ended_at empty; end_point is then where the vehicle is now).
+
+    Trips are kept when retention deletes old points (Day 16), so the
+    kilometres of past months stay in reports.
+    """
+
+    shift = models.ForeignKey(Shift, on_delete=models.CASCADE, related_name="trips")
+    # Same as shift.vehicle; stored again so lists by vehicle and date need no join.
+    vehicle = models.ForeignKey(Vehicle, on_delete=models.CASCADE, related_name="trips")
+    started_at = models.DateTimeField(help_text="Left the place of the previous stop")
+    ended_at = models.DateTimeField(null=True, blank=True,
+                                    help_text="Empty while the trip is still on the way")
+    start_point = models.PointField(srid=4326)
+    end_point = models.PointField(srid=4326, help_text="Where it stopped, or is now")
+    last_point_at = models.DateTimeField(help_text="Time of the newest point in the trip")
+    distance_m = models.FloatField(default=0)
+    max_speed_kmh = models.FloatField(null=True, blank=True)
+    points = models.PositiveIntegerField(default=0, help_text="Good points in the trip")
+
+    class Meta:
+        ordering = ["-started_at", "-pk"]
+        indexes = [
+            models.Index(fields=["vehicle", "started_at"]),
+            models.Index(fields=["started_at"]),
+        ]
+        constraints = [
+            models.UniqueConstraint(fields=["shift", "started_at"], name="trip_start_per_shift"),
+            models.CheckConstraint(name="trip_ends_after_start",
+                                   condition=Q(ended_at__isnull=True)
+                                   | Q(ended_at__gte=models.F("started_at"))),
+            models.CheckConstraint(name="trip_distance_non_negative",
+                                   condition=Q(distance_m__gte=0)),
+            models.UniqueConstraint(fields=["shift"], condition=Q(ended_at__isnull=True),
+                                    name="one_open_trip_per_shift"),
+        ]
+
+    def __str__(self) -> str:
+        return f"{self.vehicle} · {self.started_at:%d.%m %H:%M}"
+
+    @property
+    def is_open(self) -> bool:
+        return self.ended_at is None

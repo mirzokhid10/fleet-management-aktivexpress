@@ -138,4 +138,4 @@ def test_recalculate_command_reports_each_shift(capsys):
     _points(sh, DRIVE)
     f.shift()  # no points: skipped
     call_command("recalculate_track")
-    assert capsys.readouterr().out == f"shift {sh.pk}: 7 points, 2 bad, 1.2 km, 6 changed\n"
+    assert capsys.readouterr().out == f"shift {sh.pk}: 7 points, 2 bad, 1.2 km, 6 changed, 1 trips\n"

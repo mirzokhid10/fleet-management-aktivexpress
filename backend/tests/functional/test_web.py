@@ -20,8 +20,8 @@ def test_dashboard_link_is_active_and_unbuilt_pages_are_disabled(login_as):
 
     assert 'data-menu="dashboard"' in html
     assert 'aria-current="page"' in html
-    assert html.count('aria-disabled="true"') == 8  # live: vehicles, drivers, shifts, map…
-    assert "14-kun" in html  # Trips, "Day 14" in Uzbek
+    assert html.count('aria-disabled="true"') == 7  # live: vehicles, drivers, shifts, map, trips…
+    assert "21-kun" in html  # Approvals, "Day 21" in Uzbek
 
 
 def test_health_reports_postgis_and_cache(client):

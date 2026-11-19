@@ -44,7 +44,7 @@ docker compose exec web python manage.py create_demo_users
 Our own UI strings are translated in `backend/locale/translations.py`. After adding or changing text:
 
 ```bash
-docker compose exec web sh -c "python manage.py makemessages -l uz -l ru --no-obsolete && python locale/translations.py && python manage.py compilemessages"
+docker compose exec web sh -c "python manage.py makemessages -l uz -l ru --no-obsolete --ignore=venv && python locale/translations.py && python manage.py compilemessages --ignore=venv"
 ```
 
 A test fails while any string is untranslated.
@@ -149,6 +149,16 @@ http://localhost:8001/map/ for directors and dispatchers. Every active vehicle i
 The rules are in `apps/tracking/livemap.py`. The map is MapLibre GL 5.24 (vendored in `static/vendor/`) with the free OpenFreeMap style. Change `MAP_STYLE_URL` in `.env` to switch map source (e.g. self-hosted tiles). 
 **Day 13:** the open page asks `/map/data/` for new positions every `MAP_REFRESH_SECONDS` (10). It pauses while the browser tab is hidden and catches up when you come back. The page itself never reloads. Pins glide smoothly from one position to the next over one refresh period, so vehicles appear to drive continuously (they trail the newest position by up to 10 s). A jump over 3 km, a hidden tab or the system's reduced-motion setting skips the glide. The list and counts update too. Clicking a vehicle opens a panel with driver, phone, speed, last update, shift start and distance on the shift. "Follow" keeps that vehicle in the middle of the map (dragging the map turns it off). A pin can only move as often as the driver's phone reports: Telegram sends live location every few seconds to a minute.
 
+## Trips (Day 14)
+
+http://localhost:8001/trips/ for directors and dispatchers. Each shift's clean track (Day 10) is cut into trips from A to B. A stop of 5 minutes or more ends one trip and starts the next:
+
+- **Stayed:** every point for 5+ minutes is within 100 m of where the vehicle arrived.
+- **Went quiet:** a phone standing still sends almost nothing. A 5+ minute gap covered slower than 5 km/h on average counts as a stop. A gap covered faster (sharing was off while driving) stays inside the trip.
+- Moves under 200 m (around the yard) are not trips.
+
+Trips are rebuilt from the points each time a point arrives and when the shift ends. Opening the page ends the trips of vehicles that have been silent for 5 minutes. The last trip of an open shift shows **On the way**. Ends of a trip are named after the company's places (Geofences from the template, circle or drawn area); otherwise coordinates linking to OpenStreetMap. Filter by driver/plate and day; the cards show the number of trips and kilometres for the filter. Trips are kept when retention deletes old points (Day 16). After changing the rules, `docker compose exec web python manage.py recalculate_track` rebuilds tracks and trips. Rules: `apps/tracking/trips.py`.
+
 ## Admin panel
 
 http://localhost:8000/admin/ for superusers (the demo director is one). Changes made there are written to the audit log; the audit log itself is read-only.
@@ -168,3 +178,4 @@ http://localhost:8000/admin/ for superusers (the demo director is one). Changes 
 - [x] Day 11 — stop-sharing detection (every 30 s); alert with last place to the managers' group, reminder to the driver, "back on" message
 - [x] Day 12 — web live map (MapLibre + OpenFreeMap): vehicle list, statuses moving / stopped / no signal / off shift, filters and search
 - [x] Day 13 — map updates every 10 s without reloading, pins glide smoothly; vehicle panel (driver, phone, speed, last update, shift distance) with Follow
+- [x] Day 14 — trip detection (stop of 5+ min splits trips, parked silent phones count), Trips page: A → B with place names, time, km, top speed

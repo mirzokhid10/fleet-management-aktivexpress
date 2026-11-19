@@ -53,7 +53,8 @@ MENU: tuple[MenuGroup, ...] = (
         MenuItem("dashboard", _("Dashboard"), "grid", "core:dashboard"),
         # Day 12: where every vehicle is now (Telegram live location).
         MenuItem("map", _("Live map"), "map", "tracking:map", roles=MANAGERS),
-        MenuItem("trips", _("Trips"), "route", day=14, roles=MANAGERS),
+        # Day 14: drives from A to B, cut at stops of 5 minutes or more.
+        MenuItem("trips", _("Trips"), "route", "tracking:trips", roles=MANAGERS),
         # Storekeepers confirm part requests here when marked as approvers.
         MenuItem("approvals", _("Approvals"), "check", day=21),
         # Day 7: people who registered in the bot, waiting for a manager.

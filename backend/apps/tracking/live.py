@@ -24,7 +24,7 @@ from django.utils import timezone
 from apps.fleet.models import Shift
 from apps.fleet.shifts import driver_of, open_shift
 
-from . import track
+from . import track, trips
 from .models import LiveSession, LocationPoint
 
 logger = logging.getLogger(__name__)
@@ -57,6 +57,7 @@ def _save_point(session: LiveSession, fix: Fix) -> LocationPoint | None:
         accuracy_m=fix.accuracy_m, heading=fix.heading)
     track.apply(point)  # Day 10: distance, speed, bad points
     point.save()
+    trips.rebuild(session.shift, fix.at)  # Day 14
     return point
 
 

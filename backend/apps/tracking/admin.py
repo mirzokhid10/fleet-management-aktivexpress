@@ -3,7 +3,7 @@ from django.contrib.gis.admin import GISModelAdmin
 
 from apps.audit.admin import AuditedAdmin
 
-from .models import Geofence, LiveSession, LocationPoint, SharingGap
+from .models import Geofence, LiveSession, LocationPoint, SharingGap, Trip
 
 
 @admin.register(Geofence)
@@ -41,3 +41,18 @@ class SharingGapAdmin(admin.ModelAdmin):
     list_display = ("shift", "since", "alerted_at", "resolved_at")
     date_hierarchy = "since"
     raw_id_fields = ("shift",)
+
+
+@admin.register(Trip)
+class TripAdmin(admin.ModelAdmin):
+    """Trips are made from points (apps/tracking/trips.py); look, don't touch."""
+
+    list_display = ("vehicle", "started_at", "ended_at", "distance_m", "max_speed_kmh", "points")
+    date_hierarchy = "started_at"
+    raw_id_fields = ("vehicle", "shift")
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False

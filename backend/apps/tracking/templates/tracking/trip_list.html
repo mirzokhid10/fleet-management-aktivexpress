@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+<div class="mb-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+  <div class="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/3">
+    <p class="text-sm text-gray-500 dark:text-gray-400">{% translate "Trips" %}</p>
+    <p class="mt-1 text-2xl font-semibold text-gray-800 dark:text-white/90" data-testid="total-trips">{{ total_trips }}</p>
+  </div>
+  <div class="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/3">
+    <p class="text-sm text-gray-500 dark:text-gray-400">{% translate "Distance" %}</p>
+    <p class="mt-1 text-2xl font-semibold text-gray-800 dark:text-white/90" data-testid="total-km">{% blocktranslate with km=total_km|floatformat:1 %}{{ km }} km{% endblocktranslate %}</p>
+  </div>
+</div>
+
+<div class="overflow-hidden rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/3">
+  <form method="get" role="search" class="flex flex-col gap-3 border-b border-gray-100 px-5 py-4 sm:flex-row sm:flex-wrap sm:items-end sm:px-6 dark:border-gray-800">
+    <div class="w-full sm:max-w-xs">
+      <label for="trip-search" class="mb-1.5 block text-xs font-medium text-gray-500 dark:text-gray-400">{% translate "Driver or plate" %}</label>
+      <input id="trip-search" type="search" name="q" value="{{ q }}"
+             class="h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs focus:border-brand-300 focus:ring-3 focus:ring-brand-500/10 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90" />
+    </div>
+    <div>
+      <label for="trip-day" class="mb-1.5 block text-xs font-medium text-gray-500 dark:text-gray-400">{% translate "Day" %}</label>
+      <input id="trip-day" type="date" name="day" value="{{ day|date:'Y-m-d' }}"
+             class="h-11 rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs focus:border-brand-300 focus:ring-3 focus:ring-brand-500/10 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90" />
+    </div>
+    <div class="flex gap-2">
+      <button type="submit" class="h-11 rounded-lg bg-brand-500 px-4 text-sm font-medium text-white shadow-theme-xs hover:bg-brand-600">{% translate "Show" %}</button>
+      {% if filtered %}
+      <a href="{% url 'tracking:trips' %}" class="inline-flex h-11 items-center rounded-lg border border-gray-300 px-4 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-white/3">{% translate "Clear" %}</a>
+      {% endif %}
+    </div>
+    <p class="text-xs text-gray-500 sm:ml-auto sm:self-center dark:text-gray-400">{% blocktranslate with n=stop_minutes %}A stop of {{ n }} min or more ends a trip.{% endblocktranslate %}</p>
+  </form>
+
+  {% if page.object_list %}
+  <div class="max-w-full overflow-x-auto">
+    <table class="min-w-full" data-testid="trip-table">
+      <thead>
+        <tr class="border-b border-gray-100 dark:border-gray-800">
+          <th class="px-5 py-3 text-left text-xs font-medium text-gray-500 sm:px-6 dark:text-gray-400">{% translate "Vehicle" %}</th>
+          <th class="px-5 py-3 text-left text-xs font-medium text-gray-500 sm:px-6 dark:text-gray-400">{% translate "Driver" %}</th>
+          <th class="px-5 py-3 text-left text-xs font-medium text-gray-500 sm:px-6 dark:text-gray-400">{% translate "Route" %}</th>
+          <th class="px-5 py-3 text-left text-xs font-medium text-gray-500 sm:px-6 dark:text-gray-400">{% translate "Started" %}</th>
+          <th class="px-5 py-3 text-left text-xs font-medium text-gray-500 sm:px-6 dark:text-gray-400">{% translate "Ended" %}</th>
+          <th class="px-5 py-3 text-left text-xs font-medium text-gray-500 sm:px-6 dark:text-gray-400">{% translate "Duration" %}</th>
+          <th class="px-5 py-3 text-left text-xs font-medium text-gray-500 sm:px-6 dark:text-gray-400">{% translate "Distance" %}</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+        {% for t in page %}
+        <tr data-trip="{{ t.pk }}" data-open="{{ t.is_open|yesno:'1,0' }}">
+          <td class="whitespace-nowrap px-5 py-4 text-sm font-medium text-gray-800 sm:px-6 dark:text-white/90">{{ t.vehicle.plate_display }}<span class="block text-xs font-normal text-gray-400">{{ t.vehicle.brand }} {{ t.vehicle.model }}</span></td>
+          <td class="px-5 py-4 text-sm text-gray-500 sm:px-6 dark:text-gray-400">{{ t.shift.driver.full_name }}</td>
+          <td class="px-5 py-4 text-sm text-gray-800 sm:px-6 dark:text-white/90" data-testid="route">
+            <span class="block">{% include "tracking/partials/place.html" with place=t.from_place point=t.start_point %}</span>
+            <span class="block whitespace-nowrap"><span class="pr-1 text-gray-400">→</span>{% include "tracking/partials/place.html" with place=t.to_place point=t.end_point %}</span>
+          </td>
+          <td class="whitespace-nowrap px-5 py-4 text-sm text-gray-500 sm:px-6 dark:text-gray-400">{{ t.started_at|date:"d.m.Y H:i" }}</td>
+          <td class="whitespace-nowrap px-5 py-4 text-sm sm:px-6">
+            {% if t.is_open %}
+            <span class="rounded-full bg-green-50 px-2 py-0.5 text-xs font-medium text-green-700 dark:bg-green-500/15 dark:text-green-500">{% translate "On the way" %}</span>
+            {% else %}
+            <span class="text-gray-500 dark:text-gray-400">{{ t.ended_at|date:"H:i" }}</span>
+            {% endif %}
+          </td>
+          <td class="whitespace-nowrap px-5 py-4 text-sm text-gray-500 sm:px-6 dark:text-gray-400" data-testid="duration">{% blocktranslate with h=t.hours m=t.minutes %}{{ h }} h {{ m }} min{% endblocktranslate %}</td>
+          <td class="whitespace-nowrap px-5 py-4 text-sm text-gray-800 sm:px-6 dark:text-white/90" data-testid="distance">
+            {% blocktranslate with km=t.km|floatformat:1 %}{{ km }} km{% endblocktranslate %}
+            {% if t.max_speed_kmh %}<span class="block text-xs text-gray-500 dark:text-gray-400">{% blocktranslate with v=t.max_speed_kmh|floatformat:0 %}max {{ v }} km/h{% endblocktranslate %}</span>{% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% include "partials/pagination.html" %}
+  {% else %}
+  <p class="px-5 py-10 text-center text-sm text-gray-500 sm:px-6 dark:text-gray-400" data-testid="empty">
+    {% if filtered %}{% translate "Nothing found." %}{% else %}{% translate "No trips yet. They appear when a driver on shift shares live location and drives." %}{% endif %}
+  </p>
+  {% endif %}
+</div>
+{% endblock %}

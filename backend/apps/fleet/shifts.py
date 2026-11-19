@@ -98,9 +98,11 @@ def end(shift: Shift, *, actor=None, source: str = AuditLog.Source.BOT,
     if not ended:
         return False
     shift.ended_at = now
-    from apps.tracking.live import end_sessions  # tracking builds on fleet, not the reverse
+    from apps.tracking import trips  # tracking builds on fleet, not the reverse
+    from apps.tracking.live import end_sessions
 
     end_sessions(shift, now)
+    trips.rebuild(shift)  # Day 14: the last trip ends with the shift
     log.record(shift, AuditLog.Action.UPDATE, source=source, actor=actor,
                changes={"ended_at": [None, now.isoformat()]}, reason=reason)
     return True
