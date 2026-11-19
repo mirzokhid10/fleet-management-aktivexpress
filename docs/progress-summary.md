@@ -40,7 +40,7 @@ Fleet management for Aktivexpress (about 50 vehicles), later sold as SaaS to oth
 | 10 | Clean track: distance and speed; bad points (accuracy > 100 m, > 150 km/h jumps) left out | d4e05dc |
 | 11 | Stop-sharing alert after 10 min to the managers' group, reminder to the driver, "back on" message | c7e77ab |
 | 12 | Live map `/map/`: list, statuses (moving, stopped, no signal, off shift), filters, search | ad7fa50 |
-| 13 | Map updates every 10 s without reloading, pins glide smoothly; vehicle panel (driver, phone, speed, last update, shift distance) with Follow | see git log |
+| 13 | Map updates every 10 s without reloading, pins glide smoothly; vehicle panel (driver, phone, speed, last update, shift distance) with Follow | 1bc4070 |
 
 Days 7–11 were tested live with a real phone. Days 12–13 were checked in the browser with a simulated drive; a real-phone run is still to do.
 
