@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-19 00:28+0500\n"
+"POT-Creation-Date: 2026-11-19 10:14+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -42,7 +42,7 @@ msgid "Storekeeper"
 msgstr "Omborchi"
 
 #: apps/accounts/models.py:19 apps/bot/templates/bot/request_list.html:27
-#: apps/fleet/templates/fleet/shift_list.html:46
+#: apps/fleet/templates/fleet/shift_list.html:46 apps/tracking/views.py:54
 msgid "Driver"
 msgstr "Haydovchi"
 
@@ -451,7 +451,7 @@ msgstr "Ro'yxatimizdagi shaxs"
 msgid "Telegram account"
 msgstr "Telegram hisobi"
 
-#: apps/bot/templates/bot/request_list.html:17
+#: apps/bot/templates/bot/request_list.html:17 apps/tracking/views.py:54
 msgid "Phone"
 msgstr "Telefon"
 
@@ -519,7 +519,7 @@ msgstr "Menyu"
 msgid "Dashboard"
 msgstr "Bosh sahifa"
 
-#: apps/core/menu.py:55 apps/tracking/views.py:46
+#: apps/core/menu.py:55 apps/tracking/views.py:69
 msgid "Live map"
 msgstr "Jonli xarita"
 
@@ -740,8 +740,8 @@ msgid "Sharing location"
 msgstr "Joylashuvni ulashmoqda"
 
 #: apps/fleet/templates/fleet/shift_list.html:19
-#: apps/tracking/templates/tracking/live_map.html:35
-#: apps/tracking/templates/tracking/live_map.html:36
+#: apps/tracking/templates/tracking/live_map.html:41
+#: apps/tracking/templates/tracking/live_map.html:42
 msgid "Driver or plate"
 msgstr "Haydovchi yoki raqam"
 
@@ -857,7 +857,7 @@ msgid "Odometer, km"
 msgstr "Probeg, km"
 
 #: apps/fleet/templates/fleet/vehicle_list.html:25
-#: apps/tracking/templates/tracking/live_map.html:19
+#: apps/tracking/templates/tracking/live_map.html:22
 msgid "Status"
 msgstr "Holati"
 
@@ -920,45 +920,92 @@ msgid ""
 "start_shift when you take a vehicle again."
 msgstr "Dispetcher %(vehicle)s bilan smenangizni %(time)s da tugatdi. Avtomobilni yana olganingizda /start_shift yuboring."
 
-#: apps/tracking/templates/tracking/live_map.html:53
-msgid "No position yet"
-msgstr "Joylashuv hali yo'q"
-
-#: apps/tracking/templates/tracking/live_map.html:54
-#: apps/tracking/templates/tracking/live_map.html:79
-#, python-format
-msgid "Last update %(time)s"
-msgstr "Oxirgi yangilanish %(time)s"
-
-#: apps/tracking/templates/tracking/live_map.html:54
-#: apps/tracking/templates/tracking/live_map.html:78
-#, python-format
-msgid "%(v)s km/h"
-msgstr "%(v)s km/soat"
-
-#: apps/tracking/templates/tracking/live_map.html:60
+#: apps/tracking/templates/tracking/live_map.html:63
 msgid "No vehicles yet."
 msgstr "Hozircha avtomobillar yo'q."
 
-#: apps/tracking/templates/tracking/live_map.html:63
+#: apps/tracking/templates/tracking/live_map.html:65
 msgid "Nothing matches."
 msgstr "Hech narsa topilmadi."
 
-#: apps/tracking/views.py:16
+#: apps/tracking/views.py:17
 msgid "Moving"
 msgstr "Harakatda"
 
-#: apps/tracking/views.py:16
+#: apps/tracking/views.py:17
 msgid "Stopped"
 msgstr "To'xtagan"
 
-#: apps/tracking/views.py:17
+#: apps/tracking/views.py:18
 msgid "No signal"
 msgstr "Signal yo'q"
 
-#: apps/tracking/views.py:17
+#: apps/tracking/views.py:18
 msgid "Off shift"
 msgstr "Smenada emas"
+
+#: apps/tracking/views.py:52
+msgid "No position yet"
+msgstr "Joylashuv hali yo'q"
+
+#: apps/tracking/views.py:53
+msgid "km/h"
+msgstr "km/soat"
+
+#: apps/tracking/views.py:53
+msgid "km"
+msgstr "km"
+
+#: apps/tracking/views.py:54
+msgid "Speed"
+msgstr "Tezlik"
+
+#: apps/tracking/views.py:55
+msgid "Last update"
+msgstr "Oxirgi yangilanish"
+
+#: apps/tracking/views.py:55
+msgid "On shift since"
+msgstr "Smena boshlangan"
+
+#: apps/tracking/views.py:56
+msgid "Distance on this shift"
+msgstr "Smenadagi masofa"
+
+#: apps/tracking/views.py:56
+msgid "Shift log"
+msgstr "Smenalar jurnali"
+
+#: apps/tracking/views.py:57
+msgid "Follow"
+msgstr "Kuzatib borish"
+
+#: apps/tracking/views.py:57
+msgid "Close"
+msgstr "Yopish"
+
+#: apps/tracking/views.py:58
+#, python-format
+msgid "Updated %(time)s"
+msgstr "Yangilandi: %(time)s"
+
+#: apps/tracking/views.py:58
+msgid "No connection. Trying again…"
+msgstr "Aloqa yo'q. Qayta urinilmoqda…"
+
+#: apps/tracking/views.py:59
+msgid "just now"
+msgstr "hozirgina"
+
+#: apps/tracking/views.py:59
+#, python-format
+msgid "%(n)s min ago"
+msgstr "%(n)s daqiqa oldin"
+
+#: apps/tracking/views.py:60
+#, python-format
+msgid "%(n)s h ago"
+msgstr "%(n)s soat oldin"
 
 #: templates/403.html:3 templates/403.html:5
 msgid "No access"

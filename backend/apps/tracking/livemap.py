@@ -21,7 +21,7 @@ from __future__ import annotations
 import datetime as dt
 from dataclasses import dataclass
 
-from django.db.models import Exists, OuterRef, Q, Subquery
+from django.db.models import Exists, OuterRef, Q, Subquery, Sum
 from django.utils import timezone
 
 from apps.core.models import CompanySettings
@@ -49,6 +49,10 @@ class VehicleOnMap:
     at: dt.datetime | None = None  # time of that point
     speed_kmh: float | None = None
     heading: int | None = None
+    # Day 13: the vehicle panel
+    driver_phone: str = ""
+    shift_started_at: dt.datetime | None = None
+    shift_km: float | None = None  # clean track of the open shift (Day 10)
 
     @property
     def on_map(self) -> bool:
@@ -85,7 +89,8 @@ def fleet(now: dt.datetime | None = None) -> list[VehicleOnMap]:
 
     shifts = {s.vehicle_id: s for s in open_shifts.select_related("driver").annotate(
         fresh=Exists(LiveSession.objects.filter(shift=OuterRef("pk"), ended_at__isnull=True,
-                                                last_update_at__gte=since)))}
+                                                last_update_at__gte=since)),
+        meters=Sum("points__distance_m", filter=Q(points__is_valid=True)))}
     points = LocationPoint.objects.in_bulk([v.last_point_id for v in vehicles if v.last_point_id])
 
     out = []
@@ -100,6 +105,9 @@ def fleet(now: dt.datetime | None = None) -> list[VehicleOnMap]:
             at=point.recorded_at if point else None,
             speed_kmh=point.speed_kmh if point else None,
             heading=point.heading if point else None,
+            driver_phone=shift.driver.phone if shift else "",
+            shift_started_at=shift.started_at if shift else None,
+            shift_km=round((shift.meters or 0) / 1000, 1) if shift else None,
         ))
     out.sort(key=lambda x: (STATUSES.index(x.status), x.plate))
     return out

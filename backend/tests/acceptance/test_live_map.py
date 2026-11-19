@@ -13,7 +13,7 @@ from tests.bot_helpers import link_telegram
 
 pytestmark = [pytest.mark.acceptance, pytest.mark.django_db]
 
-scenarios("live_map.feature")
+scenarios("live_map.feature", "live_map_refresh.feature")
 
 M_PER_DEG_LAT = 111_195
 STEP_S = 30
@@ -33,12 +33,23 @@ def _tick(ctx, seconds=STEP_S):
     return ctx["t"]
 
 
+def _at_scenario_time(ctx, url):
+    with mock.patch("django.utils.timezone.now", return_value=ctx["t"] + dt.timedelta(seconds=5)):
+        response = ctx["dispatcher"].get(url)
+    assert response.status_code == 200
+    return response
+
+
 def _map(ctx) -> dict[str, dict]:
     """The dispatcher opens /map/ at the scenario's time."""
-    with mock.patch("django.utils.timezone.now", return_value=ctx["t"] + dt.timedelta(seconds=5)):
-        response = ctx["dispatcher"].get("/map/")
-    assert response.status_code == 200
-    return {v["plate"]: v for v in response.context["vehicles"]}
+    response = _at_scenario_time(ctx, "/map/")
+    return {v["plate"]: v for v in response.context["feed"]["vehicles"]}
+
+
+def _refresh(ctx) -> dict[str, dict]:
+    """What the open page gets on its next refresh (Day 13)."""
+    data = _at_scenario_time(ctx, "/map/data/").json()
+    return {v["plate"]: v for v in data["vehicles"]}
 
 
 @given(parsers.parse('driver "{name}" is registered in the bot'))
@@ -139,3 +150,42 @@ def at_last_place(ctx, plate, status):
 @then(parsers.parse('the map shows "{plate}" as "{status}"'))
 def shows(ctx, plate, status):
     _vehicle(ctx, plate, status)
+
+
+# --- Day 13 ---------------------------------------------------------------------
+
+@given("the dispatcher has the live map open")
+def map_open(ctx):
+    response = _at_scenario_time(ctx, "/map/")
+    ctx["refresh_s"] = response.context["map_config"]["refresh_s"]
+    ctx["seen"] = {v["plate"]: v for v in response.context["feed"]["vehicles"]}
+
+
+@when(parsers.parse("they drive north at {kmh:d} km/h for {minutes:d} minute"))
+def drive_more(ctx, kmh, minutes):
+    for _ in range(minutes * 60 // STEP_S):
+        _move(ctx, kmh / 3.6 * STEP_S)
+
+
+@then(parsers.parse('the next refresh, at most 10 seconds later, shows "{plate}" at the new place'))
+def refreshed_place(ctx, plate):
+    assert ctx["refresh_s"] <= 10
+    v = _refresh(ctx)[plate]
+    assert v["lat"] > ctx["seen"][plate]["lat"]
+    assert (v["lat"], v["lon"]) == pytest.approx((ctx["lat"], ctx["lon"]))
+    ctx["panel"] = v
+
+
+@then(parsers.parse('the next refresh, at most 10 seconds later, shows "{plate}" as "{status}"'))
+def refreshed_status(ctx, plate, status):
+    assert ctx["refresh_s"] <= 10
+    assert _refresh(ctx)[plate]["status_label"] == status
+
+
+@then(parsers.parse('the vehicle panel of "{plate}" shows driver "{name}", {kmh:d} km/h '
+                    'and {km} km on this shift'))
+def panel(ctx, plate, name, kmh, km):
+    v = ctx["panel"]
+    assert v["driver"] == name and v["phone"] == ctx["driver"].phone
+    assert v["speed"] == pytest.approx(kmh, abs=1)
+    assert v["shift_km"] == pytest.approx(float(km.replace(",", ".")), abs=0.05)

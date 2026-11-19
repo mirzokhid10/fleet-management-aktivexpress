@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-19 00:28+0500\n"
+"POT-Creation-Date: 2026-11-19 10:14+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -44,7 +44,7 @@ msgid "Storekeeper"
 msgstr "Кладовщик"
 
 #: apps/accounts/models.py:19 apps/bot/templates/bot/request_list.html:27
-#: apps/fleet/templates/fleet/shift_list.html:46
+#: apps/fleet/templates/fleet/shift_list.html:46 apps/tracking/views.py:54
 msgid "Driver"
 msgstr "Водитель"
 
@@ -453,7 +453,7 @@ msgstr "Человек в нашем списке"
 msgid "Telegram account"
 msgstr "Аккаунт Telegram"
 
-#: apps/bot/templates/bot/request_list.html:17
+#: apps/bot/templates/bot/request_list.html:17 apps/tracking/views.py:54
 msgid "Phone"
 msgstr "Телефон"
 
@@ -521,7 +521,7 @@ msgstr "Меню"
 msgid "Dashboard"
 msgstr "Главная"
 
-#: apps/core/menu.py:55 apps/tracking/views.py:46
+#: apps/core/menu.py:55 apps/tracking/views.py:69
 msgid "Live map"
 msgstr "Карта онлайн"
 
@@ -742,8 +742,8 @@ msgid "Sharing location"
 msgstr "Передают геопозицию"
 
 #: apps/fleet/templates/fleet/shift_list.html:19
-#: apps/tracking/templates/tracking/live_map.html:35
-#: apps/tracking/templates/tracking/live_map.html:36
+#: apps/tracking/templates/tracking/live_map.html:41
+#: apps/tracking/templates/tracking/live_map.html:42
 msgid "Driver or plate"
 msgstr "Водитель или номер"
 
@@ -859,7 +859,7 @@ msgid "Odometer, km"
 msgstr "Пробег, км"
 
 #: apps/fleet/templates/fleet/vehicle_list.html:25
-#: apps/tracking/templates/tracking/live_map.html:19
+#: apps/tracking/templates/tracking/live_map.html:22
 msgid "Status"
 msgstr "Статус"
 
@@ -922,45 +922,92 @@ msgid ""
 "start_shift when you take a vehicle again."
 msgstr "Диспетчер закончил вашу смену на %(vehicle)s в %(time)s. Когда снова возьмёте машину, отправьте /start_shift."
 
-#: apps/tracking/templates/tracking/live_map.html:53
-msgid "No position yet"
-msgstr "Местоположения ещё нет"
-
-#: apps/tracking/templates/tracking/live_map.html:54
-#: apps/tracking/templates/tracking/live_map.html:79
-#, python-format
-msgid "Last update %(time)s"
-msgstr "Обновлено %(time)s"
-
-#: apps/tracking/templates/tracking/live_map.html:54
-#: apps/tracking/templates/tracking/live_map.html:78
-#, python-format
-msgid "%(v)s km/h"
-msgstr "%(v)s км/ч"
-
-#: apps/tracking/templates/tracking/live_map.html:60
+#: apps/tracking/templates/tracking/live_map.html:63
 msgid "No vehicles yet."
 msgstr "Автомобилей пока нет."
 
-#: apps/tracking/templates/tracking/live_map.html:63
+#: apps/tracking/templates/tracking/live_map.html:65
 msgid "Nothing matches."
 msgstr "Ничего не найдено."
 
-#: apps/tracking/views.py:16
+#: apps/tracking/views.py:17
 msgid "Moving"
 msgstr "В движении"
 
-#: apps/tracking/views.py:16
+#: apps/tracking/views.py:17
 msgid "Stopped"
 msgstr "Стоит"
 
-#: apps/tracking/views.py:17
+#: apps/tracking/views.py:18
 msgid "No signal"
 msgstr "Нет сигнала"
 
-#: apps/tracking/views.py:17
+#: apps/tracking/views.py:18
 msgid "Off shift"
 msgstr "Не на смене"
+
+#: apps/tracking/views.py:52
+msgid "No position yet"
+msgstr "Местоположения ещё нет"
+
+#: apps/tracking/views.py:53
+msgid "km/h"
+msgstr "км/ч"
+
+#: apps/tracking/views.py:53
+msgid "km"
+msgstr "км"
+
+#: apps/tracking/views.py:54
+msgid "Speed"
+msgstr "Скорость"
+
+#: apps/tracking/views.py:55
+msgid "Last update"
+msgstr "Обновлено"
+
+#: apps/tracking/views.py:55
+msgid "On shift since"
+msgstr "На смене с"
+
+#: apps/tracking/views.py:56
+msgid "Distance on this shift"
+msgstr "Пробег за смену"
+
+#: apps/tracking/views.py:56
+msgid "Shift log"
+msgstr "Журнал смен"
+
+#: apps/tracking/views.py:57
+msgid "Follow"
+msgstr "Следить"
+
+#: apps/tracking/views.py:57
+msgid "Close"
+msgstr "Закрыть"
+
+#: apps/tracking/views.py:58
+#, python-format
+msgid "Updated %(time)s"
+msgstr "Обновлено: %(time)s"
+
+#: apps/tracking/views.py:58
+msgid "No connection. Trying again…"
+msgstr "Нет связи. Пробуем снова…"
+
+#: apps/tracking/views.py:59
+msgid "just now"
+msgstr "только что"
+
+#: apps/tracking/views.py:59
+#, python-format
+msgid "%(n)s min ago"
+msgstr "%(n)s мин назад"
+
+#: apps/tracking/views.py:60
+#, python-format
+msgid "%(n)s h ago"
+msgstr "%(n)s ч назад"
 
 #: templates/403.html:3 templates/403.html:5
 msgid "No access"

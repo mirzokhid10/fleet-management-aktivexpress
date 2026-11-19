@@ -1,9 +1,10 @@
 {% extends "base.html" %}
 {% load i18n static %}
 {% comment %}
-Day 12: the live map. Data comes from apps.tracking.views.map_data (json_script below);
-the map is MapLibre GL (vendored) with the OpenFreeMap style from settings.MAP_STYLE_URL.
-Day 13 will refresh the same data every 10 s.
+Live map. Day 12: map, list, statuses. Day 13: the page asks /map/data/ for new positions
+every map_config.refresh_s seconds (paused while the tab is hidden), pins move in place,
+and a panel shows the chosen vehicle; "Follow" keeps it in the middle of the map.
+Data shape: apps.tracking.views.feed(). Map: MapLibre GL (vendored) + settings.MAP_STYLE_URL.
 {% endcomment %}
 
 {% block head %}
@@ -12,21 +13,26 @@ Day 13 will refresh the same data every 10 s.
 {% endblock %}
 
 {% block content %}
-{{ vehicles|json_script:"map-vehicles" }}
-{{ map_center|json_script:"map-center" }}
+{{ feed|json_script:"map-feed" }}
+{{ texts|json_script:"map-texts" }}
+{{ map_config|json_script:"map-config" }}
 
-<div x-data="liveMap('{{ map_style_url|escapejs }}')" class="flex flex-col gap-4">
-  <div class="flex flex-wrap gap-2" role="group" aria-label="{% translate 'Status' %}" data-testid="status-filters">
-    {% for s in statuses %}
-    <button type="button" @click="toggle('{{ s.key }}')" :aria-pressed="show['{{ s.key }}'].toString()"
-            :class="show['{{ s.key }}'] ? 'border-gray-300 bg-white text-gray-800 dark:border-gray-700 dark:bg-white/5 dark:text-white/90' : 'border-transparent bg-gray-100 text-gray-400 dark:bg-white/3 dark:text-gray-500'"
-            class="inline-flex h-10 items-center gap-2 rounded-full border px-4 text-sm font-medium shadow-theme-xs"
-            data-status="{{ s.key }}">
-      <span class="size-2.5 rounded-full" :class="dot('{{ s.key }}')"></span>
-      {{ s.label }}
-      <span class="text-gray-500 dark:text-gray-400" data-testid="count-{{ s.key }}">{{ s.count }}</span>
-    </button>
-    {% endfor %}
+<div x-data="liveMap('{% url 'tracking:map_data' %}')" class="flex flex-col gap-4">
+  <div class="flex flex-wrap items-center gap-2">
+    <div class="flex flex-wrap gap-2" role="group" aria-label="{% translate 'Status' %}" data-testid="status-filters">
+      {% for s in statuses %}
+      <button type="button" @click="toggle('{{ s.key }}')" :aria-pressed="show['{{ s.key }}'].toString()"
+              :class="show['{{ s.key }}'] ? 'border-gray-300 bg-white text-gray-800 dark:border-gray-700 dark:bg-white/5 dark:text-white/90' : 'border-transparent bg-gray-100 text-gray-400 dark:bg-white/3 dark:text-gray-500'"
+              class="inline-flex h-10 items-center gap-2 rounded-full border px-4 text-sm font-medium shadow-theme-xs"
+              data-status="{{ s.key }}">
+        <span class="size-2.5 rounded-full" :class="dot('{{ s.key }}')"></span>
+        {{ s.label }}
+        <span class="text-gray-500 dark:text-gray-400" data-testid="count-{{ s.key }}" x-text="counts['{{ s.key }}']">{{ s.count }}</span>
+      </button>
+      {% endfor %}
+    </div>
+    <p class="ml-auto text-xs" :class="offline ? 'text-red-600 dark:text-red-400' : 'text-gray-500 dark:text-gray-400'"
+       data-testid="refresh-state" aria-live="polite" x-text="offline ? t.offline : t.updated.replace('%(time)s', updatedAt)"></p>
   </div>
 
   <div class="flex flex-col-reverse gap-4 lg:flex-row">
@@ -37,35 +43,92 @@ Day 13 will refresh the same data every 10 s.
                class="h-10 w-full rounded-lg border border-gray-300 bg-transparent px-3 text-sm text-gray-800 shadow-theme-xs focus:border-brand-300 focus:ring-3 focus:ring-brand-500/10 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90" />
       </div>
       <ul class="flex-1 divide-y divide-gray-100 overflow-y-auto dark:divide-gray-800" data-testid="vehicle-list">
-        {% for v in vehicles %}
-        <li x-show="visible({{ forloop.counter0 }})" data-vehicle="{{ v.id }}" data-status="{{ v.status }}">
-          <button type="button" @click="focus({{ forloop.counter0 }})"
-                  :class="selected === {{ forloop.counter0 }} ? 'bg-brand-50 dark:bg-brand-500/10' : 'hover:bg-gray-50 dark:hover:bg-white/3'"
-                  class="flex w-full items-start gap-3 px-4 py-3 text-left">
-            <span class="mt-1.5 size-2.5 shrink-0 rounded-full" :class="dot('{{ v.status }}')"></span>
-            <span class="min-w-0 flex-1">
-              <span class="flex items-baseline justify-between gap-2">
-                <span class="text-sm font-semibold text-gray-800 dark:text-white/90">{{ v.plate }}</span>
-                <span class="shrink-0 text-xs text-gray-500 dark:text-gray-400">{{ v.status_label }}</span>
+        <template x-for="v in vehicles" :key="v.id">
+          <li x-show="visible(v)" :data-vehicle="v.id" :data-status="v.status">
+            <button type="button" @click="select(v.id)"
+                    :class="selectedId === v.id ? 'bg-brand-50 dark:bg-brand-500/10' : 'hover:bg-gray-50 dark:hover:bg-white/3'"
+                    class="flex w-full items-start gap-3 px-4 py-3 text-left">
+              <span class="mt-1.5 size-2.5 shrink-0 rounded-full" :class="dot(v.status)"></span>
+              <span class="min-w-0 flex-1">
+                <span class="flex items-baseline justify-between gap-2">
+                  <span class="text-sm font-semibold text-gray-800 dark:text-white/90" x-text="v.plate"></span>
+                  <span class="shrink-0 text-xs text-gray-500 dark:text-gray-400" x-text="v.status_label"></span>
+                </span>
+                <span class="block truncate text-xs text-gray-500 dark:text-gray-400" x-text="v.driver || v.model"></span>
+                <span class="block text-xs text-gray-400" x-text="summary(v)"></span>
               </span>
-              <span class="block truncate text-xs text-gray-500 dark:text-gray-400">{{ v.driver|default:v.model }}</span>
-              <span class="block text-xs text-gray-400">
-                {% if v.lat is None %}{% translate "No position yet" %}
-                {% else %}{% blocktranslate with time=v.when %}Last update {{ time }}{% endblocktranslate %}{% if v.status == "moving" and v.speed is not None %} · {% blocktranslate with v=v.speed %}{{ v }} km/h{% endblocktranslate %}{% endif %}{% endif %}
-              </span>
-            </span>
-          </button>
-        </li>
-        {% empty %}
-        <li class="px-4 py-6 text-sm text-gray-500 dark:text-gray-400">{% translate "No vehicles yet." %}</li>
-        {% endfor %}
-        <li x-show="vehicles.length && !vehicles.some((v, i) => visible(i))" x-cloak
+            </button>
+          </li>
+        </template>
+        <li x-show="!vehicles.length" class="px-4 py-6 text-sm text-gray-500 dark:text-gray-400">{% translate "No vehicles yet." %}</li>
+        <li x-show="vehicles.length && !vehicles.some((v) => visible(v))" x-cloak
             class="px-4 py-6 text-sm text-gray-500 dark:text-gray-400">{% translate "Nothing matches." %}</li>
       </ul>
     </div>
 
-    <div class="relative h-[55vh] min-h-[320px] overflow-hidden lg:min-w-0 lg:flex-1 rounded-2xl border border-gray-200 lg:h-[calc(100vh-14rem)] lg:min-h-[480px] dark:border-gray-800">
-      <div x-ref="map" class="h-full w-full" data-testid="map" data-style="{{ map_style_url }}"></div>
+    <div class="relative h-[55vh] min-h-[320px] overflow-hidden rounded-2xl border border-gray-200 lg:h-[calc(100vh-14rem)] lg:min-h-[480px] lg:min-w-0 lg:flex-1 dark:border-gray-800">
+      <div x-ref="map" class="h-full w-full" data-testid="map"></div>
+
+      {# Day 13: the chosen vehicle #}
+      <template x-if="selected">
+        <section class="absolute inset-x-3 bottom-3 z-10 rounded-2xl border border-gray-200 bg-white p-4 shadow-theme-lg sm:right-auto sm:w-80 dark:border-gray-800 dark:bg-gray-900"
+                 data-testid="vehicle-panel" :aria-label="selected.plate">
+          <div class="flex items-start justify-between gap-3">
+            <div class="min-w-0">
+              <p class="text-base font-semibold text-gray-800 dark:text-white/90" x-text="selected.plate"></p>
+              <p class="truncate text-xs text-gray-500 dark:text-gray-400" x-text="selected.model"></p>
+            </div>
+            <span class="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-gray-100 px-2.5 py-1 text-xs font-medium text-gray-700 dark:bg-white/5 dark:text-gray-300">
+              <span class="size-2 rounded-full" :class="dot(selected.status)"></span>
+              <span x-text="selected.status_label"></span>
+            </span>
+            <button type="button" @click="selectedId = null; follow = false; drawMarkers()" :aria-label="t.close"
+                    class="-mr-1 -mt-1 flex size-8 shrink-0 items-center justify-center rounded-lg text-gray-400 hover:bg-gray-100 hover:text-gray-700 dark:hover:bg-white/5">
+              <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+            </button>
+          </div>
+          <dl class="mt-3 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1.5 text-sm">
+            <template x-if="selected.driver">
+              <div class="contents">
+                <dt class="text-gray-500 dark:text-gray-400" x-text="t.driver"></dt>
+                <dd class="text-gray-800 dark:text-white/90" x-text="selected.driver"></dd>
+              </div>
+            </template>
+            <template x-if="selected.phone">
+              <div class="contents">
+                <dt class="text-gray-500 dark:text-gray-400" x-text="t.phone"></dt>
+                <dd><a class="text-brand-500 hover:underline" :href="'tel:' + selected.phone" x-text="selected.phone"></a></dd>
+              </div>
+            </template>
+            <template x-if="selected.status === 'moving' || selected.status === 'stopped'">
+              <div class="contents">
+                <dt class="text-gray-500 dark:text-gray-400" x-text="t.speed"></dt>
+                <dd class="text-gray-800 dark:text-white/90" data-testid="panel-speed"
+                    x-text="(selected.status === 'moving' ? (selected.speed ?? 0) : 0) + ' ' + t.kmh"></dd>
+              </div>
+            </template>
+            <dt class="text-gray-500 dark:text-gray-400" x-text="t.last_update"></dt>
+            <dd class="text-gray-800 dark:text-white/90" x-text="selected.at ? selected.when + ' · ' + ago(selected.at) : t.no_position"></dd>
+            <template x-if="selected.shift_id">
+              <div class="contents">
+                <dt class="text-gray-500 dark:text-gray-400" x-text="t.on_shift_since"></dt>
+                <dd class="text-gray-800 dark:text-white/90" x-text="selected.shift_since"></dd>
+                <dt class="text-gray-500 dark:text-gray-400" x-text="t.distance"></dt>
+                <dd class="text-gray-800 dark:text-white/90" x-text="km(selected.shift_km) + ' ' + t.km"></dd>
+              </div>
+            </template>
+          </dl>
+          <div class="mt-3 flex items-center justify-between gap-3 border-t border-gray-100 pt-3 dark:border-gray-800">
+            <label class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300" x-show="selected.lat !== null">
+              <input type="checkbox" x-model="follow" @change="follow && centerOnSelected(true)"
+                     class="size-4 rounded border-gray-300 text-brand-500 dark:border-gray-700" />
+              <span x-text="t.follow"></span>
+            </label>
+            <a class="ml-auto text-sm text-brand-500 hover:underline"
+               :href="'{% url 'fleet:shifts' %}?q=' + encodeURIComponent(selected.plate)" x-text="t.shift_log"></a>
+          </div>
+        </section>
+      </template>
     </div>
   </div>
 </div>
@@ -75,98 +138,205 @@ Day 13 will refresh the same data every 10 s.
   const STATUS_DOT = {
     moving: "bg-green-500", stopped: "bg-brand-500", no_signal: "bg-red-500", off_shift: "bg-gray-400",
   };
-  {% blocktranslate with v="__V__" asvar speed_text %}{{ v }} km/h{% endblocktranslate %}
-  {% blocktranslate with time="__TIME__" asvar when_text %}Last update {{ time }}{% endblocktranslate %}
-  const SPEED_TEXT = "{{ speed_text|escapejs }}";
-  const WHEN_TEXT = "{{ when_text|escapejs }}";
+  const MARKER_CLASS = "flex cursor-pointer items-center gap-1 rounded-full border-2 bg-white py-0.5 pl-1 pr-2 text-xs font-semibold text-gray-800 shadow-theme-md";
 
-  function liveMap(styleUrl) {
-    const vehicles = JSON.parse(document.getElementById("map-vehicles").textContent);
-    const center = JSON.parse(document.getElementById("map-center").textContent);
+  function liveMap(dataUrl) {
+    const read = (id) => JSON.parse(document.getElementById(id).textContent);
+    const first = read("map-feed"), config = read("map-config");
+    const lang = document.documentElement.lang || "uz";
+    // MapLibre objects stay outside Alpine's reactive data.
+    let map = null;
+    const markers = new Map();  // vehicle id -> maplibregl.Marker
+    let timer = null, busy = false;
+    // Smooth movement: each pin glides from where it is to its new place over one
+    // refresh period, so it arrives as the next position comes in.
+    const glides = new Map();  // vehicle id -> { from, to, start, ms }
+    let frame = null;
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const SNAP_M = 3000;  // a longer jump (tab was asleep, first fix after a gap): no glide
+
     return {
-      vehicles,
+      t: read("map-texts"),
+      vehicles: first.vehicles,
+      counts: first.counts,
       show: { moving: true, stopped: true, no_signal: true, off_shift: true },
       q: "",
-      selected: null,
-      map: null,
-      markers: [],
+      selectedId: null,
+      follow: false,
+      offline: false,
+      updatedAt: "",
+      now: Date.now(),
 
+      get selected() { return this.vehicles.find((v) => v.id === this.selectedId) || null; },
       dot(status) { return STATUS_DOT[status]; },
+      km(value) { return (value || 0).toFixed(1).replace(".", this.t.decimal); },
 
-      visible(i) {
-        const v = this.vehicles[i];
+      // Our own words: browsers' Uzbek date data is often missing ("-9 s").
+      ago(iso) {
+        const minutes = Math.floor((this.now - new Date(iso).getTime()) / 60000);
+        if (minutes < 1) return this.t.just_now;
+        if (minutes < 60) return this.t.minutes_ago.replace("%(n)s", minutes);
+        return this.t.hours_ago.replace("%(n)s", Math.floor(minutes / 60));
+      },
+
+      summary(v) {
+        if (v.lat === null) return this.t.no_position;
+        let text = this.t.last_update + " " + v.when;
+        if (v.status === "moving" && v.speed !== null) text += " · " + v.speed + " " + this.t.kmh;
+        return text;
+      },
+
+      visible(v) {
         const q = this.q.trim().toLowerCase().replace(/\s+/g, "");
         const text = (v.plate + v.driver + v.model).toLowerCase().replace(/\s+/g, "");
         return this.show[v.status] && (!q || text.includes(q));
       },
 
-      toggle(status) { this.show[status] = !this.show[status]; this.updateMarkers(); },
+      toggle(status) { this.show[status] = !this.show[status]; this.drawMarkers(); },
 
-      popup(v) {
-        const box = document.createElement("div");
-        box.className = "text-sm text-gray-800";
-        const line = (text, cls) => {
-          const el = document.createElement("div");
-          el.textContent = text;
-          if (cls) el.className = cls;
-          box.appendChild(el);
-        };
-        line(v.plate, "font-semibold");
-        line(v.driver || v.model, "text-gray-500");
-        let state = v.status_label;
-        if (v.status === "moving" && v.speed !== null) state += " · " + SPEED_TEXT.replace("__V__", v.speed);
-        line(state);
-        line(WHEN_TEXT.replace("__TIME__", v.when), "text-xs text-gray-500");
-        return box;
+      select(id) {
+        this.selectedId = id;
+        this.follow = !!this.selected && this.selected.lat !== null;
+        this.drawMarkers();
+        this.centerOnSelected(true);
       },
 
-      marker(v) {
-        const el = document.createElement("div");
-        el.className = "flex cursor-pointer items-center gap-1 rounded-full border border-white bg-white py-0.5 pl-1 pr-2 text-xs font-semibold text-gray-800 shadow-theme-md";
+      centerOnSelected(fly) {
+        const v = this.selected;
+        if (!map || !v || v.lat === null) return;
+        const center = [v.lon, v.lat];
+        if (fly) map.flyTo({ center, zoom: Math.max(map.getZoom(), 15) });
+        else map.easeTo({ center, duration: 800 });
+      },
+
+      // --- pins ---------------------------------------------------------------
+      // The root element belongs to MapLibre (its classes place the pin); style the pill inside.
+      paint(el, v) {
+        const chosen = v.id === this.selectedId;
+        el.querySelector(".pill").className = "pill " + MARKER_CLASS + (chosen ? " border-brand-500" : " border-white");
+        el.style.zIndex = chosen ? "5" : "";
         el.dataset.status = v.status;
-        const dot = document.createElement("span");
-        dot.className = "size-3 rounded-full " + STATUS_DOT[v.status];
-        const label = document.createElement("span");
-        label.textContent = v.plate;
-        el.append(dot, label);
-        return el;
+        el.dataset.vehicle = v.id;
+        el.querySelector(".dot").className = "dot size-3 rounded-full " + STATUS_DOT[v.status];
+        el.querySelector(".plate").textContent = v.plate;
+        const arrow = el.querySelector(".arrow");
+        const heading = v.status === "moving" && v.heading !== null;
+        arrow.style.display = heading ? "" : "none";
+        if (heading) arrow.style.transform = "rotate(" + v.heading + "deg)";
+        el.style.display = this.visible(v) ? "" : "none";
       },
 
-      updateMarkers() {
-        this.markers.forEach((m, i) => {
-          if (m) m.getElement().style.display = this.visible(i) ? "" : "none";
-        });
+      newPin(v) {
+        const el = document.createElement("div");
+        el.innerHTML = '<div class="pill"><span class="dot"></span><span class="plate"></span>' +
+          '<svg class="arrow size-3 text-gray-500" viewBox="0 0 12 12" fill="currentColor"><path d="M6 1 10 10 6 8 2 10z"/></svg></div>';
+        el.addEventListener("click", (e) => { e.stopPropagation(); this.select(v.id); });
+        return new maplibregl.Marker({ element: el }).setLngLat([v.lon, v.lat]).addTo(map);
       },
 
-      focus(i) {
-        this.selected = i;
-        const v = this.vehicles[i], m = this.markers[i];
-        if (!m) return;
-        this.map.flyTo({ center: [v.lon, v.lat], zoom: Math.max(this.map.getZoom(), 15) });
-        this.markers.forEach((other) => other && other.getPopup().isOpen() && other.togglePopup());
-        m.togglePopup();
+      drawMarkers() {
+        if (!map) return;
+        const seen = new Set();
+        for (const v of this.vehicles) {
+          if (v.lat === null) continue;
+          seen.add(v.id);
+          let m = markers.get(v.id);
+          if (!m) { m = this.newPin(v); markers.set(v.id, m); }
+          else this.glide(v.id, m, [v.lon, v.lat]);
+          this.paint(m.getElement(), v);
+        }
+        for (const [id, m] of markers) {
+          if (!seen.has(id)) { m.remove(); markers.delete(id); glides.delete(id); }
+        }
+      },
+
+      glide(id, m, to) {
+        const g = glides.get(id);
+        if (g && g.to[0] === to[0] && g.to[1] === to[1]) return;  // already heading there
+        const at = m.getLngLat();
+        if (!g && at.lng === to[0] && at.lat === to[1]) return;   // has not moved
+        if (reduceMotion || document.hidden || at.distanceTo(new maplibregl.LngLat(to[0], to[1])) > SNAP_M) {
+          glides.delete(id);
+          m.setLngLat(to);
+          return;
+        }
+        glides.set(id, { from: [at.lng, at.lat], to, start: performance.now(), ms: config.refresh_s * 1000 });
+        if (!frame) frame = requestAnimationFrame((t) => this.step(t));
+      },
+
+      step(now) {
+        frame = null;
+        for (const [id, g] of glides) {
+          const m = markers.get(id);
+          const k = Math.min(Math.max((now - g.start) / g.ms, 0), 1);
+          if (m) m.setLngLat([g.from[0] + (g.to[0] - g.from[0]) * k, g.from[1] + (g.to[1] - g.from[1]) * k]);
+          if (!m || k >= 1) glides.delete(id);
+        }
+        // Follow: the map moves with the pin (not during a fly-to or while the user drags).
+        const chosen = this.follow && markers.get(this.selectedId);
+        if (chosen && !map.isMoving()) map.setCenter(chosen.getLngLat());
+        if (glides.size) frame = requestAnimationFrame((t) => this.step(t));
+      },
+
+      // --- refresh (Day 13) ---------------------------------------------------
+      apply(data) {
+        this.vehicles = data.vehicles;
+        this.counts = data.counts;
+        this.now = Date.now();
+        this.updatedAt = new Date().toLocaleTimeString(lang, { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+        this.drawMarkers();
+        // A gliding pin is followed frame by frame in step(); a still one needs one nudge.
+        if (this.follow && !glides.has(this.selectedId)) this.centerOnSelected(false);
+      },
+
+      async refresh() {
+        if (busy) return;
+        busy = true;
+        try {
+          const response = await fetch(dataUrl, { headers: { Accept: "application/json" }, cache: "no-store" });
+          if (response.redirected || response.status === 401 || response.status === 403) {
+            window.location.reload();  // signed out meanwhile: show the sign-in page
+            return;
+          }
+          if (!response.ok) throw new Error(response.status);
+          this.apply(await response.json());
+          this.offline = false;
+        } catch (e) {
+          this.offline = true;
+        } finally {
+          busy = false;
+        }
+      },
+
+      schedule() {
+        clearTimeout(timer);
+        timer = setTimeout(async () => {
+          if (!document.hidden) await this.refresh();
+          this.schedule();
+        }, config.refresh_s * 1000);
       },
 
       init() {
-        this.map = new maplibregl.Map({
-          container: this.$refs.map, style: styleUrl, center, zoom: 11,
+        map = new maplibregl.Map({
+          container: this.$refs.map, style: config.style, center: config.center, zoom: 11,
           attributionControl: { compact: true },
         });
-        this.map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-right");
-        this.markers = this.vehicles.map((v, i) => {
-          if (v.lat === null) return null;
-          const popup = new maplibregl.Popup({ offset: 14, closeButton: false }).setDOMContent(this.popup(v));
-          const el = this.marker(v);
-          el.addEventListener("click", () => { this.selected = i; });
-          return new maplibregl.Marker({ element: el }).setLngLat([v.lon, v.lat]).setPopup(popup).addTo(this.map);
-        });
+        map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-right");
+        // Moving the map by hand stops following.
+        map.on("dragstart", () => { this.follow = false; });
+        this.apply(first);
         // Show the vehicles that work now; if none, every last known place.
-        const working = this.vehicles.filter((v) => v.lat !== null && v.status !== "off_shift");
+        const placed = this.vehicles.filter((v) => v.lat !== null);
+        const working = placed.filter((v) => v.status !== "off_shift");
         const fit = new maplibregl.LngLatBounds();
-        (working.length ? working : this.vehicles.filter((v) => v.lat !== null))
-          .forEach((v) => fit.extend([v.lon, v.lat]));
-        if (!fit.isEmpty()) this.map.fitBounds(fit, { padding: 60, maxZoom: 15, duration: 0 });
-        this.$watch("q", () => this.updateMarkers());
+        (working.length ? working : placed).forEach((v) => fit.extend([v.lon, v.lat]));
+        if (!fit.isEmpty()) map.fitBounds(fit, { padding: 60, maxZoom: 15, duration: 0 });
+        this.$watch("q", () => this.drawMarkers());
+        // Back to the tab: catch up at once instead of waiting for the next tick.
+        document.addEventListener("visibilitychange", () => { if (!document.hidden) this.refresh(); });
+        // "2 minutes ago" keeps counting between refreshes.
+        setInterval(() => { this.now = Date.now(); }, 15000);
+        this.schedule();
       },
     };
   }

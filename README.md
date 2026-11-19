@@ -146,7 +146,8 @@ http://localhost:8001/map/ for directors and dispatchers. Every active vehicle i
 - **No signal**: on shift, but not sharing, or no update for `stop_alert_minutes` (Company settings), as in the Day 11 watcher.
 - **Off shift**: nobody on shift; shown at its last known place, if any.
 
-The rules are in `apps/tracking/livemap.py`. The map is MapLibre GL 5.24 (vendored in `static/vendor/`) with the free OpenFreeMap style. Change `MAP_STYLE_URL` in `.env` to switch map source (e.g. self-hosted tiles). The page is server-rendered; Day 13 adds the refresh every 10 s.
+The rules are in `apps/tracking/livemap.py`. The map is MapLibre GL 5.24 (vendored in `static/vendor/`) with the free OpenFreeMap style. Change `MAP_STYLE_URL` in `.env` to switch map source (e.g. self-hosted tiles). 
+**Day 13:** the open page asks `/map/data/` for new positions every `MAP_REFRESH_SECONDS` (10). It pauses while the browser tab is hidden and catches up when you come back. The page itself never reloads. Pins glide smoothly from one position to the next over one refresh period, so vehicles appear to drive continuously (they trail the newest position by up to 10 s). A jump over 3 km, a hidden tab or the system's reduced-motion setting skips the glide. The list and counts update too. Clicking a vehicle opens a panel with driver, phone, speed, last update, shift start and distance on the shift. "Follow" keeps that vehicle in the middle of the map (dragging the map turns it off). A pin can only move as often as the driver's phone reports: Telegram sends live location every few seconds to a minute.
 
 ## Admin panel
 
@@ -166,3 +167,4 @@ http://localhost:8000/admin/ for superusers (the demo director is one). Changes 
 - [x] Day 10 — distance and speed per point, bad points (accuracy >100 m, jumps >150 km/h) left out; distance on the Shifts page and in the bot. Committed.
 - [x] Day 11 — stop-sharing detection (every 30 s); alert with last place to the managers' group, reminder to the driver, "back on" message
 - [x] Day 12 — web live map (MapLibre + OpenFreeMap): vehicle list, statuses moving / stopped / no signal / off shift, filters and search
+- [x] Day 13 — map updates every 10 s without reloading, pins glide smoothly; vehicle panel (driver, phone, speed, last update, shift distance) with Follow

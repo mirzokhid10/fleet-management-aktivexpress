@@ -429,10 +429,23 @@ T: dict[str, tuple[str, str]] = {
     "No signal": ("Signal yo'q", "Нет сигнала"),
     "Off shift": ("Smenada emas", "Не на смене"),
     "No position yet": ("Joylashuv hali yo'q", "Местоположения ещё нет"),
-    "Last update %(time)s": ("Oxirgi yangilanish %(time)s", "Обновлено %(time)s"),
-    "%(v)s km/h": ("%(v)s km/soat", "%(v)s км/ч"),
     "No vehicles yet.": ("Hozircha avtomobillar yo'q.", "Автомобилей пока нет."),
     "Nothing matches.": ("Hech narsa topilmadi.", "Ничего не найдено."),
+    # Day 13: live map refresh and vehicle panel
+    "km/h": ("km/soat", "км/ч"),
+    "km": ("km", "км"),
+    "Speed": ("Tezlik", "Скорость"),
+    "Last update": ("Oxirgi yangilanish", "Обновлено"),
+    "On shift since": ("Smena boshlangan", "На смене с"),
+    "Distance on this shift": ("Smenadagi masofa", "Пробег за смену"),
+    "Shift log": ("Smenalar jurnali", "Журнал смен"),
+    "Follow": ("Kuzatib borish", "Следить"),
+    "Close": ("Yopish", "Закрыть"),
+    "Updated %(time)s": ("Yangilandi: %(time)s", "Обновлено: %(time)s"),
+    "No connection. Trying again…": ("Aloqa yo'q. Qayta urinilmoqda…", "Нет связи. Пробуем снова…"),
+    "just now": ("hozirgina", "только что"),
+    "%(n)s min ago": ("%(n)s daqiqa oldin", "%(n)s мин назад"),
+    "%(n)s h ago": ("%(n)s soat oldin", "%(n)s ч назад"),
 }
 
 LANGS = {"uz": 0, "ru": 1}

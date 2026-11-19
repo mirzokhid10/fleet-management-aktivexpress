@@ -145,3 +145,5 @@ BOT_WEBHOOK_PORT = int(env("BOT_WEBHOOK_PORT", "8080"))
 MAP_STYLE_URL = env("MAP_STYLE_URL", "https://tiles.openfreemap.org/styles/liberty")
 # Where the map opens when no vehicle has a position yet: Tashkent (lon, lat).
 MAP_DEFAULT_CENTER = [69.2401, 41.2995]
+# Day 13: the open map asks the server for new positions this often.
+MAP_REFRESH_SECONDS = 10
